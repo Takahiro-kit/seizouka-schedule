@@ -754,6 +754,7 @@ async function loadData(){
     renderNotices(d.notices||[]);
     renderTodos(d.todos||[]);
     renderDocs(d.docs||[]);
+    initHeroImage(d.settings||{});
     // カレンダーイベントをキャッシュして描画
     _calEvents = (d.calEvents||[]).map(ev=>{
       // Googleスプレッドシートの日付はDate型で返ることがあるので文字列に変換
@@ -1101,45 +1102,47 @@ function renderDocs(docs){
   }
 }
 
-// ── ヒーロー画像管理 ──
-function initHeroImage(){
-  const url = localStorage.getItem('hero_img_url');
+// ── ヒーロー画像管理（GAS経由・全員に反映） ──
+const DEFAULT_HERO = 'https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=800&q=80';
+
+function initHeroImage(settings){
+  const url = (settings && settings.hero_img_url) ? settings.hero_img_url : DEFAULT_HERO;
   const img = document.querySelector('.hero-img img');
-  if(url && img){ img.src = url; }
-  // 設定画面のプレビューも更新
-  updateHeroPreview(url || img?.src || '');
+  if(img && url) img.src = url;
+  updateHeroPreview(url);
 }
 
 function updateHeroPreview(url){
   const prev = document.getElementById('hero-preview-img');
   const inp = document.getElementById('hero-url-input');
   if(!prev) return;
-  if(url){
-    prev.src = url;
-    prev.style.display = 'block';
-  } else {
-    prev.style.display = 'none';
-  }
+  if(url){ prev.src = url; prev.style.display = 'block'; }
+  else { prev.style.display = 'none'; }
   if(inp) inp.value = url || '';
 }
 
-function saveHeroUrl(){
+async function saveHeroUrl(){
   const url = document.getElementById('hero-url-input').value.trim();
   if(!url){ showToast('URLを入力してください'); return; }
-  localStorage.setItem('hero_img_url', url);
-  const img = document.querySelector('.hero-img img');
-  if(img) img.src = url;
-  updateHeroPreview(url);
-  showToast('ヒーロー画像を変更しました');
+  try{
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({sheet:'設定_UPDATE', key:'hero_img_url', value:url})});
+    const img = document.querySelector('.hero-img img');
+    if(img) img.src = url;
+    updateHeroPreview(url);
+    showToast('ヒーロー画像を変更しました（全員に反映されます）');
+  }catch(e){ showToast('エラー: '+e.message); }
 }
 
-function resetHeroUrl(){
-  localStorage.removeItem('hero_img_url');
-  const defaultUrl = 'https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=800&q=80';
-  const img = document.querySelector('.hero-img img');
-  if(img) img.src = defaultUrl;
-  updateHeroPreview(defaultUrl);
-  showToast('デフォルト画像に戻しました');
+async function resetHeroUrl(){
+  try{
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({sheet:'設定_UPDATE', key:'hero_img_url', value:DEFAULT_HERO})});
+    const img = document.querySelector('.hero-img img');
+    if(img) img.src = DEFAULT_HERO;
+    updateHeroPreview(DEFAULT_HERO);
+    showToast('デフォルト画像に戻しました');
+  }catch(e){ showToast('エラー: '+e.message); }
 }
 
 // ── カレンダーイベント管理（GASスプレッドシート） ──
@@ -1159,8 +1162,7 @@ async function addCalEvent(){
     document.getElementById('ev-date').value='';
     document.getElementById('ev-label').value='';
     showToast('イベントを追加しました');
-    setTimeout(()=>{ loadData();
-initHeroImage(); }, 1500);
+    setTimeout(()=>{ loadData(); }, 1500);
   }catch(e){ showToast('エラー: '+e.message); }
 }
 
@@ -1169,8 +1171,7 @@ async function deleteCalEvent(date, type){
     await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({sheet:'カレンダー_DELETE', date, type})});
     showToast('イベントを削除しました');
-    setTimeout(()=>{ loadData();
-initHeroImage(); }, 1500);
+    setTimeout(()=>{ loadData(); }, 1500);
   }catch(e){ showToast('エラー: '+e.message); }
 }
 
@@ -1263,7 +1264,6 @@ function renderCal(){
 function calNav(d){cm+=d;if(cm>11){cm=0;cy++;}else if(cm<0){cm=11;cy--;}renderCal();}
 renderCal();
 loadData();
-initHeroImage();
 </script>
 </body>
 </html>
