@@ -52,8 +52,9 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 /* HERO（検証用: 固定表示） */
 .hero{position:fixed;top:0;left:var(--nav-w);right:0;z-index:100;display:grid;grid-template-columns:1fr 1fr;height:330px;background:var(--blue);overflow:hidden;transition:left .2s ease;}
 .hero-spacer{height:330px;}
-.hero-img{overflow:hidden;background:#004a99;}
-.hero-img img{width:100%;height:100%;object-fit:cover;opacity:0.85;}
+.hero-img{position:relative;overflow:hidden;background:#004a99;}
+.hero-img img{width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity .2s ease;}
+.hero-img.loading img{opacity:0;}
 .hero-body{padding:32px 44px;display:flex;flex-direction:column;justify-content:center;background:var(--blue);}
 .hero h1{font-size:42px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px;}
 .hero p{font-size:15px;color:rgba(255,255,255,.88);line-height:1.7;margin-bottom:16px;}
@@ -395,7 +396,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
     <div id="top">
       <!-- HERO -->
       <div class="hero">
-        <div class="hero-img"><img src="https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=800&q=80" alt="工場" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+        <div class="hero-img loading"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="工場" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
         <div class="hero-body">
           <h1>製造課　ポータル</h1>
           <p>日常業務で使うツール・リンク・手順書を一か所に集約しています。</p>
@@ -1133,6 +1134,7 @@ async function loadData(){
     document.getElementById('nlist').innerHTML='<div style="padding:12px 18px;font-size:13px;color:#999;">読み込みエラー（設定画面で再読み込みしてください）</div>';
     document.getElementById('tlist').innerHTML='<div style="padding:12px 18px;font-size:13px;color:#999;">読み込みエラー（設定画面で再読み込みしてください）</div>';
     applyPortalConfig({});
+    initHeroImage({});
     renderCal();
     renderCalEventList();
     renderHolidayList();
@@ -1937,10 +1939,22 @@ function renderDocs(docs){
 // ── ヒーロー画像管理（GAS経由・全員に反映） ──
 const DEFAULT_HERO = 'https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=800&q=80';
 
+function applyHeroImage(url){
+  const wrap = document.querySelector('.hero-img');
+  const img = wrap ? wrap.querySelector('img') : null;
+  if(!wrap || !img) return;
+  const nextUrl = String(url || '').trim() || DEFAULT_HERO;
+  wrap.classList.add('loading');
+  const done = ()=>wrap.classList.remove('loading');
+  img.onload = done;
+  img.onerror = done;
+  if(img.src !== nextUrl) img.src = nextUrl;
+  if(img.complete) done();
+}
+
 function initHeroImage(settings){
   const url = (settings && settings.hero_img_url) ? settings.hero_img_url : DEFAULT_HERO;
-  const img = document.querySelector('.hero-img img');
-  if(img && url) img.src = url;
+  applyHeroImage(url);
   updateHeroPreview(url);
 }
 
@@ -1965,8 +1979,7 @@ async function saveHeroUrl(){
   }
   try{
     await gasPost({sheet:'設定_UPDATE', key:'hero_img_url', value:url});
-    const img = document.querySelector('.hero-img img');
-    if(img) img.src = url;
+    applyHeroImage(url);
     updateHeroPreview(url);
     showToast('ヒーロー画像を変更しました（全員に反映されます）');
   }catch(e){ showToast('エラー: '+e.message); }
@@ -1976,8 +1989,7 @@ async function saveHeroUrl(){
 async function resetHeroUrl(){
   try{
     await gasPost({sheet:'設定_UPDATE', key:'hero_img_url', value:DEFAULT_HERO});
-    const img = document.querySelector('.hero-img img');
-    if(img) img.src = DEFAULT_HERO;
+    applyHeroImage(DEFAULT_HERO);
     updateHeroPreview(DEFAULT_HERO);
     showToast('デフォルト画像に戻しました');
   }catch(e){ showToast('エラー: '+e.message); }
