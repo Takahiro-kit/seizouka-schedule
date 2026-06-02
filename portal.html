@@ -129,9 +129,20 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .tag-edit-row:last-child{border-bottom:none;}
 .tag-edit-preview{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;color:#fff;margin-top:6px;}
 .ntx{color:var(--text);line-height:1.55;font-size:14px;}
+.ntx-title{font-size:16px;font-weight:700;line-height:1.45;color:#111;margin-bottom:4px;}
+.ntx-body{white-space:pre-wrap;}
 .nmt{font-size:11px;color:var(--text3);margin-top:4px;}
 #notice-section .input-row{flex-wrap:wrap;}
 #notice-section .input-row select{min-width:88px;}
+#notice-section .notice-input-row{display:grid;grid-template-columns:120px 120px 1fr auto;gap:8px;padding:11px 18px;border-top:1px solid var(--border);background:#fff;align-items:start;}
+#notice-section .notice-input-row textarea{grid-column:1 / span 3;min-height:72px;resize:vertical;}
+#notice-section .notice-input-row input,
+#notice-section .notice-input-row textarea,
+#notice-section .notice-input-row select{border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:14px;font-family:var(--sans);background:#fff;color:var(--text);outline:none;}
+#notice-section .notice-input-row input:focus,
+#notice-section .notice-input-row textarea:focus,
+#notice-section .notice-input-row select:focus{border-color:var(--blue);}
+#notice-section .notice-input-row button{min-width:84px;align-self:stretch;}
 #nlist{max-height:230px;overflow-y:auto;}
 #tlist{max-height:230px;overflow-y:auto;}
 .input-row{display:flex;gap:8px;padding:11px 18px;border-top:1px solid var(--border);background:#ffffff;}
@@ -379,7 +390,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
     <a class="nav-item active" onclick="goHome('top')"><i class="ti ti-home"></i><span class="nav-item-label">ホーム</span></a>
     <a class="nav-item" onclick="goHome('weblinks')"><i class="ti ti-link"></i><span class="nav-item-label">Webリンク</span></a>
     <a class="nav-item" onclick="goHome('mgmt')"><i class="ti ti-table"></i><span class="nav-item-label">管理表</span></a>
-    <a class="nav-item" onclick="goHome('notice-section')"><i class="ti ti-speakerphone"></i><span class="nav-item-label">課内連絡</span></a>
+    <a class="nav-item" onclick="goHome('notice-only')"><i class="ti ti-speakerphone"></i><span class="nav-item-label">課内連絡</span></a>
     <a class="nav-item" onclick="goHome('todo-section')"><i class="ti ti-checkbox"></i><span class="nav-item-label">ToDo</span></a>
     <a class="nav-item" onclick="goHome('docs')"><i class="ti ti-book"></i><span class="nav-item-label">手順書・ルール</span></a>
     <a class="nav-item" onclick="goHome('storage')"><i class="ti ti-folder"></i><span class="nav-item-label">共有ファイル</span></a>
@@ -410,7 +421,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
             <a class="hero-btn" onclick="goHome('top')"><i class="ti ti-home"></i>トップ</a>
             <a class="hero-btn" onclick="goHome('weblinks')"><i class="ti ti-link"></i>Webリンク</a>
             <a class="hero-btn" onclick="goHome('mgmt')"><i class="ti ti-table"></i>管理表</a>
-            <a class="hero-btn" onclick="goHome('notice-section')"><i class="ti ti-speakerphone"></i>課内連絡</a>
+            <a class="hero-btn" onclick="goHome('notice-only')"><i class="ti ti-speakerphone"></i>課内連絡</a>
             <a class="hero-btn" onclick="goHome('todo-section')"><i class="ti ti-checkbox"></i>ToDo</a>
             <a class="hero-btn" onclick="goHome('docs')"><i class="ti ti-book"></i>手順書</a>
             <a class="hero-btn" onclick="goHome('storage')"><i class="ti ti-folder"></i>共有ファイル</a>
@@ -472,13 +483,14 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
         </div><!-- 課内連絡 + TODO -->
         <div class="card" id="notice-section" style="padding:0;margin-bottom:20px;">
           <div class="two-col">
-            <div class="tc-l">
+            <div class="tc-l" id="notice-only">
               <div class="card-hdr yellow"><div class="card-title"><i class="ti ti-speakerphone"></i>課内連絡</div><span class="card-sub">GS連携</span></div>
               <div id="nlist"><div class="loading"><i class="ti ti-loader-2"></i>読み込み中...</div></div>
-              <div class="input-row">
+              <div class="notice-input-row">
                 <select id="ntype"><option value="">種別</option></select>
                 <select id="n-author"><option value="">投稿者</option></select>
-                <input id="ntxt" type="text" placeholder="内容を入力…" autocomplete="off">
+                <input id="ntitle" type="text" placeholder="タイトルを入力…" autocomplete="off">
+                <textarea id="nbody" placeholder="内容を入力…"></textarea>
                 <button id="add-notice-btn" onclick="addN()">投稿</button>
               </div>
             </div>
@@ -523,7 +535,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
           </div>
           <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
             <div class="img-tool-grid">
-              <input type="text" id="img-name-prefix" placeholder="不具合内容（例: ピンホール）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="text" id="img-name-prefix" placeholder="内容（例: ピンホール）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
               <input type="file" id="img-bulk-files" accept="image/*" multiple style="display:none;" onchange="onImageToolFilesChange()">
               <button class="s-btn" type="button" onclick="document.getElementById('img-bulk-files').click()">画像を選択</button>
               <button class="s-btn" id="img-save-btn" type="button" style="background:#0f766e;" onclick="compressAndRenameImages(this)">保存先を選んで保存</button>
@@ -1112,13 +1124,36 @@ function parseNoticeDatetime(v){
   return isNaN(d) ? null : d;
 }
 function normalizeNoticeItem(n){
+  const rawBody = String(n.text != null ? n.text : (n.noticeBody || '')).trim();
+  const fieldTitle = String(n.title != null ? n.title : (n.noticeTitle || '')).trim();
+  const parsed = parseNoticeBody(rawBody);
   return {
     row: n.row,
     datetime: n.datetime != null ? String(n.datetime) : '',
     type: String(n.type || n.noticeType || '連絡').trim(),
-    text: String(n.text != null ? n.text : (n.noticeBody || '')).trim(),
+    title: fieldTitle || parsed.title || '',
+    text: parsed.text,
     author: String(n.author || '').trim()
   };
+}
+function parseNoticeBody(raw){
+  const s = String(raw || '');
+  const marker = '[NTITLE]';
+  if(s.startsWith(marker)){
+    const rest = s.slice(marker.length);
+    const nl = rest.indexOf('\n');
+    if(nl >= 0){
+      return { title: rest.slice(0, nl).trim(), text: rest.slice(nl + 1).trim() };
+    }
+    return { title: rest.trim(), text: '' };
+  }
+  return { title: '', text: s.trim() };
+}
+function buildNoticeBody(title, text){
+  const t = String(title || '').trim();
+  const b = String(text || '').trim();
+  if(!t) return b;
+  return `[NTITLE]${t}\n${b}`;
 }
 function cp(path,btn){navigator.clipboard.writeText(path).then(()=>{const o=btn.textContent;btn.textContent='✓ 完了';btn.classList.add('ok');setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2000);});}
 
@@ -1830,9 +1865,13 @@ function renderNotices(notices){
   el.innerHTML=visible.map(n=>{
     const type = n.type || '連絡';
     const author = (n.author || '').trim();
+    const title = String(n.title || '').trim();
     return `<div class="ni" style="${noticeRowStyle(type)}">
       <div class="ni-top">${noticeTypeHtml(type)}${author ? memberTagHtml(author) : ''}</div>
-      <div class="ntx">${esc(n.text)}</div>
+      <div class="ntx">
+        ${title ? `<div class="ntx-title">${esc(title)}</div>` : ''}
+        <div class="ntx-body">${esc(n.text)}</div>
+      </div>
       <div class="nmt">${esc(String(n.datetime))}</div>
     </div>`;
   }).join('');
@@ -1842,23 +1881,27 @@ async function addN(){
   if(btn && btn.disabled) return;
   const typeEl = document.querySelector('#notice-section #ntype');
   const authorEl = document.querySelector('#notice-section #n-author');
-  const textEl = document.querySelector('#notice-section #ntxt');
-  if(!typeEl || !authorEl || !textEl){
+  const titleEl = document.querySelector('#notice-section #ntitle');
+  const textEl = document.querySelector('#notice-section #nbody');
+  if(!typeEl || !authorEl || !titleEl || !textEl){
     showToast('入力欄の読み込みに失敗しました');
     return;
   }
   const noticeType = (typeEl.options[typeEl.selectedIndex]?.value ?? typeEl.value).trim();
   const author = authorEl.value.trim();
+  const noticeTitle = titleEl.value.trim();
   const noticeText = textEl.value.trim();
   if(!noticeType){ showToast('種別を選択してください'); return; }
   if(!author){ showToast('投稿者を選択してください'); return; }
+  if(!noticeTitle){ showToast('タイトルを入力してください'); return; }
   if(!noticeText){ showToast('内容を入力してください'); return; }
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>投稿中...'; }
   const payload = {
     sheet:'課内連絡',
     datetime:fmtDT(),
     noticeType:noticeType,
-    noticeBody:noticeText,
+    noticeTitle:noticeTitle,
+    noticeBody:buildNoticeBody(noticeTitle, noticeText),
     author:author
   };
   try{
@@ -1867,11 +1910,13 @@ async function addN(){
       row:null,
       datetime:payload.datetime,
       type:noticeType,
+      title:noticeTitle,
       text:noticeText,
       author:author
     }];
     renderNotices(nextNotices);
     renderSettingsLists();
+    titleEl.value='';
     textEl.value='';
     showToast('投稿しました');
     loadData().catch(()=>{});
@@ -1980,7 +2025,7 @@ function renderSettingsLists(){
         <div class="s-list-item-body">
           ${noticeTypeHtml(n.type||'連絡')}
           ${author ? memberTagHtml(author) : ''}
-          <span style="margin-left:6px;">${esc(n.text)}</span>
+          <span style="margin-left:6px;">${esc(n.title ? `${n.title} / ${n.text}` : n.text)}</span>
           <div class="s-list-item-meta">${esc(String(n.datetime))}</div>
         </div>
       </div>`;
