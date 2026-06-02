@@ -188,6 +188,9 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .cpb.link{text-decoration:none;display:inline-block;}
 .wn{padding:10px 18px;font-size:12px;color:#78350f;background:#fffbeb;display:flex;align-items:center;gap:7px;border-top:1px solid #fde68a;border-radius:4px 0 6px 6px;}
 .wn i{font-size:15px;color:#d97706;flex-shrink:0;}
+.img-tool-grid{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;}
+.img-tool-note{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.55;}
+.img-tool-status{margin-top:8px;font-size:12px;color:#0f766e;min-height:18px;}
 
 /* DOC */
 .doc-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border);text-decoration:none;transition:background .1s;}
@@ -235,6 +238,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .cal-dot.tenj{background:#1d4ed8;}
 .cal-dot.kekki{background:#15803d;}
 .cal-dot.osoji{background:#7c3aed;}
+.cal-dot.allmtg{background:#f59e0b;}
 .cal-legend{display:flex;gap:10px;padding:4px 12px 10px;flex-wrap:wrap;}
 .cal-leg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2);}
 .cal-leg-dot{width:8px;height:8px;border-radius:50%;}
@@ -378,6 +382,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
     <a class="nav-item" onclick="goHome('notice-section')"><i class="ti ti-speakerphone"></i><span class="nav-item-label">課内連絡 / ToDo</span></a>
     <a class="nav-item" onclick="goHome('todo-section')"><i class="ti ti-checkbox"></i><span class="nav-item-label">ToDo</span></a>
     <a class="nav-item" onclick="goHome('storage')"><i class="ti ti-folder"></i><span class="nav-item-label">共有ファイル</span></a>
+    <a class="nav-item" onclick="goHome('img-tools')"><i class="ti ti-photo-edit"></i><span class="nav-item-label">画像圧縮</span></a>
     <a class="nav-item" onclick="goHome('docs')"><i class="ti ti-book"></i><span class="nav-item-label">手順書・ルール</span></a>
     <a class="nav-item" onclick="goHome('forms-section')"><i class="ti ti-forms"></i><span class="nav-item-label">フォーム</span></a>
     <a class="nav-item" onclick="goHome('calendar-section')"><i class="ti ti-calendar"></i><span class="nav-item-label">カレンダー</span></a>
@@ -408,6 +413,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
             <a class="hero-btn" onclick="goHome('notice-section')"><i class="ti ti-speakerphone"></i>課内連絡</a>
             <a class="hero-btn" onclick="goHome('todo-section')"><i class="ti ti-checkbox"></i>ToDo</a>
             <a class="hero-btn" onclick="goHome('storage')"><i class="ti ti-folder"></i>共有ファイル</a>
+            <a class="hero-btn" onclick="goHome('img-tools')"><i class="ti ti-photo-edit"></i>画像圧縮</a>
             <a class="hero-btn" onclick="goHome('docs')"><i class="ti ti-book"></i>手順書</a>
             <a class="hero-btn" onclick="goHome('forms-section')"><i class="ti ti-forms"></i>フォーム</a>
             <a class="hero-btn" onclick="goHome('calendar-section')"><i class="ti ti-calendar"></i>カレンダー</a>
@@ -493,39 +499,39 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
           </div>
         </div>
 
-        <!-- 共有ファイル -->
-        <div class="card" id="storage" style="padding:0;margin-bottom:20px;">
-          <div class="card-hdr yellow"><div class="card-title"><i class="ti ti-folder"></i>共有ファイル / ストレージ</div></div>
-          <div class="sti">
-            <i class="ti ti-folder-filled folder"></i>
-            <div style="flex:1"><div class="stn">製造課 共有フォルダ</div><div class="stp">SharePoint ドキュメントライブラリ</div></div>
-            <a class="cpb link" href="https://jpnext01-my.sharepoint.com/:f:/g/personal/t-kito_jpnext_co_jp/IgAduuef3YMiSLQODHxjbCfZAb0yyR7ZpbThfL5ItWOX6G4?e=PFavsj" target="_blank">開く</a>
-          </div>
-          <div class="sti">
-            <i class="ti ti-folder-filled folder"></i>
-            <div style="flex:1"><div class="stn">出荷関連書類</div><div class="stp">\\192.168.0.2\jpネクスト\05 製造課\03 出荷関連</div></div>
-            <button class="cpb" onclick="cp('\\\\192.168.0.2\\jpネクスト\\05 製造課\\03 出荷関連',this)">コピー</button>
-          </div>
-          <div class="sti">
-            <i class="ti ti-folder-filled folder"></i>
-            <div style="flex:1"><div class="stn">作業指示書</div><div class="stp">\\192.168.0.2\jpネクスト\05 製造課\18 FA作業指示フォルダー</div></div>
-            <button class="cpb" onclick="cp('\\\\192.168.0.2\\jpネクスト\\05 製造課\\18 FA作業指示フォルダー',this)">コピー</button>
-          </div>
-          <div class="sti">
-            <i class="ti ti-folder-filled folder"></i>
-            <div style="flex:1"><div class="stn">不具合報告書</div><div class="stp">\\192.168.0.2\jpネクスト\05 製造課\07 不具合報告書</div></div>
-            <button class="cpb" onclick="cp('\\\\192.168.0.2\\jpネクスト\\05 製造課\\07 不具合報告書',this)">コピー</button>
-          </div>
-          <div class="wn"><i class="ti ti-info-circle"></i>UNCパスをコピーしてエクスプローラーのアドレス欄に貼り付けてください</div>
-        </div>
-
         <!-- 製造課ルール -->
-        <div class="card" id="docs" style="padding:0;">
+        <div class="card" id="docs" style="padding:0;margin-bottom:20px;">
           <div class="card-hdr yellow">
             <div class="card-title"><i class="ti ti-book"></i>製造課ルール / 手順書</div>
             <a class="card-link" href="https://jpnext01-my.sharepoint.com/:f:/g/personal/t-kito_jpnext_co_jp/IgAduuef3YMiSLQODHxjbCfZAb0yyR7ZpbThfL5ItWOX6G4?e=PFavsj" target="_blank">共有フォルダを開く</a>
           </div>
           <div id="docs-list"><div class="loading"><i class="ti ti-loader-2"></i>読み込み中...</div></div>
+        </div>
+
+        <!-- 共有ファイル -->
+        <div class="card" id="storage" style="padding:0;margin-bottom:20px;">
+          <div class="card-hdr yellow"><div class="card-title"><i class="ti ti-folder"></i>共有ファイル / ストレージ</div></div>
+          <div id="storage-list"></div>
+          <div class="wn"><i class="ti ti-info-circle"></i>UNCパスをコピーしてエクスプローラーのアドレス欄に貼り付けてください</div>
+        </div>
+
+        <!-- 不具合画像 圧縮＆名称変更 -->
+        <div class="card" id="img-tools" style="padding:0;margin-bottom:0;">
+          <div class="card-hdr yellow">
+            <div class="card-title"><i class="ti ti-photo-edit"></i>不具合画像 圧縮＆名称変更</div>
+            <span class="card-sub">長辺1920px / JPG固定</span>
+          </div>
+          <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
+            <div class="img-tool-grid">
+              <input type="text" id="img-name-prefix" placeholder="不具合内容（例: ピンホール）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="file" id="img-bulk-files" accept="image/*" multiple style="display:none;" onchange="onImageToolFilesChange()">
+              <button class="s-btn" type="button" onclick="document.getElementById('img-bulk-files').click()">画像を選択</button>
+              <button class="s-btn" id="img-save-btn" type="button" style="background:#0f766e;" onclick="compressAndRenameImages(this)">保存先を選んで保存</button>
+            </div>
+            <div class="img-tool-note" id="img-file-note">画像を選択してください（複数可）</div>
+            <div class="img-tool-note">命名形式: <strong>入力文字_YYYYMMDD_連番</strong>（日付は自動、連番は3桁）</div>
+            <div class="img-tool-status" id="img-tool-status"></div>
+          </div>
         </div>
 
       </div>
@@ -576,6 +582,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
             <div class="cal-leg"><div class="cal-leg-dot" style="background:#1d4ed8;"></div>展示会</div>
             <div class="cal-leg"><div class="cal-leg-dot" style="background:#15803d;"></div>決起会</div>
             <div class="cal-leg"><div class="cal-leg-dot" style="background:#7c3aed;"></div>大掃除</div>
+            <div class="cal-leg"><div class="cal-leg-dot" style="background:#f59e0b;"></div>全体会議</div>
           </div>
         </div>
 
@@ -706,6 +713,32 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
         </div>
       </div>
 
+      <!-- 共有ファイル管理 -->
+      <div class="s-sec">
+        <div class="s-sec-hdr">
+          <div class="s-sec-title">🗂️ 共有ファイル管理</div>
+          <div class="s-sec-desc">ホームの「共有ファイル / ストレージ」を追加・編集・削除できます（全ユーザー共通）。</div>
+        </div>
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:#ffffff;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">＋ 共有ファイルを追加</div>
+          <div style="display:grid;grid-template-columns:1fr 1.5fr 110px 1.5fr 70px auto;gap:8px;align-items:center;">
+            <input type="text" id="new-storage-name" placeholder="表示名" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <input type="text" id="new-storage-path" placeholder="説明（パス等）" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <select id="new-storage-action" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;background:#fff;">
+              <option value="open">開く</option>
+              <option value="copy">コピー</option>
+              <option value="upload">アップロード</option>
+            </select>
+            <input type="text" id="new-storage-target" placeholder="URL または UNCパス" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <input type="color" id="new-storage-color" value="#f59e0b" style="width:44px;height:34px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;padding:2px;">
+            <button class="s-btn" onclick="addStorageLink(this)">追加</button>
+          </div>
+        </div>
+        <div id="s-storage-list" style="max-height:360px;overflow-y:auto;">
+          <div style="padding:12px 18px;font-size:13px;color:#999;">読み込み中...</div>
+        </div>
+      </div>
+
       <!-- データ再読み込み -->
       <div class="s-sec">
         <div class="s-sec-hdr">
@@ -829,7 +862,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
       <div class="s-sec">
         <div class="s-sec-hdr">
           <div class="s-sec-title">📅 カレンダーイベント管理</div>
-          <div class="s-sec-desc">展示会・決起会・大掃除を追加・削除できます（休日は上の休日管理で操作）。</div>
+          <div class="s-sec-desc">展示会・決起会・大掃除・全体会議を追加・削除できます（休日は上の休日管理で操作）。</div>
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:center;">
@@ -839,6 +872,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
               <option value="tenj">展示会</option>
               <option value="kekki">決起会</option>
               <option value="osoji">大掃除</option>
+              <option value="allmtg">全体会議</option>
             </select>
             <input type="text" id="ev-label" placeholder="メモ（任意）" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
             <button class="s-btn" onclick="addCalEvent(this)">追加</button>
@@ -1031,6 +1065,7 @@ function showPage(name){
     renderCalEventList();
     renderHolidayList();
     renderDocs(_docs);
+    renderStorageSettings();
     renderMemberSettings();
     renderNoticeTypeSettings();
     const _heroUrl = document.querySelector('.hero-img img')?.src || '';
@@ -1111,6 +1146,202 @@ async function reloadData(){
   showToast('データを再読み込みしました');
 }
 
+const IMAGE_TOOL_PRESET = { maxEdge: 1920, quality: 0.86, mime: 'image/jpeg', ext: 'jpg' };
+function sanitizeFileToken(v){
+  return String(v || '')
+    .trim()
+    .replace(/[\\\/:*?"<>|]/g, '_')
+    .replace(/\s+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+function getTodayYmd(){
+  const d = new Date();
+  return d.getFullYear() + p(d.getMonth()+1) + p(d.getDate());
+}
+function onImageToolFilesChange(){
+  const inp = document.getElementById('img-bulk-files');
+  const note = document.getElementById('img-file-note');
+  if(!inp || !note) return;
+  const files = Array.from(inp.files || []);
+  if(!files.length){
+    note.textContent = '画像を選択してください（複数可）';
+    return;
+  }
+  const names = files.slice(0,3).map(f=>f.name).join(' / ');
+  note.textContent = files.length + '枚選択中: ' + names + (files.length > 3 ? ' ...' : '');
+}
+function setImageToolBusy(btn, busy){
+  if(!btn) return;
+  if(busy){
+    btn.dataset.prevHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.style.opacity = '0.65';
+    btn.innerHTML = '<span class="btn-spinner"></span>処理中...';
+  }else{
+    btn.disabled = false;
+    btn.style.opacity = '';
+    btn.innerHTML = btn.dataset.prevHtml || '保存先を選んで保存';
+    delete btn.dataset.prevHtml;
+  }
+}
+async function fileToBitmap(file){
+  if('createImageBitmap' in window){
+    return await createImageBitmap(file);
+  }
+  const url = URL.createObjectURL(file);
+  try{
+    const img = await new Promise((resolve, reject) => {
+      const t = new Image();
+      t.onload = () => resolve(t);
+      t.onerror = reject;
+      t.src = url;
+    });
+    return img;
+  }finally{
+    URL.revokeObjectURL(url);
+  }
+}
+async function compressImageLarge(file){
+  const src = await fileToBitmap(file);
+  const sw = src.width;
+  const sh = src.height;
+  const scale = Math.min(1, IMAGE_TOOL_PRESET.maxEdge / Math.max(sw, sh));
+  const tw = Math.max(1, Math.round(sw * scale));
+  const th = Math.max(1, Math.round(sh * scale));
+  const cv = document.createElement('canvas');
+  cv.width = tw;
+  cv.height = th;
+  const ctx = cv.getContext('2d', {alpha:false});
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, tw, th);
+  ctx.drawImage(src, 0, 0, tw, th);
+  if(typeof src.close === 'function') src.close();
+  const blob = await new Promise((resolve, reject) => {
+    cv.toBlob(b => b ? resolve(b) : reject(new Error('画像変換に失敗しました')), IMAGE_TOOL_PRESET.mime, IMAGE_TOOL_PRESET.quality);
+  });
+  return blob;
+}
+async function saveBlobToDestination(blob, fileName, dirHandle){
+  if(dirHandle){
+    const handle = await dirHandle.getFileHandle(fileName, {create:true});
+    const writable = await handle.createWritable();
+    await writable.write(blob);
+    await writable.close();
+    return;
+  }
+  const url = URL.createObjectURL(blob);
+  try{
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    await new Promise(r => setTimeout(r, 150));
+  }finally{
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+}
+async function saveBlobWithFilePicker(blob, fileName){
+  const fileHandle = await window.showSaveFilePicker({
+    suggestedName: fileName,
+    types: [{
+      description: 'JPEG Image',
+      accept: { 'image/jpeg': ['.jpg', '.jpeg'] }
+    }]
+  });
+  const writable = await fileHandle.createWritable();
+  await writable.write(blob);
+  await writable.close();
+}
+async function compressAndRenameImages(btnEl){
+  const prefixInput = document.getElementById('img-name-prefix');
+  const fileInput = document.getElementById('img-bulk-files');
+  const statusEl = document.getElementById('img-tool-status');
+  const prefix = sanitizeFileToken(prefixInput && prefixInput.value);
+  const files = Array.from((fileInput && fileInput.files) || []);
+  if(!prefix){
+    showToast('不具合内容を入力してください');
+    if(prefixInput) prefixInput.focus();
+    return;
+  }
+  if(!files.length){
+    showToast('画像を選択してください');
+    return;
+  }
+  setImageToolBusy(btnEl, true);
+  if(statusEl) statusEl.textContent = '';
+  let dirHandle = null;
+  const isFileProtocol = location.protocol === 'file:';
+  const canPickFolder = !isFileProtocol && typeof window.showDirectoryPicker === 'function';
+  const canSaveByPicker = !isFileProtocol && typeof window.showSaveFilePicker === 'function';
+  let saveMode = 'download';
+  if(canPickFolder){
+    try{
+      dirHandle = await window.showDirectoryPicker({mode:'readwrite'});
+      saveMode = 'folder';
+    }catch(e){
+      if(e && e.name === 'AbortError'){
+        setImageToolBusy(btnEl, false);
+        return;
+      }
+      dirHandle = null;
+    }
+  }
+  if(!dirHandle && canSaveByPicker) saveMode = 'file';
+  let ok = 0;
+  let ng = 0;
+  let cancelled = false;
+  const ymd = getTodayYmd();
+  for(let i=0;i<files.length;i++){
+    const seq = String(i+1).padStart(3,'0');
+    const fileName = `${prefix}_${ymd}_${seq}.${IMAGE_TOOL_PRESET.ext}`;
+    try{
+      const blob = await compressImageLarge(files[i]);
+      if(saveMode === 'folder'){
+        await saveBlobToDestination(blob, fileName, dirHandle);
+      }else if(saveMode === 'file'){
+        await saveBlobWithFilePicker(blob, fileName);
+      }else{
+        await saveBlobToDestination(blob, fileName, null);
+      }
+      ok++;
+    }catch(e){
+      if(e && e.name === 'AbortError'){
+        cancelled = true;
+        break;
+      }
+      ng++;
+    }
+  }
+  if(statusEl){
+    const modeText = saveMode === 'folder'
+      ? '保存'
+      : saveMode === 'file'
+        ? '保存（保存先入力）'
+        : 'ダウンロード';
+    const note = saveMode === 'download'
+      ? (isFileProtocol
+          ? '（file:// では保存先選択APIが使えないため、通常ダウンロードになります）'
+          : '（このブラウザでは保存先選択API未対応）')
+      : '';
+    statusEl.textContent = `完了: ${ok}件${modeText} / 失敗: ${ng}件${note}${cancelled?' / キャンセル終了':''}`;
+  }
+  if(fileInput) fileInput.value = '';
+  onImageToolFilesChange();
+  setImageToolBusy(btnEl, false);
+  if(cancelled){
+    showToast(`保存を中断しました（保存 ${ok}件）`);
+  }else{
+    showToast(ng ? `一部失敗しました（成功 ${ok} / 失敗 ${ng}）` : `${ok}件を処理しました`);
+  }
+  if(isFileProtocol && saveMode === 'download'){
+    showToast('保存先選択を使うには、http://localhost で開いてください');
+  }
+}
+
 async function loadData(){
   // GASから最新を取得
   try{
@@ -1150,8 +1381,10 @@ async function loadData(){
 function applyPortalConfig(d){
   const settings = (d && d.settings) || {};
   _globalSettingsPassword = String(settings[SETTINGS_PASS_GLOBAL_KEY] || '').trim();
+  applyStorageLinksFromData(d || {});
   if(d && d.members && d.members.length) _membersCache = d.members;
   applyNoticeTypesFromData(d || {});
+  renderStorageLinks();
   renderMembers(null);
   refreshNoticeTypeSelect();
   updateMembersCount();
@@ -1228,6 +1461,238 @@ function updateMembersCount(){
   const el = document.getElementById('members-section-title');
   if(el) el.innerHTML = `<i class="ti ti-users"></i>メンバー（${getMembersList().length}名）`;
 }
+
+// ── 共有ファイル管理（GAS / 設定画面で管理） ──
+const STORAGE_LINKS_KEY = 'storage_links_json';
+const BUG_IMAGE_UPLOAD_URL = 'https://jpnext01-my.sharepoint.com/:f:/g/personal/t-kito_jpnext_co_jp/IgAXfbt2UQZaQaOTRMMiEmvOAbUl3VM6USgTUDUGe46-FqE';
+const BUG_IMAGE_VIEW_URL = 'https://jpnext01-my.sharepoint.com/:f:/g/personal/t-kito_jpnext_co_jp/IgAXfbt2UQZaQaOTRMMiEmvOAbeW8-pPmDU19RTl_oVSj38?e=gVW8hK';
+const DEFAULT_STORAGE_LINKS = [
+  {
+    name:'製造課 共有フォルダ',
+    path:'SharePoint ドキュメントライブラリ',
+    action:'open',
+    target:'https://jpnext01-my.sharepoint.com/:f:/g/personal/t-kito_jpnext_co_jp/IgAduuef3YMiSLQODHxjbCfZAb0yyR7ZpbThfL5ItWOX6G4?e=PFavsj',
+    color:'#f59e0b'
+  },
+  {
+    name:'不具合画像',
+    path:'SharePoint フォルダ（不具合画像）',
+    action:'upload',
+    target:BUG_IMAGE_UPLOAD_URL,
+    color:'#dc2626'
+  },
+  {
+    name:'出荷関連書類',
+    path:'\\\\192.168.0.2\\jpネクスト\\05 製造課\\03 出荷関連',
+    action:'copy',
+    target:'\\\\192.168.0.2\\jpネクスト\\05 製造課\\03 出荷関連',
+    color:'#f59e0b'
+  },
+  {
+    name:'作業指示書',
+    path:'\\\\192.168.0.2\\jpネクスト\\05 製造課\\18 FA作業指示フォルダー',
+    action:'copy',
+    target:'\\\\192.168.0.2\\jpネクスト\\05 製造課\\18 FA作業指示フォルダー',
+    color:'#f59e0b'
+  },
+  {
+    name:'不具合報告書',
+    path:'\\\\192.168.0.2\\jpネクスト\\05 製造課\\07 不具合報告書',
+    action:'copy',
+    target:'\\\\192.168.0.2\\jpネクスト\\05 製造課\\07 不具合報告書',
+    color:'#f59e0b'
+  }
+];
+let _storageLinksCache = null;
+
+function normalizeStorageLink(x){
+  const act = String((x && x.action) || 'open').trim();
+  return {
+    name: String((x && x.name) || '').trim(),
+    path: String((x && x.path) || '').trim(),
+    action: (act === 'copy' || act === 'upload') ? act : 'open',
+    target: String((x && x.target) || '').trim(),
+    color: String((x && x.color) || '#f59e0b').trim() || '#f59e0b'
+  };
+}
+function getStorageLinksList(){
+  return _storageLinksCache === null ? DEFAULT_STORAGE_LINKS : _storageLinksCache;
+}
+function upgradeStorageLinks(list){
+  return (list||[]).map(item => {
+    if(String(item.name||'').trim() === '不具合画像'){
+      const target = String(item.target || '').trim();
+      const action = String(item.action || '').trim();
+      const isOldTarget = !target || target.indexOf('IgAXfbt2UQZaQaOTRMMiEmvOAbeW8-pPmDU19RTl_oVSj38') >= 0;
+      return {
+        ...item,
+        action: action === 'upload' ? 'upload' : 'upload',
+        target: isOldTarget ? BUG_IMAGE_UPLOAD_URL : target
+      };
+    }
+    return item;
+  });
+}
+function applyStorageLinksFromData(d){
+  const raw = d.settings && (d.settings[STORAGE_LINKS_KEY] || d.settings.storage_links_json);
+  if(raw){
+    try{
+      const arr = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      if(Array.isArray(arr)){
+        _storageLinksCache = upgradeStorageLinks(arr.map(normalizeStorageLink).filter(x => x.name && x.target));
+        return;
+      }
+    }catch(e){}
+  }
+  _storageLinksCache = upgradeStorageLinks(DEFAULT_STORAGE_LINKS);
+}
+async function persistStorageLinks(){
+  try{
+    await gasPost({sheet:'設定_UPDATE', key:STORAGE_LINKS_KEY, value: JSON.stringify(getStorageLinksList())});
+  }catch(e){}
+}
+function renderStorageLinks(){
+  const el = document.getElementById('storage-list');
+  if(!el) return;
+  const list = getStorageLinksList();
+  el.innerHTML = list.map((item, i) => {
+    const isBugImage = String(item.name||'').trim() === '不具合画像';
+    const showOpen = item.action === 'open' || (item.action === 'upload' && isBugImage);
+    const openUrl = item.action === 'open' ? item.target : BUG_IMAGE_VIEW_URL;
+    const showUpload = item.action === 'upload';
+    return `<div class="sti">
+    <i class="ti ti-folder-filled folder" style="color:${esc(item.color)};"></i>
+    <div style="flex:1"><div class="stn">${esc(item.name)}</div><div class="stp">${esc(item.path)}</div></div>
+    ${item.action === 'copy'
+      ? `<button class="cpb" onclick="cp('${escAttr(item.target)}',this)">コピー</button>`
+      : `${showOpen ? `<a class="cpb link" href="${escAttr(openUrl)}" target="_blank">開く</a>` : ''}${showUpload ? `<a class="cpb link" href="${escAttr(item.target)}" target="_blank" style="background:#0f766e;${showOpen?'margin-left:6px;':''}">アップロード</a>` : ''}` }
+  </div>`;
+  }).join('');
+}
+function renderStorageSettings(){
+  const el = document.getElementById('s-storage-list');
+  if(!el) return;
+  const list = getStorageLinksList();
+  if(!list.length){
+    el.innerHTML = '<div style="padding:12px 18px;font-size:13px;color:#999;">共有ファイルはありません</div>';
+    return;
+  }
+  el.innerHTML = list.map((x, i) => `<div class="s-list-item" id="storage-edit-${i}" style="align-items:flex-start;gap:10px;">
+    <div style="width:16px;height:16px;border-radius:50%;background:${esc(x.color)};margin-top:8px;flex-shrink:0;"></div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1.5fr 110px 1.5fr 70px auto auto auto auto;gap:8px;align-items:center;">
+      <input class="m-edit-input" id="st-name-${i}" value="${esc(x.name)}" placeholder="表示名">
+      <input class="m-edit-input" id="st-path-${i}" value="${esc(x.path)}" placeholder="説明（パス等）">
+      <select class="m-edit-input" id="st-action-${i}">
+        <option value="open"${x.action==='open'?' selected':''}>開く</option>
+        <option value="copy"${x.action==='copy'?' selected':''}>コピー</option>
+        <option value="upload"${x.action==='upload'?' selected':''}>アップロード</option>
+      </select>
+      <input class="m-edit-input" id="st-target-${i}" value="${esc(x.target)}" placeholder="URL または UNCパス">
+      <input type="color" id="st-color-${i}" value="${esc(x.color)}" style="width:44px;height:34px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;padding:2px;">
+      <button class="s-btn" style="padding:8px 12px;background:#666;" onclick="moveStorageLink(${i}, -1, this)" ${i===0?'disabled':''}>↑</button>
+      <button class="s-btn" style="padding:8px 12px;background:#666;" onclick="moveStorageLink(${i}, 1, this)" ${i===list.length-1?'disabled':''}>↓</button>
+      <button class="s-btn" onclick="saveStorageLink(${i}, this)">保存</button>
+      <button type="button" class="icon-del-btn" onclick="deleteStorageLink(${i}, this)" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:13px;padding:2px 8px;border-radius:4px;min-width:28px;min-height:28px;display:inline-flex;align-items:center;justify-content:center;" title="削除"><i class="ti ti-trash"></i></button>
+    </div>
+  </div>`).join('');
+}
+async function moveStorageLink(i, dir, btnEl){
+  const btn = btnEl || null;
+  if(btn && btn.disabled) return;
+  const list = [...getStorageLinksList()];
+  const j = i + Number(dir||0);
+  if(j < 0 || j >= list.length) return;
+  const tmp = list[i];
+  list[i] = list[j];
+  list[j] = tmp;
+  _storageLinksCache = list;
+  renderStorageLinks();
+  renderStorageSettings();
+  try{
+    await persistStorageLinks();
+    showToast('並び順を更新しました');
+  }catch(e){
+    showToast('エラー: '+e.message);
+  }
+}
+async function addStorageLink(btnEl){
+  const btn = btnEl || document.querySelector('[onclick="addStorageLink(this)"]');
+  if(btn && btn.disabled) return;
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>追加中...'; }
+  const name = document.getElementById('new-storage-name').value.trim();
+  const path = document.getElementById('new-storage-path').value.trim();
+  const action = document.getElementById('new-storage-action').value;
+  const target = document.getElementById('new-storage-target').value.trim();
+  const color = document.getElementById('new-storage-color').value;
+  if(!name || !target){
+    showToast('表示名とURL/パスを入力してください');
+    if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
+    return;
+  }
+  const list = [...getStorageLinksList(), normalizeStorageLink({name,path,action,target,color})];
+  _storageLinksCache = list;
+  renderStorageLinks();
+  renderStorageSettings();
+  try{
+    await persistStorageLinks();
+    showToast('共有ファイルを追加しました');
+    document.getElementById('new-storage-name').value='';
+    document.getElementById('new-storage-path').value='';
+    document.getElementById('new-storage-target').value='';
+  }catch(e){
+    showToast('エラー: '+e.message);
+  }finally{
+    if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
+  }
+}
+async function saveStorageLink(i, btnEl){
+  const btn = btnEl || document.querySelector(`#storage-edit-${i} .s-btn`);
+  if(btn && btn.disabled) return;
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>保存中...'; }
+  const list = [...getStorageLinksList()];
+  const item = normalizeStorageLink({
+    name: document.getElementById(`st-name-${i}`).value,
+    path: document.getElementById(`st-path-${i}`).value,
+    action: document.getElementById(`st-action-${i}`).value,
+    target: document.getElementById(`st-target-${i}`).value,
+    color: document.getElementById(`st-color-${i}`).value
+  });
+  if(!item.name || !item.target){
+    showToast('表示名とURL/パスを入力してください');
+    if(btn){ btn.disabled=false; btn.innerHTML='保存'; }
+    return;
+  }
+  list[i] = item;
+  _storageLinksCache = list;
+  renderStorageLinks();
+  renderStorageSettings();
+  try{
+    await persistStorageLinks();
+    showToast('共有ファイルを保存しました');
+  }catch(e){
+    showToast('エラー: '+e.message);
+  }finally{
+    if(btn){ btn.disabled=false; btn.innerHTML='保存'; }
+  }
+}
+async function deleteStorageLink(i, btnEl){
+  const delBtn = btnEl || (typeof event !== 'undefined' && event.currentTarget) || null;
+  if(delBtn && delBtn.disabled) return;
+  if(!confirm('この共有ファイル設定を削除しますか？')) return;
+  setIconDeleteLoading(delBtn, true);
+  const list = getStorageLinksList().filter((_,idx)=>idx!==i);
+  _storageLinksCache = list;
+  renderStorageLinks();
+  renderStorageSettings();
+  try{
+    await persistStorageLinks();
+    showToast('共有ファイルを削除しました');
+  }catch(e){
+    showToast('エラー: '+e.message);
+    setIconDeleteLoading(delBtn, false);
+  }
+}
+
 async function persistNoticeTypesJson(){
   try{
     await gasPost({sheet:'設定_UPDATE', key:'notice_types_json', value: JSON.stringify(getNoticeTypesList())});
@@ -1617,18 +2082,10 @@ async function resetHolidaysToDefault(btnEl){
   if(!confirm('現在の休日データを標準（土日祝）へリセットしますか？\n御社独自の休日データは一度クリアされます。')) return;
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>リセット中...'; }
   try{
-    const currentHolidays = Array.from(new Set(
-      (_calEvents||[])
-        .filter(ev => String(ev.type)==='holiday' && ev.date)
-        .map(ev => String(ev.date))
-    ));
-    for(const d of currentHolidays){
-      await gasPost({sheet:'カレンダー_DELETE', date:d, type:'holiday'});
-    }
+    const baseYear = new Date().getFullYear();
+    const spanYears = 2;
+    await gasPost({sheet:'カレンダー_RESET_DEFAULT', baseYear, spanYears});
     const seedDates = buildDefaultHolidaySeedDates();
-    if(seedDates.length){
-      await gasPost({sheet:'カレンダー_ADD', dates:seedDates, type:'holiday', label:'休日'});
-    }
     _calEvents = [
       ...(_calEvents||[]).filter(ev => String(ev.type)!=='holiday'),
       ...seedDates.map(d => ({date:d, type:'holiday', label:'休日'}))
@@ -2046,8 +2503,8 @@ async function resetHeroUrl(){
 }
 
 // ── カレンダーイベント管理（GASスプレッドシート） ──
-const EV_TYPE_LABEL = {tenj:'展示会', kekki:'決起会', osoji:'大掃除'};
-const EV_TYPE_COLOR = {tenj:'#1d4ed8', kekki:'#15803d', osoji:'#7c3aed'};
+const EV_TYPE_LABEL = {tenj:'展示会', kekki:'決起会', osoji:'大掃除', allmtg:'全体会議'};
+const EV_TYPE_COLOR = {tenj:'#1d4ed8', kekki:'#15803d', osoji:'#7c3aed', allmtg:'#f59e0b'};
 
 let _calEvents = []; // GASから取得したイベントをキャッシュ
 
