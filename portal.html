@@ -1134,8 +1134,8 @@ async function loadData(){
         : String(ev.date);
       return {...ev, date: dateStr};
     });
-    if(!(_calEvents||[]).some(ev => String(ev.type)==='holiday') && _holidaySeedVersion !== HOLIDAY_SEED_VERSION && !_holidaySeedAttempted){
-      await seedDefaultHolidayData();
+    if(_holidaySeedVersion !== HOLIDAY_SEED_VERSION && !_holidaySeedAttempted){
+      await syncHolidaySeedData();
       return await loadData();
     }
     renderCal();
@@ -2108,6 +2108,23 @@ async function seedDefaultHolidayData(){
   const dates = buildDefaultHolidaySeedDates();
   if(!dates.length) return;
   await gasPost({sheet:'カレンダー_ADD', dates, type:'holiday', label:'休日'});
+  await gasPost({sheet:'設定_UPDATE', key:HOLIDAY_SEED_VERSION_KEY, value:HOLIDAY_SEED_VERSION});
+  _holidaySeedVersion = HOLIDAY_SEED_VERSION;
+}
+
+async function syncHolidaySeedData(){
+  _holidaySeedAttempted = true;
+  const target = buildDefaultHolidaySeedDates();
+  if(!target.length) return;
+  const existing = new Set(
+    (_calEvents||[])
+      .filter(ev => String(ev.type)==='holiday' && ev.date)
+      .map(ev => String(ev.date))
+  );
+  const missing = target.filter(d => !existing.has(d));
+  if(missing.length){
+    await gasPost({sheet:'カレンダー_ADD', dates:missing, type:'holiday', label:'休日'});
+  }
   await gasPost({sheet:'設定_UPDATE', key:HOLIDAY_SEED_VERSION_KEY, value:HOLIDAY_SEED_VERSION});
   _holidaySeedVersion = HOLIDAY_SEED_VERSION;
 }
