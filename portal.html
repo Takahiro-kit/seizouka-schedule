@@ -689,12 +689,15 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
       <div class="s-sec">
         <div class="s-sec-hdr">
           <div class="s-sec-title">🔴 休日管理</div>
-          <div class="s-sec-desc">休日（赤表示）を追加・削除できます。土日祝の初期データもGASに登録済み（削除可能）です。</div>
+          <div class="s-sec-desc">休日（赤表示）を追加・削除できます。必要時は標準の土日祝データにリセットできます。</div>
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;">
             <input type="date" id="hol-date" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
             <button class="s-btn" onclick="addHoliday(this)">追加</button>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px;">
+            <button class="s-btn" style="background:#555;" onclick="resetHolidaysToDefault(this)">標準（土日祝）にリセット</button>
           </div>
           <div style="margin-top:10px;font-size:12px;color:var(--text3);">※ 休日の追加・削除はGAS経由で全ユーザーに反映されます。</div>
         </div>
@@ -955,11 +958,7 @@ function navScroll(id){
   }, 400);
 }
 const SETTINGS_PASS_GLOBAL_KEY='settings_page_password';
-const HOLIDAY_SEED_VERSION_KEY='holiday_seed_version';
-const HOLIDAY_SEED_VERSION='v2_jp_weekend_national_holidays';
 let _globalSettingsPassword='';
-let _holidaySeedVersion='';
-let _holidaySeedAttempted=false;
 function refreshSettingsLockStatus(){
   const s = document.getElementById('settings-lock-status');
   if(!s) return;
@@ -1134,10 +1133,6 @@ async function loadData(){
         : String(ev.date);
       return {...ev, date: dateStr};
     });
-    if(_holidaySeedVersion !== HOLIDAY_SEED_VERSION && !_holidaySeedAttempted){
-      await syncHolidaySeedData();
-      return await loadData();
-    }
     renderCal();
     renderCalEventList();
     renderHolidayList();
@@ -1155,7 +1150,6 @@ async function loadData(){
 function applyPortalConfig(d){
   const settings = (d && d.settings) || {};
   _globalSettingsPassword = String(settings[SETTINGS_PASS_GLOBAL_KEY] || '').trim();
-  _holidaySeedVersion = String(settings[HOLIDAY_SEED_VERSION_KEY] || '').trim();
   if(d && d.members && d.members.length) _membersCache = d.members;
   applyNoticeTypesFromData(d || {});
   renderMembers(null);
@@ -1596,6 +1590,11 @@ async function addHoliday(btnEl){
     if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
     return;
   }
+  if((_calEvents||[]).some(ev => String(ev.type)==='holiday' && String(ev.date)===String(dateStr))){
+    showToast('その日はすでに休日です');
+    if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
+    return;
+  }
   try{
     await gasPost({sheet:'カレンダー_ADD', date:dateStr, type:'holiday', label:'休日'});
     _calEvents = [...(_calEvents||[]), {date:dateStr, type:'holiday', label:'休日'}];
@@ -1609,6 +1608,40 @@ async function addHoliday(btnEl){
     showToast('エラー: '+e.message);
   }finally{
     if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
+  }
+}
+
+async function resetHolidaysToDefault(btnEl){
+  const btn = btnEl || document.querySelector('[onclick="resetHolidaysToDefault(this)"]');
+  if(btn && btn.disabled) return;
+  if(!confirm('現在の休日データを標準（土日祝）へリセットしますか？\n御社独自の休日データは一度クリアされます。')) return;
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>リセット中...'; }
+  try{
+    const currentHolidays = Array.from(new Set(
+      (_calEvents||[])
+        .filter(ev => String(ev.type)==='holiday' && ev.date)
+        .map(ev => String(ev.date))
+    ));
+    for(const d of currentHolidays){
+      await gasPost({sheet:'カレンダー_DELETE', date:d, type:'holiday'});
+    }
+    const seedDates = buildDefaultHolidaySeedDates();
+    if(seedDates.length){
+      await gasPost({sheet:'カレンダー_ADD', dates:seedDates, type:'holiday', label:'休日'});
+    }
+    _calEvents = [
+      ...(_calEvents||[]).filter(ev => String(ev.type)!=='holiday'),
+      ...seedDates.map(d => ({date:d, type:'holiday', label:'休日'}))
+    ];
+    renderCal();
+    renderHolidayList();
+    renderCalEventList();
+    showToast('休日を標準（土日祝）にリセットしました');
+    loadData().catch(()=>{});
+  }catch(e){
+    showToast('エラー: '+e.message);
+  }finally{
+    if(btn){ btn.disabled=false; btn.innerHTML='標準（土日祝）にリセット'; }
   }
 }
 
@@ -2084,7 +2117,7 @@ function buildJapanHolidaySet(year){
 }
 function getHolidaySeedYears(){
   const y = new Date().getFullYear();
-  return [y-1, y, y+1, y+2];
+  return [y, y+1];
 }
 function buildDefaultHolidaySeedDates(){
   const set = new Set();
@@ -2101,32 +2134,6 @@ function buildDefaultHolidaySeedDates(){
     buildJapanHolidaySet(year).forEach(ds=>set.add(ds));
   });
   return Array.from(set).sort();
-}
-
-async function seedDefaultHolidayData(){
-  _holidaySeedAttempted = true;
-  const dates = buildDefaultHolidaySeedDates();
-  if(!dates.length) return;
-  await gasPost({sheet:'カレンダー_ADD', dates, type:'holiday', label:'休日'});
-  await gasPost({sheet:'設定_UPDATE', key:HOLIDAY_SEED_VERSION_KEY, value:HOLIDAY_SEED_VERSION});
-  _holidaySeedVersion = HOLIDAY_SEED_VERSION;
-}
-
-async function syncHolidaySeedData(){
-  _holidaySeedAttempted = true;
-  const target = buildDefaultHolidaySeedDates();
-  if(!target.length) return;
-  const existing = new Set(
-    (_calEvents||[])
-      .filter(ev => String(ev.type)==='holiday' && ev.date)
-      .map(ev => String(ev.date))
-  );
-  const missing = target.filter(d => !existing.has(d));
-  if(missing.length){
-    await gasPost({sheet:'カレンダー_ADD', dates:missing, type:'holiday', label:'休日'});
-  }
-  await gasPost({sheet:'設定_UPDATE', key:HOLIDAY_SEED_VERSION_KEY, value:HOLIDAY_SEED_VERSION});
-  _holidaySeedVersion = HOLIDAY_SEED_VERSION;
 }
 
 function buildDateRange(startDate, endDate){
