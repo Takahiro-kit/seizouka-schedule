@@ -52,7 +52,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 /* HERO（検証用: 固定表示） */
 .hero{position:fixed;top:0;left:var(--nav-w);right:0;z-index:100;display:grid;grid-template-columns:1fr 1fr;height:330px;background:var(--blue);overflow:hidden;transition:left .2s ease;}
 .hero-spacer{height:330px;}
-.hero-img{position:relative;overflow:hidden;background:#004a99;}
+.hero-img{position:relative;overflow:hidden;background:var(--blue);}
 .hero-img img{width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity .2s ease;}
 .hero-img.loading img{opacity:0;}
 .hero-body{padding:32px 44px;display:flex;flex-direction:column;justify-content:center;background:var(--blue);}
@@ -952,7 +952,11 @@ function navScroll(id){
   }, 400);
 }
 const SETTINGS_PASS_GLOBAL_KEY='settings_page_password';
+const HOLIDAY_SEED_VERSION_KEY='holiday_seed_version';
+const HOLIDAY_SEED_VERSION='v1_2026_weekend_holiday';
 let _globalSettingsPassword='';
+let _holidaySeedVersion='';
+let _holidaySeedAttempted=false;
 function refreshSettingsLockStatus(){
   const s = document.getElementById('settings-lock-status');
   if(!s) return;
@@ -1127,6 +1131,10 @@ async function loadData(){
         : String(ev.date);
       return {...ev, date: dateStr};
     });
+    if(!(_calEvents||[]).some(ev => String(ev.type)==='holiday') && _holidaySeedVersion !== HOLIDAY_SEED_VERSION && !_holidaySeedAttempted){
+      await seedDefaultHolidayData();
+      return await loadData();
+    }
     renderCal();
     renderCalEventList();
     renderHolidayList();
@@ -1144,6 +1152,7 @@ async function loadData(){
 function applyPortalConfig(d){
   const settings = (d && d.settings) || {};
   _globalSettingsPassword = String(settings[SETTINGS_PASS_GLOBAL_KEY] || '').trim();
+  _holidaySeedVersion = String(settings[HOLIDAY_SEED_VERSION_KEY] || '').trim();
   if(d && d.members && d.members.length) _membersCache = d.members;
   applyNoticeTypesFromData(d || {});
   renderMembers(null);
@@ -1608,16 +1617,11 @@ async function deleteHoliday(dateStr){
 function renderHolidayList(){
   const el = document.getElementById('s-holiday-list');
   if(!el) return;
-  const fixedHolidays = Object.entries(HOLIDAYS||{}).flatMap(([ym, days])=>{
-    const [y, m] = String(ym).split('-');
-    return (days||[]).map(day=>`${y}-${p(Number(m))}-${p(Number(day))}`);
-  });
-  const gasHolidays = (_calEvents||[])
+  const holidays = (_calEvents||[])
     .filter(ev => ev.type === 'holiday' && ev.date)
     .map(ev => String(ev.date))
-    .filter((d, i, a) => a.indexOf(d) === i);
-  const holidaySet = new Set([...fixedHolidays, ...gasHolidays]);
-  const holidays = Array.from(holidaySet).sort();
+    .filter((d, i, a) => a.indexOf(d) === i)
+    .sort();
   if(!holidays.length){
     el.innerHTML = '<div style="padding:12px 18px;font-size:13px;color:#999;">休日はありません</div>';
     return;
@@ -1625,13 +1629,10 @@ function renderHolidayList(){
   el.innerHTML = holidays.map(dateStr => {
     const m = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     const dow = m ? ['日','月','火','水','木','金','土'][new Date(+m[1], +m[2]-1, +m[3]).getDay()] : '';
-    const isGasHoliday = gasHolidays.includes(dateStr);
     return `<div class="s-list-item">
       <div style="width:10px;height:10px;border-radius:50%;background:#dc2626;flex-shrink:0;"></div>
       <div class="s-list-item-body"><strong>${esc(dateStr)}</strong>${dow ? `（${dow}）` : ''}</div>
-      ${isGasHoliday
-        ? `<button onclick="deleteHoliday('${escAttr(dateStr)}')" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:13px;padding:2px 8px;border-radius:4px;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='none'"><i class="ti ti-trash"></i></button>`
-        : `<span style="font-size:11px;color:#aaa;">固定データ</span>`}
+      <button onclick="deleteHoliday('${escAttr(dateStr)}')" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:13px;padding:2px 8px;border-radius:4px;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='none'"><i class="ti ti-trash"></i></button>
     </div>`;
   }).join('');
 }
@@ -2001,6 +2002,51 @@ const EV_TYPE_COLOR = {tenj:'#1d4ed8', kekki:'#15803d', osoji:'#7c3aed'};
 
 let _calEvents = []; // GASから取得したイベントをキャッシュ
 
+// 初期投入用の休日ベース（祝日+会社既定日）。実運用はGASデータを編集して使う。
+const DEFAULT_SEED_HOLIDAYS = {
+  '2026-1':[1,2,3,10,17,31],
+  '2026-2':[7,14,21,28],
+  '2026-3':[7,14,21],
+  '2026-4':[4,11,21,25],
+  '2026-5':[2,3,4,5,6,9,16],
+  '2026-6':[4,11,18,27,30],
+  '2026-7':[4,11,18,25],
+  '2026-8':[11,12,13,14,15,25],
+  '2026-9':[1,8,15,22,29],
+  '2026-10':[4,11,22,23,24,25],
+  '2026-11':[1,8,12,13,14,15,23],
+  '2026-12':[5,12,19,26,28,29,30,31],
+};
+
+function buildDefaultHolidaySeedDates(){
+  const dates = [];
+  const years = [...new Set(Object.keys(DEFAULT_SEED_HOLIDAYS).map(k=>Number(String(k).split('-')[0])))]
+    .filter(y=>!isNaN(y));
+  years.forEach(y=>{
+    for(let m=1;m<=12;m++){
+      const lastDay = new Date(y, m, 0).getDate();
+      for(let d=1; d<=lastDay; d++){
+        const dow = new Date(y, m-1, d).getDay();
+        if(dow===0 || dow===6) dates.push(`${y}-${p(m)}-${p(d)}`);
+      }
+    }
+  });
+  Object.entries(DEFAULT_SEED_HOLIDAYS).forEach(([ym, ds])=>{
+    const [y,m] = String(ym).split('-').map(Number);
+    (ds||[]).forEach(d=>dates.push(`${y}-${p(m)}-${p(Number(d))}`));
+  });
+  return Array.from(new Set(dates)).sort();
+}
+
+async function seedDefaultHolidayData(){
+  _holidaySeedAttempted = true;
+  const dates = buildDefaultHolidaySeedDates();
+  if(!dates.length) return;
+  await gasPost({sheet:'カレンダー_ADD', dates, type:'holiday', label:'休日'});
+  await gasPost({sheet:'設定_UPDATE', key:HOLIDAY_SEED_VERSION_KEY, value:HOLIDAY_SEED_VERSION});
+  _holidaySeedVersion = HOLIDAY_SEED_VERSION;
+}
+
 async function addCalEvent(){
   const date = document.getElementById('ev-date').value;
   const type = document.getElementById('ev-type').value;
@@ -2058,27 +2104,6 @@ function renderCalEventList(){
   }).join('');
 }
 
-// JPNEXTの休日・イベントデータ（カレンダー写真より）
-const HOLIDAYS = {
-  '2026-1':[1,2,3,10,17,31],
-  '2026-2':[7,14,21,28],
-  '2026-3':[7,14,21],
-  '2026-4':[4,11,21,25],
-  '2026-5':[2,3,4,5,6,9,16],
-  '2026-6':[4,11,18,27,30],
-  '2026-7':[4,11,18,25],
-  '2026-8':[11,12,13,14,15,25],
-  '2026-9':[1,8,15,22,29],
-  '2026-10':[4,11,22,23,24,25],
-  '2026-11':[1,8,12,13,14,15,23],
-  '2026-12':[5,12,19,26,28,29,30,31],
-};
-// 展示会・決起会・大掃除（後日追加予定）
-const EVENTS = {
-  // '2026-5-20':['tenj'],'2026-5-21':['tenj'],'2026-5-22':['tenj'],
-  // '2026-12-26':['osoji'],
-};
-
 let cy=NOW.getFullYear(),cm=NOW.getMonth();
 function renderCal(){
   const MN=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
@@ -2092,10 +2117,6 @@ function renderCal(){
   const first=new Date(cy,cm,1).getDay();
   const last=new Date(cy,cm+1,0).getDate();
   const prev=new Date(cy,cm,0).getDate();
-  // 休日リスト（固定）
-  const hKey=cy+'-'+(cm+1);
-  const fixedHolidays=HOLIDAYS[hKey]||[];
-
   // 前月の日
   for(let i=0;i<first;i++){
     const e=document.createElement('div');e.className='cal-day other';
@@ -2105,17 +2126,13 @@ function renderCal(){
   for(let d=1;d<=last;d++){
     const wrap=document.createElement('div');
     const isT=d===NOW.getDate()&&cm===NOW.getMonth()&&cy===NOW.getFullYear();
-    const isWE=new Date(cy,cm,d).getDay()===0||new Date(cy,cm,d).getDay()===6;
     // GASイベント取得
     const dateStr=cy+'-'+p(cm+1)+'-'+p(d);
     const gasEvs=(_calEvents||[]).filter(ev=>ev.date===dateStr).map(ev=>ev.type);
     const isGasHoliday=gasEvs.includes('holiday');
-    // 固定イベント
-    const evKey=cy+'-'+(cm+1)+'-'+d;
-    const fixedEvs=EVENTS[evKey]||[];
-    const allEvs=[...new Set([...fixedEvs,...gasEvs.filter(t=>t!=='holiday')])];
+    const allEvs=[...new Set(gasEvs.filter(t=>t!=='holiday'))];
     // 休日判定
-    const isH=fixedHolidays.includes(d)||isGasHoliday||isWE;
+    const isH=isGasHoliday;
     let cls='cal-day';
     if(isT) cls+=' today';
     else if(isH) cls+=' holiday';
