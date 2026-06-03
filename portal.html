@@ -89,8 +89,8 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .tile-logo.color{filter:none;height:40px;border-radius:4px;}
 .tile-logo.yamato{height:28px;filter:brightness(0) invert(1);}
 .notta-brand-row{display:flex;align-items:center;gap:10px;}
-.notta-logo-icon{width:42px;height:42px;border-radius:10px;object-fit:cover;display:block;}
-.notta-logo-word{height:20px;filter:brightness(0) invert(1);display:block;}
+.notta-logo-icon{width:42px;height:42px;border-radius:10px;object-fit:cover;display:block;background:#fff;padding:4px;}
+.notta-logo-text{font-size:26px;line-height:1;font-weight:800;color:#fff;letter-spacing:.01em;}
 .sf-tile{cursor:default;}
 .sf-shortcut-row{margin-top:6px;display:flex;gap:6px;width:100%;align-items:center;}
 .sf-shortcut-select{flex:1;min-width:0;border:1px solid rgba(255,255,255,.5);border-radius:4px;padding:6px 8px;font-size:12px;font-family:var(--sans);background:rgba(255,255,255,.95);color:#0f172a;outline:none;}
@@ -750,8 +750,8 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
             </a>
             <a class="tile" href="https://app.notta.ai/login" target="_blank">
               <div class="notta-brand-row">
-                <img src="logo.png" class="notta-logo-icon" alt="notta アイコン">
-                <img src="Unknown.svg" class="notta-logo-word" alt="notta 文字ロゴ">
+                <img src="https://app.notta.ai/favicon.ico" class="notta-logo-icon" alt="notta アイコン" onerror="this.style.display='none'">
+                <span class="notta-logo-text">notta</span>
               </div>
               <div class="tile-name">notta</div>
               <div class="tile-desc">文字起こし・議事録</div>
@@ -1390,107 +1390,6 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
     </div>
   </div>
 
-  <!-- WORK ORDER PAGE -->
-  <div class="page" id="page-workorder">
-    <div class="workorder-wrap">
-      <div class="workorder-top">
-        <button class="workorder-back" onclick="showPage('home')"><i class="ti ti-arrow-left"></i>ホームに戻る</button>
-        <div class="workorder-actions">
-          <button class="s-btn" onclick="printWorkOrderPdf()"><i class="ti ti-file-type-pdf"></i>PDF出力</button>
-          <button class="s-btn alt" onclick="resetWorkOrderForm()"><i class="ti ti-refresh"></i>次の指示書を作成</button>
-        </div>
-      </div>
-      <div class="workorder-layout">
-        <div class="workorder-card">
-          <div class="workorder-card-hdr">
-            <div class="workorder-card-title"><i class="ti ti-edit-circle"></i>作業指示書 入力</div>
-          </div>
-          <div class="workorder-form">
-            <div class="workorder-field">
-              <label for="wo-requester">作業依頼者</label>
-              <input id="wo-requester" class="workorder-input" type="text" placeholder="例: 山田 太郎" oninput="renderWorkOrderPreview()">
-            </div>
-            <div class="workorder-field">
-              <label for="wo-contractor">作業請負者</label>
-              <input id="wo-contractor" class="workorder-input" type="text" placeholder="例: 製造課 山下" oninput="renderWorkOrderPreview()">
-            </div>
-            <div class="workorder-field">
-              <label for="wo-request-date">依頼日</label>
-              <input id="wo-request-date" class="workorder-input" type="date" oninput="renderWorkOrderPreview()">
-            </div>
-            <div class="workorder-field">
-              <label for="wo-deadline">作業期限</label>
-              <input id="wo-deadline" class="workorder-input" type="date" oninput="renderWorkOrderPreview()">
-            </div>
-            <div class="workorder-field full">
-              <label for="wo-request">依頼事項</label>
-              <textarea id="wo-request" class="workorder-input" rows="4" placeholder="依頼内容を記入" oninput="renderWorkOrderPreview()"></textarea>
-            </div>
-            <div class="workorder-field full">
-              <label for="wo-work">作業内容</label>
-              <textarea id="wo-work" class="workorder-input" rows="8" placeholder="具体的な作業内容を記入" oninput="renderWorkOrderPreview()"></textarea>
-            </div>
-            <div class="workorder-field full">
-              <label for="wo-note">備考</label>
-              <textarea id="wo-note" class="workorder-input" rows="4" placeholder="注意事項、連絡事項など" oninput="renderWorkOrderPreview()"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="workorder-card">
-          <div class="workorder-card-hdr">
-            <div class="workorder-card-title"><i class="ti ti-file-description"></i>帳票プレビュー（A4）</div>
-          </div>
-          <div class="workorder-paper-wrap">
-            <div class="workorder-paper" id="workorder-paper">
-              <div class="workorder-title">作業指示書</div>
-              <div class="workorder-meta">
-                <div class="workorder-meta-row">
-                  <div class="workorder-meta-label">作業依頼者</div>
-                  <div class="workorder-meta-value" id="wo-preview-requester"></div>
-                </div>
-                <div class="workorder-meta-row">
-                  <div class="workorder-meta-label">作業請負者</div>
-                  <div class="workorder-meta-value" id="wo-preview-contractor"></div>
-                </div>
-                <div class="workorder-meta-row">
-                  <div class="workorder-meta-label">依頼日</div>
-                  <div class="workorder-meta-value" id="wo-preview-request-date"></div>
-                </div>
-                <div class="workorder-meta-row">
-                  <div class="workorder-meta-label">作業期限</div>
-                  <div class="workorder-meta-value" id="wo-preview-deadline"></div>
-                </div>
-              </div>
-              <div class="workorder-section">
-                <div class="workorder-section-row">
-                  <div class="workorder-section-label">依頼事項</div>
-                  <div class="workorder-section-body mid" id="wo-preview-request"></div>
-                </div>
-              </div>
-              <div class="workorder-section">
-                <div class="workorder-section-row">
-                  <div class="workorder-section-label">作業内容</div>
-                  <div class="workorder-section-body long" id="wo-preview-work"></div>
-                </div>
-              </div>
-              <div class="workorder-section">
-                <div class="workorder-section-row">
-                  <div class="workorder-section-label">備考</div>
-                  <div class="workorder-section-body mid" id="wo-preview-note"></div>
-                </div>
-              </div>
-              <div class="workorder-foot">
-                <div class="workorder-sign">依頼者 署名：</div>
-                <div class="workorder-sign">請負者 署名：</div>
-              </div>
-              <div class="workorder-issue" id="wo-preview-issued-at"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- MEMBER DETAIL PAGE -->
   <div class="page" id="page-member">
     <div class="member-wrap">
@@ -1979,11 +1878,6 @@ function showPage(name){
     const btns = document.querySelectorAll('.nav-item');
     btns.forEach(b=>{ if(b.textContent.includes('管理者ページ')) b.classList.add('active'); });
     renderAdminVisibility();
-  } else if(name==='workorder'){
-    window.scrollTo({top:0,left:0,behavior:'auto'});
-    const wp = document.getElementById('page-workorder');
-    if(wp) wp.scrollTop = 0;
-    renderWorkOrderPreview();
   } else if(name==='member'){
     // メンバーページ中はサイドナビのactiveを付けない
   }
