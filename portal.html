@@ -88,6 +88,14 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .tile-logo{height:32px;max-width:100%;object-fit:contain;filter:brightness(0) invert(1);margin-bottom:4px;}
 .tile-logo.color{filter:none;height:40px;border-radius:4px;}
 .tile-logo.yamato{height:28px;filter:brightness(0) invert(1);}
+.notta-brand-row{display:flex;align-items:center;gap:10px;}
+.notta-logo-icon{width:42px;height:42px;border-radius:10px;object-fit:cover;display:block;}
+.notta-logo-word{height:20px;filter:brightness(0) invert(1);display:block;}
+.sf-tile{cursor:default;}
+.sf-shortcut-row{margin-top:6px;display:flex;gap:6px;width:100%;align-items:center;}
+.sf-shortcut-select{flex:1;min-width:0;border:1px solid rgba(255,255,255,.5);border-radius:4px;padding:6px 8px;font-size:12px;font-family:var(--sans);background:rgba(255,255,255,.95);color:#0f172a;outline:none;}
+.sf-shortcut-btn{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.18);color:#fff;border-radius:4px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.sf-shortcut-btn:hover{background:rgba(255,255,255,.28);}
 
 /* 管理表タイルグリッド */
 .mgmt-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px;}
@@ -171,16 +179,100 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .a-an{background:var(--an);}
 .a-tsuda{background:var(--tsuda);}
 .task-tag{font-size:10px;font-weight:700;background:#f0f0f0;color:var(--text2);padding:3px 8px;border-radius:4px;white-space:nowrap;}
-.todo-input-row{display:flex;gap:8px;padding:11px 18px;border-top:1px solid var(--border);background:#ffffff;flex-wrap:wrap;}
+.todo-input-row{display:grid;grid-template-columns:minmax(180px,1fr) 200px 120px auto;gap:8px;padding:11px 18px;border-top:1px solid var(--border);background:#ffffff;align-items:center;}
 .todo-input-row input{flex:1;min-width:120px;border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:14px;font-family:var(--sans);outline:none;}
 .todo-input-row input:focus{border-color:var(--blue);}
-.todo-input-row select{border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:14px;font-family:var(--sans);background:#fff;cursor:pointer;outline:none;}
-.todo-input-row button{background:var(--blue);color:#fff;border:none;border-radius:4px;padding:7px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);}
-.todo-input-row button:disabled,.input-row button:disabled{background:#7ab0e0;cursor:not-allowed;}
+.todo-input-row select{border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:14px;font-family:var(--sans);background:#fff;cursor:pointer;outline:none;height:36px;}
+.todo-input-row > button{background:var(--blue);color:#fff;border:none;border-radius:4px;padding:7px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);height:36px;}
+.todo-input-row > button:disabled,.input-row button:disabled{background:#7ab0e0;cursor:not-allowed;}
+.todo-assignee-picker{position:relative;min-width:200px;}
+.todo-assignee-btn{
+  border:1px solid #93c5fd;
+  border-radius:6px;
+  padding:7px 11px;
+  font-size:13px;
+  font-weight:700;
+  font-family:var(--sans);
+  background:#fff;
+  color:#0f172a;
+  cursor:pointer;
+  text-align:left;
+  width:100%;
+  height:36px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+  transition:border-color .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.todo-assignee-btn::after{
+  content:'▾';
+  margin-left:auto;
+  color:#1d4ed8;
+  font-size:12px;
+  line-height:1;
+}
+.todo-assignee-btn.open::after{content:'▴';}
+.todo-assignee-btn:focus,.todo-assignee-btn:hover{
+  border-color:#3b82f6;
+  box-shadow:0 0 0 2px rgba(59,130,246,.15);
+}
+.todo-assignee-menu{
+  position:absolute;
+  top:40px;
+  left:0;
+  right:0;
+  min-width:200px;
+  background:#fff;
+  border:1px solid #bfdbfe;
+  border-radius:8px;
+  box-shadow:0 10px 24px rgba(15,23,42,.16);
+  padding:0;
+  display:none;
+  z-index:220;
+  max-height:240px;
+  overflow-y:auto;
+}
+.todo-assignee-menu.show{display:block;}
+.todo-assignee-item{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:0;
+  width:100%;
+  min-height:34px;
+  padding:0 10px;
+  font-size:13px;
+  color:var(--text);
+  cursor:pointer;
+  border:none;
+  border-radius:0;
+  background:#fff;
+  border-bottom:1px solid #eef2ff;
+  appearance:none;
+  -webkit-appearance:none;
+  text-align:left;
+}
+.todo-assignee-item:last-child{border-bottom:none;}
+.todo-assignee-item:hover{background:#f8fafc;}
+.todo-assignee-item.selected{background:#eaf1ff;color:#1e3a8a;font-weight:700;}
+.todo-assignee-item span{
+  flex:1 1 auto;
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  writing-mode:horizontal-tb;
+  text-align:left!important;
+  line-height:1.2;
+}
+.todo-assignee-mark{display:none;}
+.todo-assignee-preview{display:flex;flex-wrap:wrap;gap:5px;min-height:20px;grid-column:1 / -1;margin-top:2px;}
+.todo-assignee-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
 .btn-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:4px;}
 .btn-spinner-danger{display:inline-block;width:16px;height:16px;border:2px solid rgba(220,38,38,.25);border-top-color:#dc2626;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;}
 .icon-del-btn:disabled{opacity:.45;cursor:not-allowed;pointer-events:none;}
-.todo-input-row button:hover{background:var(--blue-dk);}
+.todo-input-row > button:hover{background:var(--blue-dk);}
 .two-col{display:grid;grid-template-columns:1fr 1fr;}
 .tc-l{border-right:1px solid var(--border);}
 #notice-section .two-col{grid-template-columns:1fr;gap:10px;}
@@ -543,11 +635,22 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
         <div id="weblinks" style="margin-bottom:24px;">
           <div class="sec-title">Webリンク</div>
           <div class="tile-grid">
-                        <a class="tile" href="https://jpnext.lightning.force.com/lightning/page/home" target="_blank">
+                        <div class="tile sf-tile">
               <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MiA2NCI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSwgLmNscy0yIHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CgogICAgICAuY2xzLTMgewogICAgICAgIGZpbGw6ICMwZDlkZGE7CiAgICAgIH0KCiAgICAgIC5jbHMtMiB7CiAgICAgICAgZmlsbC1ydWxlOiBldmVub2RkOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Im0zOC4zMyw2Ljk4YzIuOTUtMy4wNyw3LjA1LTQuOTgsMTEuNTktNC45OCw2LjA0LDAsMTEuMywzLjM3LDE0LjExLDguMzYsMi40NC0xLjA5LDUuMTQtMS43LDcuOTctMS43LDEwLjg5LDAsMTkuNzEsOC45LDE5LjcxLDE5Ljg5cy04LjgzLDE5Ljg5LTE5LjcxLDE5Ljg5Yy0xLjMzLDAtMi42My0uMTMtMy44OC0uMzktMi40Nyw0LjQtNy4xOCw3LjM4LTEyLjU4LDcuMzgtMi4yNiwwLTQuNC0uNTItNi4zLTEuNDUtMi41LDUuODktOC4zNCwxMC4wMi0xNS4xMywxMC4wMnMtMTMuMTEtNC40OC0xNS40My0xMC43NmMtMS4wMS4yMS0yLjA2LjMzLTMuMTQuMzMtOC40MywwLTE1LjI2LTYuOS0xNS4yNi0xNS40MiwwLTUuNzEsMy4wNy0xMC42OSw3LjYzLTEzLjM2LS45NC0yLjE2LTEuNDYtNC41NS0xLjQ2LTcuMDVDNi40NSw3Ljk0LDE0LjQsMCwyNC4yMSwwLDI5Ljk3LDAsMzUuMDksMi43NCwzOC4zMyw2Ljk4WiIvPgogIDxnPgogICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJtMTMuNTMsMzMuMTljLS4wNi4xNS4wMi4xOC4wNC4yMS4xNy4xMi4zNS4yMS41Mi4zMi45My40OSwxLjgxLjY0LDIuNzMuNjQsMS44OCwwLDMuMDQtMSwzLjA0LTIuNnYtLjAzYzAtMS40OC0xLjMyLTIuMDItMi41NS0yLjQxbC0uMTYtLjA1Yy0uOTMtLjMtMS43My0uNTYtMS43My0xLjE4di0uMDNjMC0uNTIuNDctLjkxLDEuMi0uOTEuODEsMCwxLjc3LjI3LDIuMzguNjEsMCwwLC4xOC4xMi4yNS0uMDYuMDQtLjEuMzUtLjk0LjM4LTEuMDMuMDQtLjEtLjAzLS4xNy0uMDktLjIxLS43MS0uNDMtMS42OC0uNzItMi42OS0uNzJoLS4xOWMtMS43MiwwLTIuOTIsMS4wNC0yLjkyLDIuNTJ2LjAzYzAsMS41NywxLjMyLDIuMDcsMi41NiwyLjQzbC4yLjA2Yy45LjI4LDEuNjguNTIsMS42OCwxLjE1di4wM2MwLC41OC0uNTEsMS4wMS0xLjMyLDEuMDEtLjMyLDAtMS4zMywwLTIuNDItLjctLjEzLS4wOC0uMjEtLjEzLS4zMS0uMTktLjA1LS4wMy0uMTktLjA5LS4yNS4wOGwtLjM3LDEuMDNaIi8+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Im00MC45OCwzMy4xOWMtLjA2LjE1LjAyLjE4LjA0LjIxLjE3LjEyLjM1LjIxLjUyLjMyLjkzLjQ5LDEuODEuNjQsMi43My42NCwxLjg4LDAsMy4wNC0xLDMuMDQtMi42di0uMDNjMC0xLjQ4LTEuMzEtMi4wMi0yLjU1LTIuNDFsLS4xNi0uMDVjLS45My0uMy0xLjczLS41Ni0xLjczLTEuMTh2LS4wM2MwLS41Mi40Ny0uOTEsMS4yLS45MS44MSwwLDEuNzcuMjcsMi4zOC42MSwwLDAsLjE4LjEyLjI1LS4wNi4wNC0uMS4zNS0uOTQuMzgtMS4wMy4wNC0uMS0uMDMtLjE3LS4wOS0uMjEtLjcxLS40My0xLjY4LS43Mi0yLjY5LS43MmgtLjE5Yy0xLjcyLDAtMi45MiwxLjA0LTIuOTIsMi41MnYuMDNjMCwxLjU3LDEuMzIsMi4wNywyLjU2LDIuNDNsLjIuMDZjLjkuMjgsMS42OC41MiwxLjY4LDEuMTV2LjAzYzAsLjU4LS41MSwxLjAxLTEuMzIsMS4wMS0uMzIsMC0xLjMzLDAtMi40Mi0uNy0uMTMtLjA4LS4yMS0uMTMtLjMxLS4xOS0uMDMtLjAyLS4xOS0uMDgtLjI1LjA4bC0uMzcsMS4wM1oiLz4KICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0ibTYxLjI5LDI4LjM2Yy0uMTUtLjUyLS4zOS0uOTgtLjcxLTEuMzYtLjMyLS4zOC0uNzItLjY5LTEuMi0uOTEtLjQ4LS4yMi0xLjA0LS4zNC0xLjY4LS4zNHMtMS4yLjExLTEuNjguMzRjLS40OC4yMi0uODguNTMtMS4yLjkxLS4zMi4zOC0uNTYuODQtLjcxLDEuMzYtLjE1LjUyLS4yMywxLjA4LS4yMywxLjY4cy4wOCwxLjE3LjIzLDEuNjhjLjE1LjUyLjM5Ljk4LjcxLDEuMzYuMzIuMzguNzMuNjksMS4yLjkxLjQ4LjIyLDEuMDQuMzMsMS42OC4zM3MxLjItLjExLDEuNjgtLjMzYy40OC0uMjIuODgtLjUyLDEuMi0uOTEuMzItLjM4LjU2LS44NC43MS0xLjM2LjE1LS41Mi4yMy0xLjA4LjIzLTEuNjhzLS4wOC0xLjE3LS4yMy0xLjY4bS0xLjU3LDEuNjhjMCwuOTEtLjE3LDEuNjItLjUsMi4xMy0uMzMuNS0uODMuNzQtMS41Mi43NHMtMS4xOS0uMjQtMS41Mi0uNzRjLS4zMy0uNTEtLjUtMS4yMi0uNS0yLjEzcy4xNy0xLjYyLjQ5LTIuMTJjLjMzLS41LjgyLS43NCwxLjUyLS43NHMxLjE5LjI0LDEuNTIuNzRjLjMzLjUuNSwxLjIxLjUsMi4xMiIvPgogICAgPHBhdGggY2xhc3M9ImNscy0yIiBkPSJtNzQuMTUsMzIuNjdjLS4wNS0uMTUtLjItLjA5LS4yLS4wOS0uMjMuMDktLjQ3LjE3LS43My4yMS0uMjYuMDQtLjU1LjA2LS44Ni4wNi0uNzYsMC0xLjM2LS4yMy0xLjc5LS42Ny0uNDMtLjQ1LS42OC0xLjE3LS42Ny0yLjE0LDAtLjg5LjIyLTEuNTUuNi0yLjA2LjM4LS41MS45Ni0uNzYsMS43NC0uNzYuNjUsMCwxLjE0LjA3LDEuNjYuMjQsMCwwLC4xMi4wNS4xOC0uMTEuMTQtLjM4LjI0LS42NS4zOS0xLjA3LjA0LS4xMi0uMDYtLjE3LS4xLS4xOC0uMi0uMDgtLjY4LS4yMS0xLjA0LS4yNi0uMzQtLjA1LS43My0uMDgtMS4xNy0uMDgtLjY2LDAtMS4yNC4xMS0xLjc1LjM0LS41LjIyLS45Mi41My0xLjI2LjkxLS4zNC4zOC0uNTkuODQtLjc2LDEuMzYtLjE3LjUyLS4yNiwxLjA4LS4yNiwxLjY5LDAsMS4zLjM1LDIuMzUsMS4wNCwzLjEyLjY5Ljc3LDEuNzMsMS4xNiwzLjA5LDEuMTYuOCwwLDEuNjItLjE2LDIuMjItLjQsMCwwLC4xMS0uMDUuMDYtLjE5bC0uMzgtMS4wNloiLz4KICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0ibTgyLjE2LDI4LjA3Yy0uMTMtLjUtLjQ2LTEuMDEtLjY4LTEuMjQtLjM0LS4zNy0uNjctLjYyLTEuMDEtLjc3LS40My0uMTktLjk1LS4zMS0xLjUyLS4zMS0uNjYsMC0xLjI2LjExLTEuNzUuMzQtLjQ5LjIzLS45LjU0LTEuMjIuOTMtLjMyLjM5LS41Ni44NS0uNzIsMS4zOC0uMTUuNTItLjIzLDEuMDktLjIzLDEuNjlzLjA4LDEuMTguMjQsMS42OWMuMTYuNTIuNDIuOTcuNzcsMS4zNS4zNS4zOC44LjY4LDEuMzMuODguNTMuMjEsMS4xOC4zMSwxLjkyLjMxLDEuNTMsMCwyLjM0LS4zNSwyLjY3LS41My4wNi0uMDMuMTEtLjA5LjA1LS4yNWwtLjM1LS45N2MtLjA1LS4xNC0uMi0uMDktLjItLjA5LS4zOC4xNC0uOTIuMzktMi4xOC4zOS0uODIsMC0xLjQzLS4yNC0xLjgxLS42Mi0uMzktLjM5LS41OC0uOTYtLjYyLTEuNzZoNS4zcy4xNCwwLC4xNS0uMTNjMC0uMDYuMTgtMS4wOS0uMTYtMi4yOFptLTUuMjcsMS4xMWMuMDctLjUuMjEtLjkyLjQzLTEuMjUuMzItLjUuODItLjc3LDEuNTItLjc3czEuMTUuMjcsMS40OC43N2MuMjIuMzMuMzEuNzYuMzUsMS4yNWgtMy43OFoiLz4KICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0ibTM5LjcyLDI4LjA3Yy0uMTMtLjUtLjQ2LTEuMDEtLjY4LTEuMjQtLjM0LS4zNy0uNjctLjYyLTEuMDEtLjc3LS40My0uMTktLjk1LS4zMS0xLjUyLS4zMS0uNjYsMC0xLjI2LjExLTEuNzUuMzQtLjQ5LjIzLS45LjU0LTEuMjIuOTMtLjMyLjM5LS41Ni44NS0uNzIsMS4zOC0uMTUuNTItLjIzLDEuMDktLjIzLDEuNjlzLjA4LDEuMTguMjQsMS42OWMuMTYuNTIuNDIuOTcuNzcsMS4zNS4zNS4zOC44LjY4LDEuMzMuODguNTMuMjEsMS4xOC4zMSwxLjkyLjMxLDEuNTMsMCwyLjM0LS4zNSwyLjY3LS41My4wNi0uMDMuMTEtLjA5LjA0LS4yNWwtLjM1LS45N2MtLjA1LS4xNC0uMi0uMDktLjItLjA5LS4zOC4xNC0uOTIuMzktMi4xOC4zOS0uODIsMC0xLjQzLS4yNC0xLjgxLS42Mi0uMzktLjM5LS41OC0uOTYtLjYyLTEuNzZoNS4zcy4xNCwwLC4xNS0uMTNjMC0uMDYuMTgtMS4wOS0uMTYtMi4yOFptLTUuMjcsMS4xMWMuMDctLjUuMjEtLjkyLjQzLTEuMjUuMzMtLjUuODItLjc3LDEuNTItLjc3czEuMTUuMjcsMS40OS43N2MuMjIuMzMuMzEuNzYuMzUsMS4yNWgtMy43OFoiLz4KICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0ibTI1LjEsMjguOTJjLS4yMi0uMDItLjQ5LS4wMi0uODMtLjAyLS40NSwwLS44OS4wNi0xLjMxLjE3LS40MS4xMS0uNzkuMjgtMS4xMS41MS0uMzIuMjMtLjU4LjUyLS43Ny44Ny0uMTkuMzUtLjI4Ljc2LS4yOCwxLjIycy4wOC44OC4yNCwxLjIxYy4xNi4zMy4zOS42MS42OS44My4yOS4yMS42Ni4zNywxLjA4LjQ3LjQyLjA5Ljg5LjE0LDEuNC4xNC41NCwwLDEuMDktLjA1LDEuNjEtLjEzLjUyLS4wOSwxLjE2LS4yMiwxLjMzLS4yNi4xOC0uMDQuMzctLjA5LjM3LS4wOS4xMy0uMDMuMTItLjE3LjEyLS4xN3YtNC44NWMwLTEuMDYtLjI5LTEuODUtLjg1LTIuMzQtLjU2LS40OS0xLjM3LS43My0yLjQzLS43My0uNCwwLTEuMDQuMDUtMS40Mi4xMywwLDAtMS4xNi4yMi0xLjYzLjYsMCwwLS4xLjA2LS4wNS4yMWwuMzgsMS4wMWMuMDUuMTMuMTcuMDkuMTcuMDksMCwwLC4wNC0uMDIuMDktLjA0LDEuMDItLjU1LDIuMzEtLjU0LDIuMzEtLjU0LjU3LDAsMS4wMS4xMiwxLjMxLjM0LjI5LjIyLjQ0LjU2LjQ0LDEuMjZ2LjIyYy0uNDUtLjA3LS44Ny0uMS0uODctLjFabS0yLjExLDMuNzJjLS4yMS0uMTctLjI0LS4yMS0uMzEtLjMxLS4xLS4xNi0uMTYtLjM5LS4xNi0uNjksMC0uNDcuMTUtLjguNDctMS4wMywwLDAsLjQ2LS40LDEuNTQtLjM4Ljc2LDAsMS40NC4xMiwxLjQ0LjEydjIuNDFoMHMtLjY3LjE0LTEuNDMuMTljLTEuMDguMDYtMS41Ni0uMzEtMS41NS0uMzFaIi8+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Im02Ny44NCwyNi4xOWMuMDQtLjEyLS4wNC0uMTgtLjA4LS4xOS0uMDktLjAzLS41NC0uMTMtLjg5LS4xNS0uNjctLjA0LTEuMDQuMDctMS4zNy4yMi0uMzMuMTUtLjY5LjM5LS45LjY2di0uNjVjMC0uMDktLjA2LS4xNi0uMTUtLjE2aC0xLjM2Yy0uMDksMC0uMTUuMDctLjE1LjE2djcuOTFjMCwuMDkuMDcuMTYuMTYuMTZoMS4zOWMuMDksMCwuMTYtLjA3LjE2LS4xNnYtMy45NWMwLS41My4wNi0xLjA2LjE4LTEuMzkuMTEtLjMzLjI3LS41OS40Ni0uNzguMTktLjE5LjQxLS4zMi42NS0uMzkuMjUtLjA4LjUyLS4xLjcxLS4xLjI4LDAsLjU4LjA3LjU4LjA3LjEuMDEuMTYtLjA1LjE5LS4xNC4wOS0uMjQuMzUtLjk3LjQtMS4xMVoiLz4KICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0ibTU0Ljc3LDIyLjUzYy0uMTctLjA1LS4zMi0uMDktLjUyLS4xMi0uMi0uMDQtLjQ1LS4wNi0uNzItLjA2LS45NiwwLTEuNzEuMjctMi4yNC44MS0uNTMuNTMtLjg5LDEuMzQtMS4wNiwyLjRsLS4wNi4zNmgtMS4ycy0uMTUsMC0uMTguMTVsLS4yLDEuMWMtLjAxLjExLjAzLjE3LjE3LjE3aDEuMTdsLTEuMTksNi42M2MtLjA5LjUzLS4yLjk3LS4zMiwxLjMxLS4xMi4zMy0uMjMuNTctLjM3Ljc1LS4xNC4xNy0uMjYuMy0uNDguMzctLjE4LjA2LS4zOS4wOS0uNjIuMDktLjEzLDAtLjMtLjAyLS40My0uMDUtLjEzLS4wMi0uMTktLjA1LS4yOS0uMDksMCwwLS4xNC0uMDUtLjE5LjA5LS4wNC4xMS0uMzYuOTctLjM5LDEuMDgtLjA0LjEuMDIuMTkuMDguMjEuMTYuMDYuMjcuMDkuNDguMTQuMjkuMDcuNTQuMDcuNzguMDcuNDksMCwuOTMtLjA3LDEuMy0uMi4zNy0uMTMuNjktLjM3Ljk4LS42OC4zMS0uMzQuNS0uNy42OS0xLjE5LjE4LS40OC4zNC0xLjA4LjQ3LTEuNzhsMS4xOS02Ljc2aDEuNzVzLjE1LDAsLjE4LS4xNWwuMi0xLjFjLjAxLS4xMS0uMDMtLjE3LS4xNy0uMTdoLTEuNjlzLjA5LS42My4yOC0xLjJjLjA4LS4yNC4yNC0uNDMuMzctLjU3LjEzLS4xMy4yOC0uMjIuNDQtLjI4LjE3LS4wNS4zNi0uMDguNTctLjA4LjE2LDAsLjMyLjAyLjQ0LjA0LjE2LjAzLjIzLjA1LjI3LjA3LjE3LjA1LjIsMCwuMjMtLjA4bC40MS0xLjExYy4wNC0uMTItLjA2LS4xNy0uMS0uMThaIi8+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Im0zMS4xLDMzLjk5YzAsLjA5LS4wNi4xNi0uMTUuMTZoLTEuNDFjLS4wOSwwLS4xNS0uMDctLjE1LS4xNnYtMTEuMzFjMC0uMDkuMDYtLjE2LjE1LS4xNmgxLjQxYy4wOSwwLC4xNS4wNy4xNS4xNnYxMS4zMVoiLz4KICA8L2c+Cjwvc3ZnPg==" class="tile-logo color" alt="Salesforce">
               <div class="tile-name">Salesforce</div>
               <div class="tile-desc">顧客・案件・活動管理</div>
-            </a>
+              <div class="sf-shortcut-row">
+                <select id="sf-quick-link" class="sf-shortcut-select">
+                  <option value="https://jpnext.lightning.force.com/lightning/page/home">Salesforce ホーム</option>
+                  <option value="https://jpnext.lightning.force.com/lightning/o/Specification__c/list?filterName=All">仕様確認書 全て</option>
+                  <option value="https://jpnext.lightning.force.com/lightning/r/Report/00OIi000000FMvoMAG/view">FK案件一覧</option>
+                  <option value="https://jpnext.lightning.force.com/lightning/r/Report/00OIi000000FMwrMAG/view">FX案件一覧</option>
+                  <option value="https://jpnext.lightning.force.com/lightning/o/Sales__c/list?filterName=FA">FAの受注案件</option>
+                  <option value="https://jpnext.lightning.force.com/lightning/o/InsideCompanyMaintenance__c/list?filterName=TEST">FS案件 社内メンテナンス(TEST以外)</option>
+                </select>
+                <button type="button" class="sf-shortcut-btn" onclick="openSalesforceQuickLink()">開く</button>
+              </div>
+            </div>
                         <a class="tile" href="https://ap.sansan.com/" target="_blank">
               <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODgiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCA4OCAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTg3LjY3MDMgMjcuMDI4OEgwLjI0NzU1OVYzMkg4Ny42NzAzVjI3LjAyODhaIiBmaWxsPSIjRDcwQzE4Ii8+CjxwYXRoIGQ9Ik0yOS43MDc1IDE1LjAwNDhDMjkuNjM2MiAxNS4wMTI5IDI5LjU2NCAxNS4wMDM4IDI5LjQ5NzMgMTQuOTc4M0MyOS40MzA2IDE0Ljk1MjggMjkuMzcxNSAxNC45MTE3IDI5LjMyNTMgMTQuODU4N0MyOS4yNzkyIDE0LjgwNTcgMjkuMjQ3MyAxNC43NDI1IDI5LjIzMjcgMTQuNjc0N0MyOS4yMTgxIDE0LjYwNjkgMjkuMjIxMiAxNC41MzY3IDI5LjI0MTYgMTQuNDcwM0wzMS42Mjk2IDEuNjI4NzdDMzEuNjUyOSAxLjUxNjM3IDMxLjcwNTEgMS40MTE0MiAzMS43ODE0IDEuMzIzNTNDMzEuODU3NyAxLjIzNTY0IDMxLjk1NTYgMS4xNjc2MSAzMi4wNjYxIDEuMTI1NjhDMzMuOTUzNSAwLjQyMjU2NyAzNS45NTMxIDAuMDQxNjY0MiAzNy45NzU3IDBDNDIuMzcwNSAwIDQ0LjM1MTIgMi42OTc4NSA0My42MjE1IDYuNjg4MDNMNDIuMTY4NSAxNC41NDg5QzQyLjE1NDUgMTQuNjc4NSA0Mi4wODg5IDE0Ljc5NzcgNDEuOTg1NiAxNC44ODE2QzQxLjg4MjMgMTQuOTY1NSA0MS43NDk0IDE1LjAwNzQgNDEuNjE0NyAxNC45OTg1SDM4LjI2NTdDMzguMTk2IDE1LjAwMDkgMzguMTI2NiAxNC45ODggMzguMDYyOSAxNC45NjA3QzM3Ljk5OTEgMTQuOTMzMyAzNy45NDI3IDE0Ljg5MjQgMzcuODk3OCAxNC44NDA5QzM3Ljg1MjkgMTQuNzg5MyAzNy44MjA3IDE0LjcyODYgMzcuODAzNyAxNC42NjMzQzM3Ljc4NjggMTQuNTk4IDM3Ljc4NTQgMTQuNTI5OSAzNy43OTk4IDE0LjQ2NEwzOS4yNTYgNi4yNjAzOUMzOS42MDQ2IDQuNDkwMTIgMzguOTY2MSAzLjY3NTc0IDM3LjQyMTkgMy42NzU3NEMzNi43ODc3IDMuNjcxMDggMzYuMTU4OCAzLjc4NzU3IDM1LjU3MTUgNC4wMTg0OEwzMy42NDk0IDE0LjU1NTJDMzMuNjQ1OCAxNC42MjAzIDMzLjYyODUgMTQuNjg0IDMzLjU5ODUgMTQuNzQyNEMzMy41Njg0IDE0LjgwMDggMzMuNTI2MyAxNC44NTI3IDMzLjQ3NDggMTQuODk0OEMzMy40MjMyIDE0LjkzNjkgMzMuMzYzMiAxNC45Njg0IDMzLjI5ODYgMTQuOTg3M0MzMy4yMzM5IDE1LjAwNjMgMzMuMTY2IDE1LjAxMjIgMzMuMDk4OCAxNS4wMDQ4SDI5LjcwNzVaIiBmaWxsPSIjMDA0RTk4Ii8+CjxwYXRoIGQ9Ik03My45MjI1IDE1LjAwNDhDNzMuODUxNSAxNS4wMTIxIDczLjc3OTcgMTUuMDAyNCA3My43MTM0IDE0Ljk3NjdDNzMuNjQ3MSAxNC45NTA5IDczLjU4ODQgMTQuOTA5OCA3My41NDI0IDE0Ljg1NzFDNzMuNDk2NCAxNC44MDQzIDczLjQ2NDYgMTQuNzQxNCA3My40NDk2IDE0LjY3NEM3My40MzQ3IDE0LjYwNjUgNzMuNDM3MSAxNC41MzY2IDczLjQ1NjcgMTQuNDcwM0w3NS44NDQ2IDEuNjI4NzdDNzUuODY5MiAxLjUxNTAxIDc1LjkyMzQgMS40MDkxNSA3Ni4wMDIxIDEuMzIxMTRDNzYuMDgwNyAxLjIzMzE0IDc2LjE4MTIgMS4xNjU4NyA3Ni4yOTQyIDEuMTI1NjhDNzguMTgxNiAwLjQyMjU2NyA4MC4xODEyIDAuMDQxNjY0MiA4Mi4yMDM4IDBDODYuNTk4NiAwIDg4LjU3OTMgMi42OTc4NSA4Ny44NTI4IDYuNjg4MDNMODYuMzk2NiAxNC41NDg5Qzg2LjM4MjYgMTQuNjc4NSA4Ni4zMTcgMTQuNzk3NyA4Ni4yMTM3IDE0Ljg4MTZDODYuMTEwNCAxNC45NjU1IDg1Ljk3NzUgMTUuMDA3NCA4NS44NDI4IDE0Ljk5ODVIODIuNDg0QzgyLjQxNDMgMTUuMDAwOSA4Mi4zNDQ5IDE0Ljk4OCA4Mi4yODEyIDE0Ljk2MDdDODIuMjE3NCAxNC45MzMzIDgyLjE2MSAxNC44OTI0IDgyLjExNjEgMTQuODQwOUM4Mi4wNzEyIDE0Ljc4OTMgODIuMDM5IDE0LjcyODYgODIuMDIyMSAxNC42NjMzQzgyLjAwNTEgMTQuNTk4IDgyLjAwMzggMTQuNTI5OSA4Mi4wMTgxIDE0LjQ2NEw4My40NjEzIDYuMjY2NjlDODMuODA5OSA0LjQ5NjQyIDgzLjE3MTQgMy42ODIwMyA4MS42MjcyIDMuNjgyMDNDODAuOTg5MSAzLjY3MzcyIDgwLjM1NTYgMy43ODgwOSA3OS43NjM4IDQuMDE4NDhMNzcuODQ0OSAxNC41NTUyQzc3Ljg0MDUgMTQuNjIwMyA3Ny44MjI0IDE0LjY4MzggNzcuNzkxOSAxNC43NDJDNzcuNzYxNCAxNC44MDAyIDc3LjcxOSAxNC44NTE5IDc3LjY2NzMgMTQuODkzOUM3Ny42MTU1IDE0LjkzNTkgNzcuNTU1NSAxNC45Njc0IDc3LjQ5MDkgMTQuOTg2NEM3Ny40MjYzIDE1LjAwNTUgNzcuMzU4MyAxNS4wMTE3IDc3LjI5MTEgMTUuMDA0OEg3My45MjI1WiIgZmlsbD0iIzAwNEU5OCIvPgo8cGF0aCBkPSJNNTQuMTAyIDMuNzQxNzhMNTQuMjE2MSAzLjc2NjkzQzU0LjY5NjEgMy44NjU1MiA1NS4xNjYgNC4wMDU0OSA1NS42MjAyIDQuMTg1MTNDNTUuOTQ1OSA0LjMyMDM0IDU2LjE3NCA0LjI3MDAzIDU2LjI5MTMgMy45NjgxN0w1Ny4yMDAyIDEuNzEwNTNDNTcuMjg4MiAxLjQ2MjEzIDU3LjI4ODEgMS4yNjcxOCA1Ny4xMTU1IDEuMTU3MTNDNTYuNjQ2IDAuODkyOTk2IDU2LjE1MTkgMC42NzE5MjMgNTUuNjM5NyAwLjQ5NjgxMkM1NS4zNDk4IDAuMzk2MTkzIDU1LjA0MzUgMC4zMDUwMDggNTQuNzMwOCAwLjIyMzI1NUM1My44NzU3IDAuMDQwNjUxNSA1Mi45OTkxIC0wLjAzMDIwNTkgNTIuMTI0NSAwLjAxMjU4NDVDNDguOTkzOCAwLjE3Mjk0NiA0Ni44NDA0IDEuNDAyMzggNDYuMjYwNSA0LjA0MDQ5QzQ1LjYwOSA3LjA3NDc4IDQ3Ljg4OTQgOC43MzE4NiA1MC43NDMyIDkuMjk0N0M1MS45MDYzIDkuNTQ2MjQgNTIuOTI2IDkuNzcyNjMgNTIuNzI0IDEwLjY0MzZDNTIuNTc3NCAxMS4yNzI1IDUxLjg3NyAxMS43MDk2IDUwLjQ4MjYgMTEuNzA5NkM0OS4xMTc2IDExLjcxOTQgNDcuNzg3MiAxMS4yOTUxIDQ2LjY5NzEgMTAuNTAyMUM0Ni42NDU3IDEwLjQ1OTUgNDYuNTg1MiAxMC40Mjg0IDQ2LjUxOTkgMTAuNDEwOEM0Ni40NTQ3IDEwLjM5MzMgNDYuMzg2MiAxMC4zODk4IDQ2LjMxOTQgMTAuNDAwNkM0Ni4yNTI2IDEwLjQxMTQgNDYuMTg5MSAxMC40MzYyIDQ2LjEzMzMgMTAuNDczM0M0Ni4wNzc1IDEwLjUxMDQgNDYuMDMwOSAxMC41NTg5IDQ1Ljk5NjYgMTAuNjE1M0w0NC4zMzg0IDEyLjgxNjRDNDQuMjkyNSAxMi44NjM2IDQ0LjI1NzkgMTIuOTIgNDQuMjM3MiAxMi45ODE2QzQ0LjIxNjQgMTMuMDQzMiA0NC4yMSAxMy4xMDg1IDQ0LjIxODQgMTMuMTcyOEM0NC4yMjY4IDEzLjIzNyA0NC4yNDk4IDEzLjI5ODcgNDQuMjg1OCAxMy4zNTM0QzQ0LjMyMTcgMTMuNDA4MSA0NC4zNjk3IDEzLjQ1NDUgNDQuNDI2NCAxMy40ODkzQzQ2LjAyNiAxNC43NDcgNDcuOTE4NyAxNS4zNzU5IDUwLjMzNiAxNS4zNzU5QzUzLjk3NSAxNS4zNzU5IDU2LjU2NDkgMTMuOTk4NiA1Ny4xNDgxIDExLjAyMDlDNTcuNzU3MyA3LjczMTk1IDU0Ljk2NTMgNi4zODMwMiA1Mi43MjQgNS45MDgyM0M1MS4zMjY0IDUuNTkzNzkgNTAuMzk0NyA1LjM0NTM5IDUwLjU2NzMgNC41MDI3MUM1MC42ODQ2IDMuNzk4MzcgNTEuMzU1NyAzLjU1OTQgNTIuNDMwOCAzLjU1OTRDNTIuOTM4NCAzLjU1ODQ2IDUzLjQ0NDggMy42MDY5MiA1My45NDI0IDMuNzA0MDVMNTQuMTAyIDMuNzQxNzhaIiBmaWxsPSIjMDA0RTk4Ii8+CjxwYXRoIGQ9Ik05Ljg4NzE4IDMuNzQxODRMMTAuMDAxMiAzLjc2Njk5QzEwLjQ4MTMgMy44NjU1OSAxMC45NTEyIDQuMDA1NTUgMTEuNDA1MyA0LjE4NTJDMTEuNzMxMSA0LjMyMDQgMTEuOTU5MSA0LjI3MDA5IDEyLjA3NjQgMy45NjgyNEwxMi45ODUzIDEuNzEwNTlDMTMuMDczMyAxLjQ2MjE5IDEzLjA3MzMgMS4yNjcyNCAxMi45MDA2IDEuMTU3MTlDMTIuNDMwNiAwLjg5NTgwNSAxMS45MzY2IDAuNjc2ODY3IDExLjQyNDkgMC41MDMxNjRDMTEuMTM0OSAwLjQwMjU0NSAxMC44Mjg3IDAuMzExMzU2IDEwLjUxNTkgMC4yMjk2MDNDOS42NjA4OSAwLjA0Njk5OTIgOC43ODQzIC0wLjAyMzg1ODMgNy45MDk3IDAuMDE4OTMyMkM0Ljc3ODk3IDAuMTc5Mjk0IDIuNjI1NTcgMS40MDg3NCAyLjA0NTY4IDQuMDQ2ODRDMS4zOTQxMiA3LjA4MTE0IDMuNjc0NTggOC43MzgyMSA2LjUyODQgOS4zMDEwNEM3LjY5MTQzIDkuNTUyNTkgOC43MTExMiA5Ljc3ODk5IDguNTA1ODggMTAuNjVDOC4zNjI1NCAxMS4yNzg4IDcuNjYyMTEgMTEuNzE1OSA2LjI2NDUyIDExLjcxNTlDNC45MDA2MiAxMS43MjUxIDMuNTcxNDggMTEuMzAwOCAyLjQ4MjIyIDEwLjUwODVDMi40MzA4MiAxMC40NjU5IDIuMzcwMzUgMTAuNDM0NyAyLjMwNTEgMTAuNDE3MkMyLjIzOTg0IDEwLjM5OTcgMi4xNzE0IDEwLjM5NjIgMi4xMDQ1OSAxMC40MDdDMi4wMzc3OCAxMC40MTc4IDEuOTc0MjQgMTAuNDQyNiAxLjkxODQ2IDEwLjQ3OTdDMS44NjI2OSAxMC41MTY4IDEuODE2MDMgMTAuNTY1MyAxLjc4MTggMTAuNjIxN0wwLjEyMzU4NyAxMi44MjI3QzAuMDc3NjQ3NCAxMi44Njk5IDAuMDQzMDY5NyAxMi45MjY0IDAuMDIyMzI3NyAxMi45ODhDMC4wMDE1ODU3OSAxMy4wNDk2IC0wLjAwNDgxNDMyIDEzLjExNDkgMC4wMDM1ODcwOCAxMy4xNzkxQzAuMDExOTg4NSAxMy4yNDM0IDAuMDM0OTg3NiAxMy4zMDUxIDAuMDcwOTM0MSAxMy4zNTk4QzAuMTA2ODgxIDEzLjQxNDUgMC4xNTQ4OSAxMy40NjA5IDAuMjExNTQ0IDEzLjQ5NTZDMS44MTExMiAxNC43NTMzIDMuNzAzOSAxNS4zODIyIDYuMTIxMTggMTUuMzgyMkM5Ljc2MDEzIDE1LjM4MjIgMTIuMzUwMSAxNC4wMDUgMTIuOTMzMiAxMS4wMjczQzEzLjU0MjQgNy43MzgzIDEwLjc1MDUgNi4zODkzOCA4LjUwNTg4IDUuOTE0NTlDNy4xMTE1NSA1LjYwMDE1IDYuMTc5ODIgNS4zNTE3NSA2LjM1MjQ4IDQuNTA5MDZDNi40Njk3NiAzLjgwNDczIDcuMTQwODYgMy41NjU3NiA4LjIxNTkzIDMuNTY1NzZDOC43MjM1NiAzLjU2NDgxIDkuMjMgMy42MTMyNyA5LjcyNzU1IDMuNzEwNEw5Ljg4NzE4IDMuNzQxODRaIiBmaWxsPSIjMDA0RTk4Ii8+CjxwYXRoIGQ9Ik0yMi44MDc0IDBDMjEuOTg5MSAwLjAwMDY1NjA5OSAyMS4xNzIxIDAuMDYzNzQxNCAyMC4zNjQxIDAuMTg4NjYzQzE5LjM3ODYgMC4zNDQ0MzEgMTguNDIyNCAwLjY0MDA1MyAxNy41MjY1IDEuMDY1OTNDMTcuMzQ3MyAxLjE2NjU1IDE3LjMzNDMgMS4zNjQ2NSAxNy40MDYgMS42MjI0OEwxOC4xNjgzIDMuOTcxMzFDMTguMTc3NCA0LjAyODEgMTguMTk5NiA0LjA4MjIxIDE4LjIzMzMgNC4xMjk2MkMxOC4yNjY5IDQuMTc3MDIgMTguMzExMiA0LjIxNjUyIDE4LjM2MjggNC4yNDUyQzE4LjQxNDQgNC4yNzM4OCAxOC40NzIgNC4yOTA5OSAxOC41MzE0IDQuMjk1MjlDMTguNTkwOCA0LjI5OTU5IDE4LjY1MDQgNC4yOTA5NSAxOC43MDU4IDQuMjcwMDJDMTkuMjcyNCA0LjA3MDM1IDE5Ljg2MDMgMy45MzIyIDIwLjQ1ODUgMy44NTgxMUgyMC41MTcyQzIwLjk0OSAzLjgwMTIyIDIxLjM4NDQgMy43NzI4NiAyMS44MjAzIDMuNzczMjJDMjMuNjU0NCAzLjc3MzIyIDI0LjA2MTcgNC41MzEgMjMuODAxIDUuOTA4MjNMMjMuNzQyNCA2LjM1Nzg3QzIyLjkyNzcgNi4yMDU2OSAyMi4wOTk2IDYuMTI5ODcgMjEuMjY5NyA2LjEzMTQ4QzE3LjU0MjggNi4xMzE0OCAxNS4xNTQ5IDcuMzM4OSAxNC42NTk3IDEwLjA2NTFDMTQuMDc5OCAxMy4xMjc2IDE2LjE0NTIgMTUuMzc1OSAyMC4yMjA3IDE1LjM3NTlDMjIuMjgxNyAxNS4zNzA2IDI0LjMyNzggMTUuMDM4MSAyNi4yNzcgMTQuMzkxN0MyNi4zOTM5IDE0LjM1MDQgMjYuNDk2NyAxNC4yNzg2IDI2LjU3MzggMTQuMTg0MkMyNi42NTA5IDE0LjA4OTggMjYuNjk5MyAxMy45NzY2IDI2LjcxMzUgMTMuODU3MUwyOC4wMTY2IDYuNzUwOTJDMjguODA1IDIuNTI4MDYgMjYuNzc1NCAwIDIyLjgwNzQgMFpNMjEuMjM3MSAxMi41MjcxQzIwLjg0MTQgMTIuNTI3NyAyMC40NTQzIDEyLjQxNSAyMC4xMjUgMTIuMjAzMkMxOS43OTU2IDExLjk5MTUgMTkuNTM4NyAxMS42OTAyIDE5LjM4NjggMTEuMzM3NUMxOS4yMzQ5IDEwLjk4NDcgMTkuMTk0OCAxMC41OTY0IDE5LjI3MTYgMTAuMjIxN0MxOS4zNDg1IDkuODQ3MDIgMTkuNTM4NyA5LjUwMjcyIDE5LjgxODMgOS4yMzI0MUMyMC4wOTc5IDguOTYyMDkgMjAuNDU0MyA4Ljc3NzkgMjAuODQyNSA4LjcwMzE1QzIxLjIzMDYgOC42Mjg0IDIxLjYzMjkgOC42NjY0NSAyMS45OTg2IDguODEyNDlDMjIuMzY0MyA4Ljk1ODUyIDIyLjY3NjkgOS4yMDU5NyAyMi44OTY4IDkuNTIzNTJDMjMuMTE2OCA5Ljg0MTA4IDIzLjIzNDIgMTAuMjE0NSAyMy4yMzQyIDEwLjU5NjRDMjMuMjM0NiAxMC44NDk4IDIzLjE4MzMgMTEuMTAwOCAyMy4wODMxIDExLjMzNUMyMi45ODI5IDExLjU2OTMgMjIuODM1OSAxMS43ODIxIDIyLjY1MDQgMTEuOTYxNEMyMi40NjQ5IDEyLjE0MDcgMjIuMjQ0NiAxMi4yODMgMjIuMDAyMSAxMi4zODAxQzIxLjc1OTYgMTIuNDc3MSAyMS40OTk3IDEyLjUyNzEgMjEuMjM3MSAxMi41MjcxWiIgZmlsbD0iIzAwNEU5OCIvPgo8cGF0aCBkPSJNNjcuMDIyOSAwQzY2LjIwNTYgMC4wMDA1MTkzMzUgNjUuMzg5NyAwLjA2MzYwNiA2NC41ODI4IDAuMTg4NjYzQzYzLjU5NjMgMC4zNDQ0NDUgNjIuNjM5IDAuNjQwMDU5IDYxLjc0MiAxLjA2NTkzQzYxLjU2MjggMS4xNjY1NSA2MS41NDk4IDEuMzY0NjUgNjEuNjIxNSAxLjYyMjQ4TDYyLjM4MzggMy45NzEzMUM2Mi4zOTIyIDQuMDMwMSA2Mi40MTQ2IDQuMDg2MjIgNjIuNDQ5MyA0LjEzNTIzQzYyLjQ4NCA0LjE4NDI1IDYyLjUzIDQuMjI0ODIgNjIuNTgzNiA0LjI1Mzc4QzYyLjYzNzMgNC4yODI3MyA2Mi42OTcyIDQuMjk5MjcgNjIuNzU4NiA0LjMwMjA5QzYyLjgyMDEgNC4zMDQ5MSA2Mi44ODEzIDQuMjkzOTMgNjIuOTM3NiA0LjI3MDAyQzYzLjUwNDIgNC4wNzAzNSA2NC4wOTIxIDMuOTMyMiA2NC42OTAzIDMuODU4MTFINjQuNzQ5QzY1LjE4MDggMy44MDEyNSA2NS42MTYyIDMuNzcyODkgNjYuMDUyMSAzLjc3MzIyQzY3Ljg4NjIgMy43NzMyMiA2OC4yOTM0IDQuNTMxIDY4LjAyOTUgNS45MDgyM0w2Ny45NzA5IDYuMzU3ODdDNjcuMTU2MiA2LjIwNTY5IDY2LjMyODEgNi4xMjk4NyA2NS40OTgyIDYuMTMxNDhDNjEuNzcxMyA2LjEzMTQ4IDU5LjM4MzQgNy4zMzg5IDU4Ljg4ODIgMTAuMDY1MUM1OC4zMDgzIDEzLjEyNzYgNjAuMzczNyAxNS4zNzU5IDY0LjQ0OTIgMTUuMzc1OUM2Ni41MTAyIDE1LjM3MDYgNjguNTU2MyAxNS4wMzgxIDcwLjUwNTUgMTQuMzkxN0M3MC42MjI1IDE0LjM1MDQgNzAuNzI1MyAxNC4yNzg2IDcwLjgwMjQgMTQuMTg0MkM3MC44Nzk0IDE0LjA4OTggNzAuOTI3OCAxMy45NzY2IDcwLjk0MiAxMy44NTcxTDcyLjI0NTEgNi43NTA5MkM3My4wMzY4IDIuNTI4MDYgNzAuOTg0NCAwIDY3LjAyMjkgMFpNNjUuNDQyOSAxMi41MjcxQzY1LjA0NzIgMTIuNTI3MSA2NC42NjA1IDEyLjQxMzggNjQuMzMxNiAxMi4yMDE3QzY0LjAwMjYgMTEuOTg5NiA2My43NDYyIDExLjY4OCA2My41OTQ4IDExLjMzNTNDNjMuNDQzNCAxMC45ODI1IDYzLjQwMzggMTAuNTk0MyA2My40ODEgMTAuMjE5OEM2My41NTgyIDkuODQ1MyA2My43NDg3IDkuNTAxMjkgNjQuMDI4NCA5LjIzMTI4QzY0LjMwODIgOC45NjEyOCA2NC42NjQ2IDguNzc3NDEgNjUuMDUyNiA4LjcwMjkyQzY1LjQ0MDYgOC42Mjg0MyA2NS44NDI4IDguNjY2NjYgNjYuMjA4MyA4LjgxMjc4QzY2LjU3MzggOC45NTg5MSA2Ni44ODYyIDkuMjA2MzYgNjcuMTA2IDkuNTIzODVDNjcuMzI1OCA5Ljg0MTM0IDY3LjQ0MzEgMTAuMjE0NiA2Ny40NDMxIDEwLjU5NjRDNjcuNDQzMSAxMS4xMDg1IDY3LjIzMjQgMTEuNTk5NSA2Ni44NTczIDExLjk2MTZDNjYuNDgyMiAxMi4zMjM3IDY1Ljk3MzQgMTIuNTI3MSA2NS40NDI5IDEyLjUyNzFaIiBmaWxsPSIjMDA0RTk4Ii8+Cjwvc3ZnPgo=" class="tile-logo color" alt="Sansan">
               <div class="tile-name">Sansan</div>
@@ -564,7 +667,10 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
               <div class="tile-desc">宅急便・送り状</div>
             </a>
             <a class="tile" href="https://app.notta.ai/login" target="_blank">
-              <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='40' viewBox='0 0 170 40'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%230ea5ff'/%3E%3Cstop offset='1' stop-color='%236d28d9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='0' y='0' width='40' height='40' rx='9' fill='url(%23g)'/%3E%3Cpath d='M10 28V12h5l9 10V12h6v16h-5l-9-10v10z' fill='white'/%3E%3Ctext x='50' y='27' font-family='Noto Sans JP,Arial,sans-serif' font-size='29' font-weight='700' fill='white'%3Enotta%3C/text%3E%3C/svg%3E" class="tile-logo" alt="notta ロゴ">
+              <div class="notta-brand-row">
+                <img src="logo.png" class="notta-logo-icon" alt="notta アイコン">
+                <img src="Unknown.svg" class="notta-logo-word" alt="notta 文字ロゴ">
+              </div>
               <div class="tile-name">notta</div>
               <div class="tile-desc">文字起こし・議事録</div>
             </a>
@@ -605,13 +711,17 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
               <div id="tlist"><div class="loading"><i class="ti ti-loader-2"></i>読み込み中...</div></div>
               <div class="todo-input-row">
                 <input id="tinp" type="text" placeholder="タスクを追加…">
-                <select id="t-assignee"><option value="">担当者</option></select>
+                <div class="todo-assignee-picker" id="todo-assignee-picker">
+                  <button type="button" id="t-assignee-btn" class="todo-assignee-btn" onclick="toggleTodoAssigneeMenu(event)">担当者を選択</button>
+                  <div id="t-assignee-menu" class="todo-assignee-menu"></div>
+                </div>
                 <select id="t-tag">
                   <option value="">タグ</option>
                   <option>出荷</option><option>在庫</option><option>IT</option>
                   <option>品質</option><option>安全</option><option>その他</option>
                 </select>
                 <button id="add-todo-btn" onclick="addT()">追加</button>
+                <div id="t-assignee-preview" class="todo-assignee-preview"></div>
               </div>
             </div>
           </div>
@@ -640,14 +750,28 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
             <span class="card-sub">長辺1920px / JPG固定</span>
           </div>
           <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
-            <div class="img-tool-grid">
+            <div style="display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:center;margin-bottom:8px;">
+              <select id="img-name-rule" onchange="onImageToolRuleChange()" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;background:#fff;">
+                <option value="image">画像: 入力文字_YYYYMMDD_連番</option>
+                <option value="workreport">作業報告書: 作業報告書 FK/FS番号 ユーザー名 日付</option>
+              </select>
+              <div class="img-tool-note" id="img-rule-hint" style="margin-top:0;">命名形式: <strong>入力文字_YYYYMMDD_連番</strong>（日付は自動、連番は3桁）</div>
+            </div>
+            <div id="img-rule-image" style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px;">
               <input type="text" id="img-name-prefix" placeholder="内容（例: ピンホール）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
-              <input type="file" id="img-bulk-files" accept="image/*" multiple style="display:none;" onchange="onImageToolFilesChange()">
-              <button class="s-btn" type="button" onclick="document.getElementById('img-bulk-files').click()">画像を選択</button>
+            </div>
+            <div id="img-rule-workreport" style="display:none;grid-template-columns:1fr 1fr 180px;gap:8px;margin-bottom:8px;">
+              <input type="text" id="img-report-number" placeholder="FKまたはFS番号（例: FK1234）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="text" id="img-report-user" placeholder="ユーザー名（例: 山田）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="date" id="img-report-date" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            </div>
+            <div class="img-tool-grid">
+              <input type="file" id="img-bulk-files" accept="image/*,.pdf,application/pdf" multiple style="display:none;" onchange="onImageToolFilesChange()">
+              <button class="s-btn" type="button" onclick="document.getElementById('img-bulk-files').click()">画像/PDFを選択</button>
               <button class="s-btn" id="img-save-btn" type="button" style="background:#0f766e;" onclick="compressAndRenameImages(this)">保存先を選んで保存</button>
             </div>
-            <div class="img-tool-note" id="img-file-note">画像を選択してください（複数可）</div>
-            <div class="img-tool-note">命名形式: <strong>入力文字_YYYYMMDD_連番</strong>（日付は自動、連番は3桁）</div>
+            <div class="img-tool-note" id="img-file-note">画像またはPDFを選択してください（複数可）</div>
+            <div class="img-tool-note">※ PDFは圧縮せず、名称変更のみで保存されます。</div>
             <div class="img-tool-status" id="img-tool-status"></div>
           </div>
         </div>
@@ -1084,6 +1208,14 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
                   </div>
                 </a>
               </div>
+              <div class="admin-tile-wrap">
+                <a class="admin-tile" href="https://docs.google.com/spreadsheets/d/1ko0qTcFTaQJYDHSzV1j5llXTRPxS5gLbX269o-csRbM/edit?gid=0#gid=0" target="_blank">
+                  <i class="ti ti-file-spreadsheet admin-tile-icon"></i>
+                  <div>
+                    <div class="admin-tile-title">製造課<br>ポータルデータ</div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -1136,6 +1268,73 @@ function memberTagHtml(name){
   if(ac) return `<span class="assignee-tag ${ac}">${esc(name)}</span>`;
   return `<span class="assignee-tag" style="background:#6b7280">${esc(name)}</span>`;
 }
+function parseAssigneeNames(raw){
+  if(Array.isArray(raw)){
+    return [...new Set(raw.map(x => String(x||'').trim()).filter(Boolean))];
+  }
+  const s = String(raw || '').trim();
+  if(!s) return [];
+  return [...new Set(s.split(/[,\n、\/]/).map(x => x.trim()).filter(Boolean))];
+}
+function assigneeNamesToPayload(names){
+  return (names || []).map(x => String(x||'').trim()).filter(Boolean).join(',');
+}
+function assigneeTagsHtml(names){
+  const arr = parseAssigneeNames(names);
+  if(!arr.length) return '';
+  return `<div class="todo-assignee-tags">${arr.map(memberTagHtml).join('')}</div>`;
+}
+let _todoAssigneeSelected = [];
+function syncTodoAssigneeSelectedWithMembers(){
+  const valid = new Set(getMembersList().map(m => String(m.name||'').trim()).filter(Boolean));
+  _todoAssigneeSelected = _todoAssigneeSelected.filter(n => valid.has(n));
+}
+function renderTodoAssigneePicker(){
+  const menu = document.getElementById('t-assignee-menu');
+  const preview = document.getElementById('t-assignee-preview');
+  const btn = document.getElementById('t-assignee-btn');
+  if(!menu || !preview || !btn) return;
+  syncTodoAssigneeSelectedWithMembers();
+  const list = getMembersList();
+  if(!list.length){
+    menu.innerHTML = '<div style="font-size:12px;color:#999;padding:4px;">メンバーがありません</div>';
+  }else{
+    menu.innerHTML = list.map((m,i)=>{
+      const name = String(m.name||'').trim();
+      const selected = _todoAssigneeSelected.includes(name);
+      return `<button type="button" class="todo-assignee-item ${selected?'selected':''}" onclick="toggleTodoAssignee('${escAttr(name)}')"><span>${esc(name)}</span><i class="ti ti-check todo-assignee-mark"></i></button>`;
+    }).join('');
+  }
+  preview.innerHTML = assigneeTagsHtml(_todoAssigneeSelected);
+  btn.textContent = _todoAssigneeSelected.length
+    ? `担当者 ${_todoAssigneeSelected.length}名選択`
+    : '担当者を選択';
+}
+function toggleTodoAssigneeMenu(ev){
+  if(ev) ev.stopPropagation();
+  const menu = document.getElementById('t-assignee-menu');
+  const btn = document.getElementById('t-assignee-btn');
+  if(!menu) return;
+  const next = !menu.classList.contains('show');
+  menu.classList.toggle('show', next);
+  if(btn) btn.classList.toggle('open', next);
+}
+function closeTodoAssigneeMenu(){
+  const menu = document.getElementById('t-assignee-menu');
+  const btn = document.getElementById('t-assignee-btn');
+  if(menu) menu.classList.remove('show');
+  if(btn) btn.classList.remove('open');
+}
+function toggleTodoAssignee(name){
+  const n = String(name||'').trim();
+  if(!n) return;
+  if(_todoAssigneeSelected.includes(n)){
+    _todoAssigneeSelected = _todoAssigneeSelected.filter(x => x !== n);
+  }else{
+    _todoAssigneeSelected.push(n);
+  }
+  renderTodoAssigneePicker();
+}
 function refreshMemberSelects(){
   const list = getMembersList();
   const nAuthor = document.getElementById('n-author');
@@ -1146,14 +1345,7 @@ function refreshMemberSelects(){
       getLabel: m => m.name
     });
   }
-  const tAssignee = document.getElementById('t-assignee');
-  if(tAssignee){
-    fillSelectOptions(tAssignee, list, {
-      placeholder: '担当者',
-      getValue: m => m.name,
-      getLabel: m => m.name
-    });
-  }
+  renderTodoAssigneePicker();
 }
 const NOW = new Date();
 const p = n => String(n).padStart(2,'0');
@@ -1483,6 +1675,16 @@ function buildNoticeBody(title, text){
   return `[NTITLE]${t}\n${b}`;
 }
 function cp(path,btn){navigator.clipboard.writeText(path).then(()=>{const o=btn.textContent;btn.textContent='✓ 完了';btn.classList.add('ok');setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2000);});}
+function openSalesforceQuickLink(){
+  const sel = document.getElementById('sf-quick-link');
+  if(!sel) return;
+  const url = String(sel.value || '').trim();
+  if(!url){
+    showToast('リンク先を選択してください');
+    return;
+  }
+  window.open(url, '_blank', 'noopener');
+}
 
 // ── DATA ──
 function renameDownload(input){
@@ -1509,6 +1711,8 @@ async function reloadData(){
 }
 
 const IMAGE_TOOL_PRESET = { maxEdge: 1920, quality: 0.86, mime: 'image/jpeg', ext: 'jpg' };
+const IMAGE_TOOL_RULE_IMAGE = 'image';
+const IMAGE_TOOL_RULE_WORKREPORT = 'workreport';
 function sanitizeFileToken(v){
   return String(v || '')
     .trim()
@@ -1517,9 +1721,58 @@ function sanitizeFileToken(v){
     .replace(/_+/g, '_')
     .replace(/^_+|_+$/g, '');
 }
+function sanitizeFileTokenSpace(v){
+  return String(v || '')
+    .trim()
+    .replace(/[\\\/:*?"<>|]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/^ +| +$/g, '');
+}
 function getTodayYmd(){
   const d = new Date();
   return d.getFullYear() + p(d.getMonth()+1) + p(d.getDate());
+}
+function getTodayIsoDate(){
+  const d = new Date();
+  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+}
+function getImageToolRule(){
+  const el = document.getElementById('img-name-rule');
+  return (el && el.value) || IMAGE_TOOL_RULE_IMAGE;
+}
+function formatDateToYmdFromInput(v){
+  const s = String(v || '').trim();
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return `${m[1]}${m[2]}${m[3]}`;
+  return getTodayYmd();
+}
+function getFileExt(file){
+  const name = String(file && file.name || '');
+  const i = name.lastIndexOf('.');
+  if(i < 0) return '';
+  return name.slice(i + 1).toLowerCase();
+}
+function isPdfFile(file){
+  const type = String(file && file.type || '').toLowerCase();
+  const ext = getFileExt(file);
+  return type === 'application/pdf' || ext === 'pdf';
+}
+function isImageFile(file){
+  const type = String(file && file.type || '').toLowerCase();
+  return type.startsWith('image/');
+}
+function onImageToolRuleChange(){
+  const rule = getImageToolRule();
+  const imageBox = document.getElementById('img-rule-image');
+  const reportBox = document.getElementById('img-rule-workreport');
+  const hint = document.getElementById('img-rule-hint');
+  if(imageBox) imageBox.style.display = rule === IMAGE_TOOL_RULE_IMAGE ? 'grid' : 'none';
+  if(reportBox) reportBox.style.display = rule === IMAGE_TOOL_RULE_WORKREPORT ? 'grid' : 'none';
+  if(hint){
+    hint.innerHTML = rule === IMAGE_TOOL_RULE_WORKREPORT
+      ? '命名形式: <strong>作業報告書 FK/FS番号 ユーザー名 日付</strong>（日付は初期値が当日で変更可）'
+      : '命名形式: <strong>入力文字_YYYYMMDD_連番</strong>（日付は自動、連番は3桁）';
+  }
 }
 function onImageToolFilesChange(){
   const inp = document.getElementById('img-bulk-files');
@@ -1527,11 +1780,13 @@ function onImageToolFilesChange(){
   if(!inp || !note) return;
   const files = Array.from(inp.files || []);
   if(!files.length){
-    note.textContent = '画像を選択してください（複数可）';
+    note.textContent = '画像またはPDFを選択してください（複数可）';
     return;
   }
+  const imageCount = files.filter(isImageFile).length;
+  const pdfCount = files.filter(isPdfFile).length;
   const names = files.slice(0,3).map(f=>f.name).join(' / ');
-  note.textContent = files.length + '枚選択中: ' + names + (files.length > 3 ? ' ...' : '');
+  note.textContent = `${files.length}件選択中（画像 ${imageCount} / PDF ${pdfCount}）: ${names}${files.length > 3 ? ' ...' : ''}`;
 }
 function setImageToolBusy(btn, busy){
   if(!btn) return;
@@ -1606,31 +1861,49 @@ async function saveBlobToDestination(blob, fileName, dirHandle){
     setTimeout(() => URL.revokeObjectURL(url), 1500);
   }
 }
-async function saveBlobWithFilePicker(blob, fileName){
+async function saveBlobWithFilePicker(blob, fileName, mime){
+  const safeMime = mime || 'application/octet-stream';
+  const dotIdx = fileName.lastIndexOf('.');
+  const ext = dotIdx >= 0 ? fileName.slice(dotIdx).toLowerCase() : '';
   const fileHandle = await window.showSaveFilePicker({
     suggestedName: fileName,
     types: [{
-      description: 'JPEG Image',
-      accept: { 'image/jpeg': ['.jpg', '.jpeg'] }
+      description: '保存ファイル',
+      accept: { [safeMime]: ext ? [ext] : [] }
     }]
   });
   const writable = await fileHandle.createWritable();
   await writable.write(blob);
   await writable.close();
 }
+function buildImageToolName(rule, seq, total){
+  if(rule === IMAGE_TOOL_RULE_WORKREPORT){
+    const fkfs = sanitizeFileTokenSpace((document.getElementById('img-report-number') || {}).value);
+    const user = sanitizeFileTokenSpace((document.getElementById('img-report-user') || {}).value);
+    const dateYmd = formatDateToYmdFromInput((document.getElementById('img-report-date') || {}).value);
+    if(!fkfs || !user){
+      return { ok:false, message: 'FK/FS番号とユーザー名を入力してください' };
+    }
+    return { ok:true, base:`作業報告書 ${fkfs} ${user} ${dateYmd}` };
+  }
+  const prefix = sanitizeFileToken((document.getElementById('img-name-prefix') || {}).value);
+  if(!prefix){
+    return { ok:false, message: '内容を入力してください' };
+  }
+  return { ok:true, base:`${prefix}_${getTodayYmd()}_${String(seq).padStart(3,'0')}` };
+}
 async function compressAndRenameImages(btnEl){
-  const prefixInput = document.getElementById('img-name-prefix');
   const fileInput = document.getElementById('img-bulk-files');
   const statusEl = document.getElementById('img-tool-status');
-  const prefix = sanitizeFileToken(prefixInput && prefixInput.value);
   const files = Array.from((fileInput && fileInput.files) || []);
-  if(!prefix){
-    showToast('不具合内容を入力してください');
-    if(prefixInput) prefixInput.focus();
+  const rule = getImageToolRule();
+  if(!files.length){
+    showToast('画像またはPDFを選択してください');
     return;
   }
-  if(!files.length){
-    showToast('画像を選択してください');
+  const probe = buildImageToolName(rule, 1, files.length);
+  if(!probe.ok){
+    showToast(probe.message);
     return;
   }
   setImageToolBusy(btnEl, true);
@@ -1653,21 +1926,38 @@ async function compressAndRenameImages(btnEl){
     }
   }
   if(!dirHandle && canSaveByPicker) saveMode = 'file';
+
   let ok = 0;
   let ng = 0;
   let cancelled = false;
-  const ymd = getTodayYmd();
+  let pdfRenameOnlyCount = 0;
+  let compressedCount = 0;
   for(let i=0;i<files.length;i++){
-    const seq = String(i+1).padStart(3,'0');
-    const fileName = `${prefix}_${ymd}_${seq}.${IMAGE_TOOL_PRESET.ext}`;
+    const file = files[i];
+    const nameInfo = buildImageToolName(rule, i+1, files.length);
+    if(!nameInfo.ok){
+      ng++;
+      continue;
+    }
     try{
-      const blob = await compressImageLarge(files[i]);
+      let blobToSave = file;
+      let mime = file.type || 'application/octet-stream';
+      let ext = getFileExt(file) || 'dat';
+      if(isPdfFile(file)){
+        pdfRenameOnlyCount++;
+      }else if(isImageFile(file)){
+        blobToSave = await compressImageLarge(file);
+        mime = IMAGE_TOOL_PRESET.mime;
+        ext = IMAGE_TOOL_PRESET.ext;
+        compressedCount++;
+      }
+      const fileName = `${nameInfo.base}.${ext}`;
       if(saveMode === 'folder'){
-        await saveBlobToDestination(blob, fileName, dirHandle);
+        await saveBlobToDestination(blobToSave, fileName, dirHandle);
       }else if(saveMode === 'file'){
-        await saveBlobWithFilePicker(blob, fileName);
+        await saveBlobWithFilePicker(blobToSave, fileName, mime);
       }else{
-        await saveBlobToDestination(blob, fileName, null);
+        await saveBlobToDestination(blobToSave, fileName, null);
       }
       ok++;
     }catch(e){
@@ -1689,7 +1979,7 @@ async function compressAndRenameImages(btnEl){
           ? '（file:// では保存先選択APIが使えないため、通常ダウンロードになります）'
           : '（このブラウザでは保存先選択API未対応）')
       : '';
-    statusEl.textContent = `完了: ${ok}件${modeText} / 失敗: ${ng}件${note}${cancelled?' / キャンセル終了':''}`;
+    statusEl.textContent = `完了: ${ok}件${modeText} / 失敗: ${ng}件（画像圧縮 ${compressedCount}件 / PDF名称変更 ${pdfRenameOnlyCount}件）${note}${cancelled?' / キャンセル終了':''}`;
   }
   if(fileInput) fileInput.value = '';
   onImageToolFilesChange();
@@ -2337,10 +2627,11 @@ function renderTodos(todos){
   });
   function rowHtml(t){
     const done=String(t.done)==='true'||t.done===true;
+    const assignees = parseAssigneeNames(t.assignees && t.assignees.length ? t.assignees : t.assignee);
     return `<div class="ti-row" data-id="${esc(String(t.id))}">
       <div class="tc ${done?'dn':''}" onclick="toggleTodo('${esc(String(t.id))}',this)"><i class="ti ti-check"></i></div>
       <div class="tt ${done?'dn':''}">${esc(t.text)}</div>
-      ${t.assignee ? memberTagHtml(t.assignee) : ''}
+      ${assignees.length ? assigneeTagsHtml(assignees) : ''}
       ${t.tag?`<span class="task-tag">${esc(t.tag)}</span>`:''}
     </div>`;
   }
@@ -2365,16 +2656,19 @@ async function addT(){
   if(btn && btn.disabled) return;
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>追加中...'; }
   const tx=document.getElementById('tinp').value.trim();
-  const as=document.getElementById('t-assignee').value;
+  const assignees = [..._todoAssigneeSelected];
+  const as=assigneeNamesToPayload(assignees);
   const tg=document.getElementById('t-tag').value;
   if(!tx){ if(btn){btn.disabled=false;btn.textContent='追加';} return; }
   const id='T'+Date.now();
   try{
     await gasPost({sheet:'TODO',id,datetime:fmtDT(),assignee:as,text:tx,tag:tg,done:false});
-    const nextTodos = [...(_settingsTodos||[]), {id, datetime:fmtDT(), assignee:as, text:tx, tag:tg, done:false, doneAt:''}];
+    const nextTodos = [...(_settingsTodos||[]), {id, datetime:fmtDT(), assignee:as, assignees, text:tx, tag:tg, done:false, doneAt:''}];
     renderTodos(nextTodos);
     renderSettingsLists();
     document.getElementById('tinp').value='';
+    _todoAssigneeSelected = [];
+    renderTodoAssigneePicker();
     showToast('タスクを追加しました');
     loadData().catch(()=>{});
     if(btn){btn.disabled=false;btn.innerHTML='追加';}
@@ -2435,10 +2729,11 @@ function renderSettingsLists(){
   } else {
     tl.innerHTML = _settingsTodos.map((t,idx)=>{
       const done = String(t.done)==='true'||t.done===true;
+      const assignees = parseAssigneeNames(t.assignees && t.assignees.length ? t.assignees : t.assignee);
       return `<div class="s-list-item">
         <input type="checkbox" class="todo-chk" data-id="${esc(String(t.id))}">
         <div class="s-list-item-body">
-          ${t.assignee ? memberTagHtml(t.assignee) : ''}
+          ${assignees.length ? assigneeTagsHtml(assignees) : ''}
           <span style="margin-left:4px;${done?'text-decoration:line-through;color:#999':''}">${esc(t.text)}</span>
           ${t.tag?`<span class="task-tag" style="margin-left:4px;">${esc(t.tag)}</span>`:''}
           <div class="s-list-item-meta">${esc(String(t.datetime))}</div>
@@ -3442,7 +3737,13 @@ function selectMonth(m){
 document.addEventListener('click', function(e){
   const f = document.getElementById('cal-month-float');
   if(f && !f.contains(e.target)) f.classList.remove('show');
+  const picker = document.getElementById('todo-assignee-picker');
+  if(picker && !picker.contains(e.target)) closeTodoAssigneeMenu();
 });
+const imgReportDateEl = document.getElementById('img-report-date');
+if(imgReportDateEl && !imgReportDateEl.value) imgReportDateEl.value = getTodayIsoDate();
+onImageToolRuleChange();
+onImageToolFilesChange();
 renderCal();
 refreshNoticeTypeSelect();
 refreshMemberSelects();
