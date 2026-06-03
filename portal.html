@@ -179,7 +179,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .a-an{background:var(--an);}
 .a-tsuda{background:var(--tsuda);}
 .task-tag{font-size:10px;font-weight:700;background:#f0f0f0;color:var(--text2);padding:3px 8px;border-radius:4px;white-space:nowrap;}
-.todo-input-row{display:grid;grid-template-columns:minmax(180px,1fr) 200px 120px auto;gap:8px;padding:11px 18px;border-top:1px solid var(--border);background:#ffffff;align-items:center;}
+.todo-input-row{display:grid;grid-template-columns:minmax(180px,1fr) 200px 120px 190px auto;gap:8px;padding:11px 18px;border-top:1px solid var(--border);background:#ffffff;align-items:center;}
 .todo-input-row input{flex:1;min-width:120px;border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:14px;font-family:var(--sans);outline:none;}
 .todo-input-row input:focus{border-color:var(--blue);}
 .todo-input-row select{border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:14px;font-family:var(--sans);background:#fff;cursor:pointer;outline:none;height:36px;}
@@ -269,6 +269,11 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .todo-assignee-mark{display:none;}
 .todo-assignee-preview{display:flex;flex-wrap:wrap;gap:5px;min-height:20px;grid-column:1 / -1;margin-top:2px;}
 .todo-assignee-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.todo-date-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.todo-date-pill{font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#eef2ff;color:#3730a3;white-space:nowrap;}
+.todo-due-wrap{display:flex;align-items:center;gap:6px;min-width:0;}
+.todo-due-label{font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap;}
+.todo-due-wrap input{min-width:0;flex:1;}
 .btn-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:4px;}
 .btn-spinner-danger{display:inline-block;width:16px;height:16px;border:2px solid rgba(220,38,38,.25);border-top-color:#dc2626;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;}
 .icon-del-btn:disabled{opacity:.45;cursor:not-allowed;pointer-events:none;}
@@ -384,6 +389,52 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
   background:#eef4fb;
   z-index:255;
 }
+.workorder-wrap{max-width:1240px;margin:0 auto;padding:26px 28px 34px;}
+.workorder-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.workorder-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--blue);font-size:13px;font-family:var(--sans);padding:0;}
+.workorder-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.workorder-layout{display:grid;grid-template-columns:minmax(360px,1fr) minmax(480px,1fr);gap:14px;align-items:start;}
+.workorder-card{background:#fff;border-radius:4px;box-shadow:var(--shadow);overflow:hidden;}
+.workorder-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:#f7f9fc;}
+.workorder-card-title{font-size:14px;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:7px;}
+.workorder-card-title i{color:var(--blue);}
+.workorder-form{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.workorder-field{display:flex;flex-direction:column;gap:5px;}
+.workorder-field.full{grid-column:1 / span 2;}
+.workorder-field label{font-size:12px;font-weight:700;color:#334155;}
+.workorder-input{border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;}
+.workorder-input:focus{border-color:var(--blue);}
+.workorder-paper-wrap{padding:16px;background:#e2e8f0;overflow:auto;}
+.workorder-paper{
+  width:210mm;
+  min-height:297mm;
+  margin:0 auto;
+  background:#fff;
+  border:1px solid #cbd5e1;
+  box-shadow:0 4px 24px rgba(15,23,42,.12);
+  padding:10mm;
+  color:#111827;
+  font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+}
+.workorder-title{font-size:26px;font-weight:900;letter-spacing:.1em;text-align:center;margin:2mm 0 5mm;}
+.workorder-meta{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #0f172a;border-left:1px solid #0f172a;margin-bottom:5mm;}
+.workorder-meta-row{display:grid;grid-template-columns:38mm 1fr;border-right:1px solid #0f172a;border-bottom:1px solid #0f172a;min-height:10mm;}
+.workorder-meta-label{background:#f8fafc;border-right:1px solid #0f172a;padding:2.5mm 2mm;font-size:12px;font-weight:700;}
+.workorder-meta-value{padding:2.5mm 2mm;font-size:13px;font-weight:600;word-break:break-word;}
+.workorder-section{border-top:1px solid #0f172a;border-left:1px solid #0f172a;margin-bottom:4mm;}
+.workorder-section-row{display:grid;grid-template-columns:38mm 1fr;border-right:1px solid #0f172a;border-bottom:1px solid #0f172a;}
+.workorder-section-label{background:#f8fafc;border-right:1px solid #0f172a;padding:2.5mm 2mm;font-size:12px;font-weight:700;}
+.workorder-section-body{padding:2.5mm 3mm;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+.workorder-section-body.long{min-height:54mm;}
+.workorder-section-body.mid{min-height:34mm;}
+.workorder-foot{margin-top:6mm;display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
+.workorder-sign{border:1px solid #0f172a;min-height:16mm;padding:2.5mm 3mm;font-size:12px;}
+.workorder-issue{margin-top:4mm;text-align:right;font-size:12px;color:#334155;}
+
+@media (max-width:1200px){
+  .workorder-layout{grid-template-columns:1fr;}
+  .workorder-paper{width:min(210mm,100%);}
+}
 .member-wrap{max-width:1000px;margin:0 auto;padding:28px 28px 36px;}
 .member-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--blue);font-size:13px;font-family:var(--sans);padding:0;margin-bottom:16px;}
 .member-hero{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;padding:18px;background:#fff;border-radius:4px;box-shadow:var(--shadow);border-top:4px solid var(--blue);}
@@ -461,6 +512,36 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
 .admin-surface .s-btn:hover{background:#6d28d9;}
 .admin-surface .s-btn.alt{background:#64748b;}
 .admin-surface .s-btn.alt:hover{background:#475569;}
+.admin-quick-select{
+  font-size:18px !important;
+  min-height:39px;
+  padding:9px 12px 9px 40px;
+  border:2px solid #7c3aed !important;
+  background:#a78bfa !important;
+  color:#ffffff !important;
+  font-weight:800 !important;
+}
+.admin-quick-select:focus{
+  border-color:#5b21b6 !important;
+  box-shadow:0 0 0 3px rgba(124,58,237,.35);
+}
+.admin-quick-select option{
+  background:#7c3aed;
+  color:#ffffff;
+  font-weight:800;
+}
+.admin-select-wrap{
+  position:relative;
+}
+.admin-select-wrap i{
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:18px;
+  color:#ffffff;
+  pointer-events:none;
+}
 
 
 
@@ -640,7 +721,9 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
               <div class="tile-name">Salesforce</div>
               <div class="tile-desc">顧客・案件・活動管理</div>
               <div class="sf-shortcut-row">
-                <select id="sf-quick-link" class="sf-shortcut-select">
+                <select id="sf-quick-link" class="sf-shortcut-select" onchange="openSalesforceQuickLink()">
+                  <option value="" selected>Salesforceリンクを選択</option>
+                  <option value="https://jpnext.lightning.force.com/lightning/n/TSMNTBS__mitocoLEX">mitoco</option>
                   <option value="https://jpnext.lightning.force.com/lightning/page/home">Salesforce ホーム</option>
                   <option value="https://jpnext.lightning.force.com/lightning/o/Specification__c/list?filterName=All">仕様確認書 全て</option>
                   <option value="https://jpnext.lightning.force.com/lightning/r/Report/00OIi000000FMvoMAG/view">FK案件一覧</option>
@@ -648,7 +731,6 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
                   <option value="https://jpnext.lightning.force.com/lightning/o/Sales__c/list?filterName=FA">FAの受注案件</option>
                   <option value="https://jpnext.lightning.force.com/lightning/o/InsideCompanyMaintenance__c/list?filterName=TEST">FS案件 社内メンテナンス(TEST以外)</option>
                 </select>
-                <button type="button" class="sf-shortcut-btn" onclick="openSalesforceQuickLink()">開く</button>
               </div>
             </div>
                         <a class="tile" href="https://ap.sansan.com/" target="_blank">
@@ -720,6 +802,10 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
                   <option>出荷</option><option>在庫</option><option>IT</option>
                   <option>品質</option><option>安全</option><option>その他</option>
                 </select>
+                <div class="todo-due-wrap">
+                  <span class="todo-due-label">完了希望日</span>
+                  <input id="t-due-date" type="date" title="完了希望日" aria-label="完了希望日">
+                </div>
                 <button id="add-todo-btn" onclick="addT()">追加</button>
                 <div id="t-assignee-preview" class="todo-assignee-preview"></div>
               </div>
@@ -754,6 +840,7 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
               <select id="img-name-rule" onchange="onImageToolRuleChange()" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;background:#fff;">
                 <option value="image">画像: 入力文字_YYYYMMDD_連番</option>
                 <option value="workreport">作業報告書: 作業報告書 FK/FS番号 ユーザー名 日付</option>
+                <option value="slip">送状: 日付_客先会社名_お客様名様_送状</option>
               </select>
               <div class="img-tool-note" id="img-rule-hint" style="margin-top:0;">命名形式: <strong>入力文字_YYYYMMDD_連番</strong>（日付は自動、連番は3桁）</div>
             </div>
@@ -764,6 +851,11 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
               <input type="text" id="img-report-number" placeholder="FKまたはFS番号（例: FK1234）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
               <input type="text" id="img-report-user" placeholder="ユーザー名（例: 山田）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
               <input type="date" id="img-report-date" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            </div>
+            <div id="img-rule-slip" style="display:none;grid-template-columns:180px 1fr 1fr;gap:8px;margin-bottom:8px;">
+              <input type="date" id="img-slip-date" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="text" id="img-slip-company" placeholder="客先会社名（例: 株式会社〇〇）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="text" id="img-slip-customer" placeholder="お客様名（例: 山田太郎）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
             </div>
             <div class="img-tool-grid">
               <input type="file" id="img-bulk-files" accept="image/*,.pdf,application/pdf" multiple style="display:none;" onchange="onImageToolFilesChange()">
@@ -784,6 +876,9 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
         <div class="card" id="forms-section" style="padding:0;margin-bottom:20px;">
           <div class="card-hdr"><div class="card-title"><i class="ti ti-forms"></i>フォーム</div></div>
           <div class="form-grid">
+            <a class="form-tile" href="workorder.html">
+              <i class="ti ti-file-description"></i><span class="form-tile-label">作業指示書</span>
+            </a>
             <a class="form-tile" href="https://docs.google.com/forms/d/1Q9DhQZTHoC4xBF5y93m5sGnRkoONNJ-zKje1nQmzEYE/edit" target="_blank" rel="noopener noreferrer">
               <i class="ti ti-alert-triangle"></i><span class="form-tile-label">不具合</span>
             </a>
@@ -792,6 +887,9 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
             </a>
             <a class="form-tile" href="https://docs.google.com/forms/d/e/1FAIpQLSfbyv5Qxxjc2dUoQN5PrxVp9sv6xsGz5y621PzwOFy2dDQZQA/viewform" target="_blank" rel="noopener noreferrer">
               <i class="ti ti-map-pin"></i><span class="form-tile-label">現地報告</span>
+            </a>
+            <a class="form-tile" href="https://docs.google.com/spreadsheets/d/1GkeEID98CWGPz_h2UtXP7yzdSi_X9jzJ9ofoZtbZuXQ/edit?gid=1570059078#gid=1570059078" target="_blank" rel="noopener noreferrer">
+              <i class="ti ti-file-spreadsheet"></i><span class="form-tile-label">製造課_作業指示書データ</span>
             </a>
 
           </div>
@@ -1119,6 +1217,40 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
         <div id="s-member-list" style="max-height:600px;overflow-y:auto;"></div>
       </div>
 
+      <div class="s-sec">
+        <div class="s-sec-hdr">
+          <div class="s-sec-title">🧾 作業指示書の選択肢設定</div>
+          <div class="s-sec-desc">作業部署・作業場所のプルダウン候補を追加/削除できます（作業指示書ページに反映）。</div>
+        </div>
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:#ffffff;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">作業指示書DBの連携先（専用スプレッドシート）</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+            <input type="text" id="workorder-db-sheet" placeholder="スプレッドシートID または URL" style="flex:1;min-width:320px;border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="url" id="workorder-db-gas-url" placeholder="作業指示専用 GAS WebアプリURL" style="flex:1;min-width:320px;border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <button class="s-btn" onclick="saveWorkorderDbSpreadsheet(this)">保存</button>
+          </div>
+          <div id="workorder-db-sheet-status" style="margin-top:8px;font-size:12px;color:var(--text3);">連携先: 未設定</div>
+        </div>
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:#ffffff;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">＋ 作業部署を追加</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+            <input type="text" id="new-workorder-dept" placeholder="例：ジェイピーネクスト株式会社　製造部　製造課" style="flex:1;min-width:260px;border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <button class="s-btn" onclick="addWorkorderDepartment(this)">追加</button>
+          </div>
+          <div id="s-workorder-dept-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+        <div style="padding:14px 18px;background:#ffffff;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">＋ 作業場所を追加</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+            <input type="text" id="new-workorder-place" placeholder="例：テックセンタ" style="flex:1;min-width:260px;border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <button class="s-btn" onclick="addWorkorderPlace(this)">追加</button>
+          </div>
+          <div id="s-workorder-place-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+      </div>
+
       <!-- メンバー専用ページ設定 -->
       <div class="s-sec">
         <div class="s-sec-hdr">
@@ -1219,6 +1351,142 @@ body{font-family:var(--sans);background:#ffffff;color:var(--text);font-size:15px
             </div>
           </div>
         </div>
+        <div class="admin-sec">
+          <div class="admin-sec-hdr">
+            <div class="admin-sec-title"><i class="ti ti-link"></i>業務リンク</div>
+            <div class="admin-sec-desc">選択すると新しいタブで開きます</div>
+          </div>
+          <div class="admin-row" style="align-items:center;">
+            <div class="admin-col" style="max-width:560px;">
+              <div class="admin-label">デベロッパーサイト（開発ツール）選択</div>
+              <div class="admin-select-wrap">
+                <i class="ti ti-code"></i>
+                <select id="admin-dev-quick-link" class="sf-shortcut-select admin-quick-select" onchange="openAdminDevQuickLink()">
+                  <option value="">デベロッパーサイト（開発ツール）選択</option>
+                  <option value="https://github.com/">GitHub</option>
+                  <option value="https://admin.cloud.microsoft/#/homepage">Microsoft 365 管理センター</option>
+                  <option value="https://signin.autodesk.com/?flowId=DqTWWTAqND">Autodesk</option>
+                  <option value="https://adminconsole.adobe.com/CEA421CF6940FB960A495FFD@AdobeOrg/overview">Adobe admin console</option>
+                  <option value="https://qst05-ism.cloud-one.net/ismc-user/#/">ismCloudOne</option>
+                </select>
+              </div>
+            </div>
+            <div class="admin-col" style="max-width:560px;">
+              <div class="admin-label">業務サイト選択</div>
+              <div class="admin-select-wrap">
+                <i class="ti ti-briefcase"></i>
+                <select id="admin-quick-link" class="sf-shortcut-select admin-quick-select" onchange="openAdminQuickLink()">
+                  <option value="">業務サイトを選択</option>
+                  <option value="https://expense.moneyforward.com">MoneyForwardクラウド経費</option>
+                  <option value="https://www.monotaro.com">MonotaRO</option>
+                  <option value="https://www.frecious.jp/mypagefrecious/index.php">FRECIOUS</option>
+                  <option value="https://www.amazon.co.jp/?ref_=abn_logo">Amazon</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORK ORDER PAGE -->
+  <div class="page" id="page-workorder">
+    <div class="workorder-wrap">
+      <div class="workorder-top">
+        <button class="workorder-back" onclick="showPage('home')"><i class="ti ti-arrow-left"></i>ホームに戻る</button>
+        <div class="workorder-actions">
+          <button class="s-btn" onclick="printWorkOrderPdf()"><i class="ti ti-file-type-pdf"></i>PDF出力</button>
+          <button class="s-btn alt" onclick="resetWorkOrderForm()"><i class="ti ti-refresh"></i>次の指示書を作成</button>
+        </div>
+      </div>
+      <div class="workorder-layout">
+        <div class="workorder-card">
+          <div class="workorder-card-hdr">
+            <div class="workorder-card-title"><i class="ti ti-edit-circle"></i>作業指示書 入力</div>
+          </div>
+          <div class="workorder-form">
+            <div class="workorder-field">
+              <label for="wo-requester">作業依頼者</label>
+              <input id="wo-requester" class="workorder-input" type="text" placeholder="例: 山田 太郎" oninput="renderWorkOrderPreview()">
+            </div>
+            <div class="workorder-field">
+              <label for="wo-contractor">作業請負者</label>
+              <input id="wo-contractor" class="workorder-input" type="text" placeholder="例: 製造課 山下" oninput="renderWorkOrderPreview()">
+            </div>
+            <div class="workorder-field">
+              <label for="wo-request-date">依頼日</label>
+              <input id="wo-request-date" class="workorder-input" type="date" oninput="renderWorkOrderPreview()">
+            </div>
+            <div class="workorder-field">
+              <label for="wo-deadline">作業期限</label>
+              <input id="wo-deadline" class="workorder-input" type="date" oninput="renderWorkOrderPreview()">
+            </div>
+            <div class="workorder-field full">
+              <label for="wo-request">依頼事項</label>
+              <textarea id="wo-request" class="workorder-input" rows="4" placeholder="依頼内容を記入" oninput="renderWorkOrderPreview()"></textarea>
+            </div>
+            <div class="workorder-field full">
+              <label for="wo-work">作業内容</label>
+              <textarea id="wo-work" class="workorder-input" rows="8" placeholder="具体的な作業内容を記入" oninput="renderWorkOrderPreview()"></textarea>
+            </div>
+            <div class="workorder-field full">
+              <label for="wo-note">備考</label>
+              <textarea id="wo-note" class="workorder-input" rows="4" placeholder="注意事項、連絡事項など" oninput="renderWorkOrderPreview()"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="workorder-card">
+          <div class="workorder-card-hdr">
+            <div class="workorder-card-title"><i class="ti ti-file-description"></i>帳票プレビュー（A4）</div>
+          </div>
+          <div class="workorder-paper-wrap">
+            <div class="workorder-paper" id="workorder-paper">
+              <div class="workorder-title">作業指示書</div>
+              <div class="workorder-meta">
+                <div class="workorder-meta-row">
+                  <div class="workorder-meta-label">作業依頼者</div>
+                  <div class="workorder-meta-value" id="wo-preview-requester"></div>
+                </div>
+                <div class="workorder-meta-row">
+                  <div class="workorder-meta-label">作業請負者</div>
+                  <div class="workorder-meta-value" id="wo-preview-contractor"></div>
+                </div>
+                <div class="workorder-meta-row">
+                  <div class="workorder-meta-label">依頼日</div>
+                  <div class="workorder-meta-value" id="wo-preview-request-date"></div>
+                </div>
+                <div class="workorder-meta-row">
+                  <div class="workorder-meta-label">作業期限</div>
+                  <div class="workorder-meta-value" id="wo-preview-deadline"></div>
+                </div>
+              </div>
+              <div class="workorder-section">
+                <div class="workorder-section-row">
+                  <div class="workorder-section-label">依頼事項</div>
+                  <div class="workorder-section-body mid" id="wo-preview-request"></div>
+                </div>
+              </div>
+              <div class="workorder-section">
+                <div class="workorder-section-row">
+                  <div class="workorder-section-label">作業内容</div>
+                  <div class="workorder-section-body long" id="wo-preview-work"></div>
+                </div>
+              </div>
+              <div class="workorder-section">
+                <div class="workorder-section-row">
+                  <div class="workorder-section-label">備考</div>
+                  <div class="workorder-section-body mid" id="wo-preview-note"></div>
+                </div>
+              </div>
+              <div class="workorder-foot">
+                <div class="workorder-sign">依頼者 署名：</div>
+                <div class="workorder-sign">請負者 署名：</div>
+              </div>
+              <div class="workorder-issue" id="wo-preview-issued-at"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1256,7 +1524,7 @@ function gasPost(payload){
     body:'data='+encodeURIComponent(JSON.stringify(payload))
   });
 }
-const MEMBER_CLASS = {'鬼頭':'a-kito','佐藤':'a-sato','山下':'a-yamashita','山﨑':'a-yamazaki','サン':'a-san','喜多':'a-kita','アン':'a-an','津田':'a-tsuda'};
+const MEMBER_CLASS = {'鬼頭':'a-kito','鬼頭(貴)':'a-kito','佐藤':'a-sato','山下':'a-yamashita','山﨑':'a-yamazaki','サン':'a-san','喜多':'a-kita','アン':'a-an','津田':'a-tsuda'};
 function getMembersList(){
   return (_membersCache && _membersCache.length > 0) ? _membersCache : DEFAULT_MEMBERS;
 }
@@ -1283,6 +1551,19 @@ function assigneeTagsHtml(names){
   const arr = parseAssigneeNames(names);
   if(!arr.length) return '';
   return `<div class="todo-assignee-tags">${arr.map(memberTagHtml).join('')}</div>`;
+}
+function extractYmdFromDateLike(v){
+  const s = String(v || '').trim();
+  if(!s) return '';
+  const m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if(!m) return '';
+  return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+}
+function getTodoRegisteredDate(t){
+  return String(t.regDate || t.registeredDate || '').trim() || extractYmdFromDateLike(t.datetime);
+}
+function getTodoDueDate(t){
+  return String(t.dueDate || t.deadline || '').trim();
 }
 let _todoAssigneeSelected = [];
 function syncTodoAssigneeSelectedWithMembers(){
@@ -1533,6 +1814,104 @@ function requestSettingsAccess(){
   }
   return true;
 }
+function formatWorkOrderDate(v){
+  const s = String(v || '').trim();
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return '';
+  return `${m[1]}/${m[2]}/${m[3]}`;
+}
+function workOrderValue(id){
+  const el = document.getElementById(id);
+  return el ? String(el.value || '').trim() : '';
+}
+function workOrderTextOrPlaceholder(v){
+  return v || '　';
+}
+function renderWorkOrderPreview(){
+  const requester = workOrderValue('wo-requester');
+  const contractor = workOrderValue('wo-contractor');
+  const requestDate = formatWorkOrderDate(workOrderValue('wo-request-date'));
+  const deadline = formatWorkOrderDate(workOrderValue('wo-deadline'));
+  const request = workOrderValue('wo-request');
+  const work = workOrderValue('wo-work');
+  const note = workOrderValue('wo-note');
+
+  const map = {
+    'wo-preview-requester': workOrderTextOrPlaceholder(requester),
+    'wo-preview-contractor': workOrderTextOrPlaceholder(contractor),
+    'wo-preview-request-date': workOrderTextOrPlaceholder(requestDate),
+    'wo-preview-deadline': workOrderTextOrPlaceholder(deadline),
+    'wo-preview-request': workOrderTextOrPlaceholder(request),
+    'wo-preview-work': workOrderTextOrPlaceholder(work),
+    'wo-preview-note': workOrderTextOrPlaceholder(note)
+  };
+  Object.keys(map).forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = map[id];
+  });
+  const issued = document.getElementById('wo-preview-issued-at');
+  if(issued){
+    issued.textContent = `作成日時: ${fmtDT()}`;
+  }
+}
+function resetWorkOrderForm(){
+  const ids = ['wo-requester','wo-contractor','wo-request','wo-work','wo-note','wo-deadline'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  const requestDateEl = document.getElementById('wo-request-date');
+  if(requestDateEl) requestDateEl.value = getTodayIsoDate();
+  renderWorkOrderPreview();
+  showToast('次の指示書の入力を開始できます');
+}
+function buildWorkOrderPrintHtml(){
+  const paper = document.getElementById('workorder-paper');
+  if(!paper) return '';
+  const preview = paper.cloneNode(true);
+  preview.style.margin = '0 auto';
+  preview.style.boxShadow = 'none';
+  preview.style.border = '1px solid #0f172a';
+  const style = `<style>
+    @page{size:A4;margin:8mm;}
+    html,body{margin:0;padding:0;background:#fff;}
+    body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;color:#111827;}
+    .workorder-paper{width:100%;min-height:auto;padding:8mm;box-sizing:border-box;}
+    .workorder-title{font-size:26px;font-weight:900;letter-spacing:.1em;text-align:center;margin:2mm 0 5mm;}
+    .workorder-meta{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #0f172a;border-left:1px solid #0f172a;margin-bottom:5mm;}
+    .workorder-meta-row{display:grid;grid-template-columns:38mm 1fr;border-right:1px solid #0f172a;border-bottom:1px solid #0f172a;min-height:10mm;}
+    .workorder-meta-label{background:#f8fafc;border-right:1px solid #0f172a;padding:2.5mm 2mm;font-size:12px;font-weight:700;}
+    .workorder-meta-value{padding:2.5mm 2mm;font-size:13px;font-weight:600;word-break:break-word;}
+    .workorder-section{border-top:1px solid #0f172a;border-left:1px solid #0f172a;margin-bottom:4mm;}
+    .workorder-section-row{display:grid;grid-template-columns:38mm 1fr;border-right:1px solid #0f172a;border-bottom:1px solid #0f172a;}
+    .workorder-section-label{background:#f8fafc;border-right:1px solid #0f172a;padding:2.5mm 2mm;font-size:12px;font-weight:700;}
+    .workorder-section-body{padding:2.5mm 3mm;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+    .workorder-section-body.long{min-height:54mm;}
+    .workorder-section-body.mid{min-height:34mm;}
+    .workorder-foot{margin-top:6mm;display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
+    .workorder-sign{border:1px solid #0f172a;min-height:16mm;padding:2.5mm 3mm;font-size:12px;}
+    .workorder-issue{margin-top:4mm;text-align:right;font-size:12px;color:#334155;}
+  </style>`;
+  return `<!doctype html><html><head><meta charset="utf-8">${style}</head><body>${preview.outerHTML}</body></html>`;
+}
+function printWorkOrderPdf(){
+  renderWorkOrderPreview();
+  const html = buildWorkOrderPrintHtml();
+  if(!html){
+    showToast('帳票プレビューの生成に失敗しました');
+    return;
+  }
+  const w = window.open('', '_blank', 'noopener');
+  if(!w){
+    showToast('ポップアップがブロックされています');
+    return;
+  }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  setTimeout(() => w.print(), 250);
+}
 async function setGlobalSettingsPassword(){
   const inp = document.getElementById('settings-pass-input');
   if(!inp) return;
@@ -1588,6 +1967,7 @@ function showPage(name){
     renderDocs(_docs);
     renderStorageSettings();
     renderMemberSettings();
+    renderWorkorderOptionsSettings();
     renderMemberProfileSettings();
     renderNoticeTypeSettings();
     const _heroUrl = document.querySelector('.hero-img img')?.src || '';
@@ -1599,6 +1979,11 @@ function showPage(name){
     const btns = document.querySelectorAll('.nav-item');
     btns.forEach(b=>{ if(b.textContent.includes('管理者ページ')) b.classList.add('active'); });
     renderAdminVisibility();
+  } else if(name==='workorder'){
+    window.scrollTo({top:0,left:0,behavior:'auto'});
+    const wp = document.getElementById('page-workorder');
+    if(wp) wp.scrollTop = 0;
+    renderWorkOrderPreview();
   } else if(name==='member'){
     // メンバーページ中はサイドナビのactiveを付けない
   }
@@ -1675,15 +2060,33 @@ function buildNoticeBody(title, text){
   return `[NTITLE]${t}\n${b}`;
 }
 function cp(path,btn){navigator.clipboard.writeText(path).then(()=>{const o=btn.textContent;btn.textContent='✓ 完了';btn.classList.add('ok');setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2000);});}
+function cpFromBtn(btn){
+  if(!btn) return;
+  cp(String(btn.dataset.copy || ''), btn);
+}
 function openSalesforceQuickLink(){
   const sel = document.getElementById('sf-quick-link');
   if(!sel) return;
   const url = String(sel.value || '').trim();
-  if(!url){
-    showToast('リンク先を選択してください');
-    return;
-  }
+  if(!url) return;
   window.open(url, '_blank', 'noopener');
+  sel.value = '';
+}
+function openAdminQuickLink(){
+  const sel = document.getElementById('admin-quick-link');
+  if(!sel) return;
+  const url = String(sel.value || '').trim();
+  if(!url) return;
+  window.open(url, '_blank', 'noopener');
+  sel.value = '';
+}
+function openAdminDevQuickLink(){
+  const sel = document.getElementById('admin-dev-quick-link');
+  if(!sel) return;
+  const url = String(sel.value || '').trim();
+  if(!url) return;
+  window.open(url, '_blank', 'noopener');
+  sel.value = '';
 }
 
 // ── DATA ──
@@ -1713,6 +2116,7 @@ async function reloadData(){
 const IMAGE_TOOL_PRESET = { maxEdge: 1920, quality: 0.86, mime: 'image/jpeg', ext: 'jpg' };
 const IMAGE_TOOL_RULE_IMAGE = 'image';
 const IMAGE_TOOL_RULE_WORKREPORT = 'workreport';
+const IMAGE_TOOL_RULE_SLIP = 'slip';
 function sanitizeFileToken(v){
   return String(v || '')
     .trim()
@@ -1735,6 +2139,16 @@ function getTodayYmd(){
 function getTodayIsoDate(){
   const d = new Date();
   return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+}
+function resetSelectToDefault(selectId){
+  const el = document.getElementById(selectId);
+  if(!el || !el.options || !el.options.length) return;
+  const hasEmptyOption = Array.from(el.options).some(opt => String(opt.value) === '');
+  if(hasEmptyOption){
+    el.value = '';
+    if(el.value === '') return;
+  }
+  el.selectedIndex = 0;
 }
 function getImageToolRule(){
   const el = document.getElementById('img-name-rule');
@@ -1765,13 +2179,17 @@ function onImageToolRuleChange(){
   const rule = getImageToolRule();
   const imageBox = document.getElementById('img-rule-image');
   const reportBox = document.getElementById('img-rule-workreport');
+  const slipBox = document.getElementById('img-rule-slip');
   const hint = document.getElementById('img-rule-hint');
   if(imageBox) imageBox.style.display = rule === IMAGE_TOOL_RULE_IMAGE ? 'grid' : 'none';
   if(reportBox) reportBox.style.display = rule === IMAGE_TOOL_RULE_WORKREPORT ? 'grid' : 'none';
+  if(slipBox) slipBox.style.display = rule === IMAGE_TOOL_RULE_SLIP ? 'grid' : 'none';
   if(hint){
     hint.innerHTML = rule === IMAGE_TOOL_RULE_WORKREPORT
       ? '命名形式: <strong>作業報告書 FK/FS番号 ユーザー名 日付</strong>（日付は初期値が当日で変更可）'
-      : '命名形式: <strong>入力文字_YYYYMMDD_連番</strong>（日付は自動、連番は3桁）';
+      : rule === IMAGE_TOOL_RULE_SLIP
+        ? '命名形式: <strong>日付_客先会社名_お客様名様_送状</strong>（日付は初期値が当日で変更可）'
+        : '命名形式: <strong>入力文字_YYYYMMDD_連番</strong>（日付は自動、連番は3桁）';
   }
 }
 function onImageToolFilesChange(){
@@ -1886,6 +2304,15 @@ function buildImageToolName(rule, seq, total){
     }
     return { ok:true, base:`作業報告書 ${fkfs} ${user} ${dateYmd}` };
   }
+  if(rule === IMAGE_TOOL_RULE_SLIP){
+    const dateYmd = formatDateToYmdFromInput((document.getElementById('img-slip-date') || {}).value);
+    const company = sanitizeFileTokenSpace((document.getElementById('img-slip-company') || {}).value);
+    const customer = sanitizeFileTokenSpace((document.getElementById('img-slip-customer') || {}).value);
+    if(!company || !customer){
+      return { ok:false, message: '客先会社名とお客様名を入力してください' };
+    }
+    return { ok:true, base:`${dateYmd}_${company}_${customer}様_送状` };
+  }
   const prefix = sanitizeFileToken((document.getElementById('img-name-prefix') || {}).value);
   if(!prefix){
     return { ok:false, message: '内容を入力してください' };
@@ -1982,6 +2409,8 @@ async function compressAndRenameImages(btnEl){
     statusEl.textContent = `完了: ${ok}件${modeText} / 失敗: ${ng}件（画像圧縮 ${compressedCount}件 / PDF名称変更 ${pdfRenameOnlyCount}件）${note}${cancelled?' / キャンセル終了':''}`;
   }
   if(fileInput) fileInput.value = '';
+  resetSelectToDefault('img-name-rule');
+  onImageToolRuleChange();
   onImageToolFilesChange();
   setImageToolBusy(btnEl, false);
   if(cancelled){
@@ -2030,6 +2459,190 @@ async function loadData(){
   }
 }
 
+const WORKORDER_DEPARTMENTS_KEY = 'workorder_departments_json';
+const WORKORDER_PLACES_KEY = 'workorder_places_json';
+const WORKORDER_DB_SPREADSHEET_KEY = 'workorder_db_spreadsheet_id';
+const WORKORDER_DB_GAS_URL_KEY = 'workorder_db_gas_url';
+const DEFAULT_WORKORDER_DEPARTMENTS = ['ジェイピーネクスト株式会社　製造部　製造課'];
+const DEFAULT_WORKORDER_PLACES = ['テックセンタ'];
+let _workorderDepartments = [...DEFAULT_WORKORDER_DEPARTMENTS];
+let _workorderPlaces = [...DEFAULT_WORKORDER_PLACES];
+let _workorderDbSpreadsheetId = '';
+let _workorderDbGasUrl = '';
+
+function normalizeWorkorderList(arr, fallback){
+  const src = Array.isArray(arr) ? arr : fallback;
+  const uniq = [];
+  src.forEach(v => {
+    const s = String(v || '').trim();
+    if(s && !uniq.includes(s)) uniq.push(s);
+  });
+  return uniq.length ? uniq : [...fallback];
+}
+function extractSpreadsheetId(raw){
+  const s = String(raw || '').trim();
+  if(!s) return '';
+  const m = s.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  if(m && m[1]) return m[1];
+  return s;
+}
+function applyWorkorderOptionsFromData(d){
+  const settings = (d && d.settings) || {};
+  const deptRaw = settings[WORKORDER_DEPARTMENTS_KEY] || settings.workorder_departments_json;
+  const placeRaw = settings[WORKORDER_PLACES_KEY] || settings.workorder_places_json;
+  const sheetRaw = settings[WORKORDER_DB_SPREADSHEET_KEY] || settings.workorder_db_spreadsheet_id;
+  const gasRaw = settings[WORKORDER_DB_GAS_URL_KEY] || settings.workorder_db_gas_url;
+  let depts = null;
+  let places = null;
+  if(deptRaw){
+    try{
+      const parsed = typeof deptRaw === 'string' ? JSON.parse(deptRaw) : deptRaw;
+      if(Array.isArray(parsed)) depts = parsed;
+    }catch(e){}
+  }
+  if(placeRaw){
+    try{
+      const parsed = typeof placeRaw === 'string' ? JSON.parse(placeRaw) : placeRaw;
+      if(Array.isArray(parsed)) places = parsed;
+    }catch(e){}
+  }
+  _workorderDepartments = normalizeWorkorderList(depts, DEFAULT_WORKORDER_DEPARTMENTS);
+  _workorderPlaces = normalizeWorkorderList(places, DEFAULT_WORKORDER_PLACES);
+  _workorderDbSpreadsheetId = extractSpreadsheetId(sheetRaw);
+  _workorderDbGasUrl = String(gasRaw || '').trim();
+}
+async function persistWorkorderOptions(){
+  await gasPost({sheet:'設定_UPDATE', key:WORKORDER_DEPARTMENTS_KEY, value:JSON.stringify(_workorderDepartments)});
+  await gasPost({sheet:'設定_UPDATE', key:WORKORDER_PLACES_KEY, value:JSON.stringify(_workorderPlaces)});
+}
+function renderWorkorderOptionsSettings(){
+  const deptEl = document.getElementById('s-workorder-dept-list');
+  const placeEl = document.getElementById('s-workorder-place-list');
+  const dbInp = document.getElementById('workorder-db-sheet');
+  const gasInp = document.getElementById('workorder-db-gas-url');
+  const dbSt = document.getElementById('workorder-db-sheet-status');
+  if(dbInp) dbInp.value = _workorderDbSpreadsheetId || '';
+  if(gasInp) gasInp.value = _workorderDbGasUrl || '';
+  if(dbSt){
+    const idText = _workorderDbSpreadsheetId ? `ID: ${_workorderDbSpreadsheetId}` : 'ID: 未設定';
+    const urlText = _workorderDbGasUrl ? 'GAS URL: 設定済み' : 'GAS URL: 未設定';
+    dbSt.textContent = `連携状態 / ${idText} / ${urlText}`;
+  }
+  if(deptEl){
+    deptEl.innerHTML = _workorderDepartments.map((v, i) => `<div class="s-list-item" style="padding:8px 10px;">
+      <div class="s-list-item-body"><strong>${esc(v)}</strong></div>
+      <button type="button" class="icon-del-btn" onclick="deleteWorkorderDepartment(${i}, this)" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:13px;padding:2px 8px;border-radius:4px;min-width:28px;min-height:28px;display:inline-flex;align-items:center;justify-content:center;" title="削除"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+  }
+  if(placeEl){
+    placeEl.innerHTML = _workorderPlaces.map((v, i) => `<div class="s-list-item" style="padding:8px 10px;">
+      <div class="s-list-item-body"><strong>${esc(v)}</strong></div>
+      <button type="button" class="icon-del-btn" onclick="deleteWorkorderPlace(${i}, this)" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:13px;padding:2px 8px;border-radius:4px;min-width:28px;min-height:28px;display:inline-flex;align-items:center;justify-content:center;" title="削除"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+  }
+}
+async function saveWorkorderDbSpreadsheet(btnEl){
+  if(btnEl && btnEl.disabled) return;
+  const inp = document.getElementById('workorder-db-sheet');
+  const gasInp = document.getElementById('workorder-db-gas-url');
+  const raw = String(inp && inp.value || '').trim();
+  const gasUrl = String(gasInp && gasInp.value || '').trim();
+  const id = extractSpreadsheetId(raw);
+  if(!id){
+    showToast('スプレッドシートIDまたはURLを入力してください');
+    return;
+  }
+  if(!gasUrl){
+    showToast('GAS WebアプリURLを入力してください');
+    return;
+  }
+  if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner"></span>保存中...'; }
+  try{
+    await gasPost({sheet:'設定_UPDATE', key:WORKORDER_DB_SPREADSHEET_KEY, value:id});
+    await gasPost({sheet:'設定_UPDATE', key:WORKORDER_DB_GAS_URL_KEY, value:gasUrl});
+    _workorderDbSpreadsheetId = id;
+    _workorderDbGasUrl = gasUrl;
+    renderWorkorderOptionsSettings();
+    showToast('作業指示書DBの連携設定を保存しました');
+  }catch(e){
+    showToast('エラー: ' + e.message);
+  }finally{
+    if(btnEl){ btnEl.disabled = false; btnEl.innerHTML = '保存'; }
+  }
+}
+async function addWorkorderDepartment(btnEl){
+  if(btnEl && btnEl.disabled) return;
+  const inp = document.getElementById('new-workorder-dept');
+  const v = String(inp && inp.value || '').trim();
+  if(!v){ showToast('作業部署を入力してください'); return; }
+  if(_workorderDepartments.includes(v)){ showToast('同じ作業部署が存在します'); return; }
+  if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner"></span>追加中...'; }
+  _workorderDepartments.push(v);
+  try{
+    await persistWorkorderOptions();
+    if(inp) inp.value = '';
+    renderWorkorderOptionsSettings();
+    showToast('作業部署を追加しました');
+  }catch(e){
+    showToast('エラー: ' + e.message);
+  }finally{
+    if(btnEl){ btnEl.disabled = false; btnEl.innerHTML = '追加'; }
+  }
+}
+async function addWorkorderPlace(btnEl){
+  if(btnEl && btnEl.disabled) return;
+  const inp = document.getElementById('new-workorder-place');
+  const v = String(inp && inp.value || '').trim();
+  if(!v){ showToast('作業場所を入力してください'); return; }
+  if(_workorderPlaces.includes(v)){ showToast('同じ作業場所が存在します'); return; }
+  if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner"></span>追加中...'; }
+  _workorderPlaces.push(v);
+  try{
+    await persistWorkorderOptions();
+    if(inp) inp.value = '';
+    renderWorkorderOptionsSettings();
+    showToast('作業場所を追加しました');
+  }catch(e){
+    showToast('エラー: ' + e.message);
+  }finally{
+    if(btnEl){ btnEl.disabled = false; btnEl.innerHTML = '追加'; }
+  }
+}
+async function deleteWorkorderDepartment(i, btnEl){
+  if(btnEl && btnEl.disabled) return;
+  if(_workorderDepartments.length <= 1){ showToast('作業部署は最低1件必要です'); return; }
+  const target = _workorderDepartments[i];
+  if(!target) return;
+  if(!confirm(`「${target}」を削除しますか？`)) return;
+  if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner-danger"></span>'; }
+  _workorderDepartments = _workorderDepartments.filter((_, idx) => idx !== i);
+  try{
+    await persistWorkorderOptions();
+    renderWorkorderOptionsSettings();
+    showToast('作業部署を削除しました');
+  }catch(e){
+    showToast('エラー: ' + e.message);
+    if(btnEl){ btnEl.disabled = false; btnEl.innerHTML = '<i class="ti ti-trash"></i>'; }
+  }
+}
+async function deleteWorkorderPlace(i, btnEl){
+  if(btnEl && btnEl.disabled) return;
+  if(_workorderPlaces.length <= 1){ showToast('作業場所は最低1件必要です'); return; }
+  const target = _workorderPlaces[i];
+  if(!target) return;
+  if(!confirm(`「${target}」を削除しますか？`)) return;
+  if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner-danger"></span>'; }
+  _workorderPlaces = _workorderPlaces.filter((_, idx) => idx !== i);
+  try{
+    await persistWorkorderOptions();
+    renderWorkorderOptionsSettings();
+    showToast('作業場所を削除しました');
+  }catch(e){
+    showToast('エラー: ' + e.message);
+    if(btnEl){ btnEl.disabled = false; btnEl.innerHTML = '<i class="ti ti-trash"></i>'; }
+  }
+}
+
 function applyPortalConfig(d){
   const settings = (d && d.settings) || {};
   _globalSettingsPassword = String(settings[SETTINGS_PASS_GLOBAL_KEY] || '').trim();
@@ -2041,10 +2654,12 @@ function applyPortalConfig(d){
   if(!_adminPagePassword) _adminUnlocked = true;
   applyStorageLinksFromData(d || {});
   applyMemberProfilesFromData(d || {});
+  applyWorkorderOptionsFromData(d || {});
   if(d && d.members && d.members.length) _membersCache = d.members;
   applyNoticeTypesFromData(d || {});
   renderStorageLinks();
   renderMembers(null);
+  renderWorkorderOptionsSettings();
   refreshNoticeTypeSelect();
   updateMembersCount();
 }
@@ -2186,6 +2801,11 @@ function updateMembersCount(){
 const STORAGE_LINKS_KEY = 'storage_links_json';
 const BUG_IMAGE_UPLOAD_URL = 'https://jpnext01-my.sharepoint.com/:f:/g/personal/t-kito_jpnext_co_jp/IgAXfbt2UQZaQaOTRMMiEmvOAbUl3VM6USgTUDUGe46-FqE';
 const BUG_IMAGE_VIEW_URL = 'https://jpnext01-my.sharepoint.com/:f:/g/personal/t-kito_jpnext_co_jp/IgAXfbt2UQZaQaOTRMMiEmvOAbeW8-pPmDU19RTl_oVSj38?e=gVW8hK';
+const FIXED_STORAGE_COPY_PATHS = {
+  '出荷関連書類':'\\\\192.168.0.2\\jpネクスト\\05 製造課\\03 出荷関連',
+  '作業指示書':'\\\\192.168.0.2\\jpネクスト\\05 製造課\\18 FA作業指示フォルダー',
+  '不具合報告書':'\\\\192.168.0.2\\jpネクスト\\05 製造課\\07 不具合報告書'
+};
 const DEFAULT_STORAGE_LINKS = [
   {
     name:'製造課 共有フォルダ',
@@ -2240,6 +2860,16 @@ function getStorageLinksList(){
 }
 function upgradeStorageLinks(list){
   return (list||[]).map(item => {
+    const name = String(item.name || '').trim();
+    const fixedPath = FIXED_STORAGE_COPY_PATHS[name];
+    if(fixedPath){
+      return {
+        ...item,
+        action: 'copy',
+        path: fixedPath,
+        target: fixedPath
+      };
+    }
     if(String(item.name||'').trim() === '不具合画像'){
       const target = String(item.target || '').trim();
       const action = String(item.action || '').trim();
@@ -2284,7 +2914,7 @@ function renderStorageLinks(){
     <i class="ti ti-folder-filled folder" style="color:${esc(item.color)};"></i>
     <div style="flex:1"><div class="stn">${esc(item.name)}</div><div class="stp">${esc(item.path)}</div></div>
     ${item.action === 'copy'
-      ? `<button class="cpb" onclick="cp('${escAttr(item.target)}',this)">コピー</button>`
+      ? `<button class="cpb" data-copy="${escAttr(item.target)}" onclick="cpFromBtn(this)">コピー</button>`
       : `${showOpen ? `<a class="cpb link" href="${escAttr(openUrl)}" target="_blank">開く</a>` : ''}${showUpload ? `<a class="cpb link" href="${escAttr(item.target)}" target="_blank" style="background:#0f766e;${showOpen?'margin-left:6px;':''}">アップロード</a>` : ''}` }
   </div>`;
   }).join('');
@@ -2359,6 +2989,7 @@ async function addStorageLink(btnEl){
     document.getElementById('new-storage-name').value='';
     document.getElementById('new-storage-path').value='';
     document.getElementById('new-storage-target').value='';
+    resetSelectToDefault('new-storage-action');
   }catch(e){
     showToast('エラー: '+e.message);
   }finally{
@@ -2467,6 +3098,7 @@ async function addNoticeType(){
     await gasPost({sheet:'課内連絡種別_UPDATE', label, icon, color});
     await persistNoticeTypesJson();
     document.getElementById('new-notice-type-label').value = '';
+    resetSelectToDefault('new-notice-type-icon');
     showToast(label + ' を追加しました');
     renderNoticeTypeSettings();
     refreshNoticeTypeSelect();
@@ -2603,6 +3235,8 @@ async function addN(){
     renderSettingsLists();
     titleEl.value='';
     textEl.value='';
+    resetSelectToDefault('ntype');
+    resetSelectToDefault('n-author');
     showToast('投稿しました');
     loadData().catch(()=>{});
     if(btn){btn.disabled=false;btn.innerHTML='投稿';}
@@ -2628,10 +3262,13 @@ function renderTodos(todos){
   function rowHtml(t){
     const done=String(t.done)==='true'||t.done===true;
     const assignees = parseAssigneeNames(t.assignees && t.assignees.length ? t.assignees : t.assignee);
+    const regDate = getTodoRegisteredDate(t);
+    const dueDate = getTodoDueDate(t);
     return `<div class="ti-row" data-id="${esc(String(t.id))}">
       <div class="tc ${done?'dn':''}" onclick="toggleTodo('${esc(String(t.id))}',this)"><i class="ti ti-check"></i></div>
       <div class="tt ${done?'dn':''}">${esc(t.text)}</div>
       ${assignees.length ? assigneeTagsHtml(assignees) : ''}
+      ${(regDate || dueDate) ? `<div class="todo-date-meta">${regDate ? `<span class="todo-date-pill">登録: ${esc(regDate)}</span>` : ''}${dueDate ? `<span class="todo-date-pill">希望: ${esc(dueDate)}</span>` : ''}</div>` : ''}
       ${t.tag?`<span class="task-tag">${esc(t.tag)}</span>`:''}
     </div>`;
   }
@@ -2659,14 +3296,18 @@ async function addT(){
   const assignees = [..._todoAssigneeSelected];
   const as=assigneeNamesToPayload(assignees);
   const tg=document.getElementById('t-tag').value;
+  const regDate=getTodayIsoDate();
+  const dueDate=document.getElementById('t-due-date').value || '';
   if(!tx){ if(btn){btn.disabled=false;btn.textContent='追加';} return; }
   const id='T'+Date.now();
   try{
-    await gasPost({sheet:'TODO',id,datetime:fmtDT(),assignee:as,text:tx,tag:tg,done:false});
-    const nextTodos = [...(_settingsTodos||[]), {id, datetime:fmtDT(), assignee:as, assignees, text:tx, tag:tg, done:false, doneAt:''}];
+    await gasPost({sheet:'TODO',id,datetime:fmtDT(),regDate,dueDate,assignee:as,text:tx,tag:tg,done:false});
+    const nextTodos = [...(_settingsTodos||[]), {id, datetime:fmtDT(), regDate, dueDate, assignee:as, assignees, text:tx, tag:tg, done:false, doneAt:''}];
     renderTodos(nextTodos);
     renderSettingsLists();
     document.getElementById('tinp').value='';
+    document.getElementById('t-due-date').value='';
+    resetSelectToDefault('t-tag');
     _todoAssigneeSelected = [];
     renderTodoAssigneePicker();
     showToast('タスクを追加しました');
@@ -2736,7 +3377,7 @@ function renderSettingsLists(){
           ${assignees.length ? assigneeTagsHtml(assignees) : ''}
           <span style="margin-left:4px;${done?'text-decoration:line-through;color:#999':''}">${esc(t.text)}</span>
           ${t.tag?`<span class="task-tag" style="margin-left:4px;">${esc(t.tag)}</span>`:''}
-          <div class="s-list-item-meta">${esc(String(t.datetime))}</div>
+          <div class="s-list-item-meta">${esc(String(t.datetime))}${getTodoRegisteredDate(t)?` / 登録日: ${esc(getTodoRegisteredDate(t))}`:''}${getTodoDueDate(t)?` / 完了希望日: ${esc(getTodoDueDate(t))}`:''}</div>
         </div>
       </div>`;
     }).join('');
@@ -2891,7 +3532,7 @@ const MEMBER_COLOR_BY_NAME = {
   '津田': '#0f766e'
 };
 const DEFAULT_MEMBERS = [
-  {name:'鬼頭', color:KITO_FIXED_COLOR, initial:'鬼', photoUrl:''},
+  {name:'鬼頭(貴)', color:KITO_FIXED_COLOR, initial:'鬼', photoUrl:''},
   {name:'佐藤', color:'#7c3aed', initial:'佐', photoUrl:''},
   {name:'山下', color:'#2563eb', initial:'山', photoUrl:''},
   {name:'山﨑', color:'#65a30d', initial:'山', photoUrl:''},
@@ -3344,6 +3985,7 @@ async function addDoc(){
     document.getElementById('doc-name').value='';
     document.getElementById('doc-url').value='';
     document.getElementById('doc-date').value='';
+    resetSelectToDefault('doc-type');
     showToast('ファイルを追加しました');
     loadData().catch(()=>{});
     if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
@@ -3604,6 +4246,7 @@ async function addCalEvent(btnEl){
     document.getElementById('ev-date').value='';
     document.getElementById('ev-date-end').value='';
     document.getElementById('ev-label').value='';
+    resetSelectToDefault('ev-type');
     showToast(dates.length>1 ? `イベントを${dates.length}日分追加しました` : 'イベントを追加しました');
     loadData().catch(()=>{});
   }catch(e){
@@ -3742,6 +4385,11 @@ document.addEventListener('click', function(e){
 });
 const imgReportDateEl = document.getElementById('img-report-date');
 if(imgReportDateEl && !imgReportDateEl.value) imgReportDateEl.value = getTodayIsoDate();
+const imgSlipDateEl = document.getElementById('img-slip-date');
+if(imgSlipDateEl && !imgSlipDateEl.value) imgSlipDateEl.value = getTodayIsoDate();
+const woRequestDateEl = document.getElementById('wo-request-date');
+if(woRequestDateEl && !woRequestDateEl.value) woRequestDateEl.value = getTodayIsoDate();
+renderWorkOrderPreview();
 onImageToolRuleChange();
 onImageToolFilesChange();
 renderCal();
