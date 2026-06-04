@@ -100,10 +100,23 @@
         -webkit-print-color-adjust:exact !important;
         print-color-adjust:exact !important;
       }
-      .top,.grid>.card:first-child,.grid>.card:last-child>.hdr{display:none !important}
-      .wrap,.grid,.grid>.card:last-child,.paper-wrap{margin:0 !important;padding:0 !important;background:transparent !important;box-shadow:none !important;border:none !important}
+      .top,#db-status,.grid>.card:first-child,.grid>.card:last-child>.hdr{display:none !important}
+      .wrap,.grid,.grid>.card:last-child,.paper-wrap{
+        margin:0 !important;
+        padding:0 !important;
+        max-width:none !important;
+        min-width:0 !important;
+        width:auto !important;
+        background:transparent !important;
+        box-shadow:none !important;
+        border:none !important;
+        overflow:visible !important;
+      }
+      .grid{display:block !important}
+      .grid>.card:last-child{display:block !important}
       .paper{
         width:198mm;
+        max-width:198mm;
         min-height:277mm;
         box-shadow:none !important;
         border:1px solid #111 !important;
