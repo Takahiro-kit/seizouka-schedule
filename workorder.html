@@ -21,7 +21,7 @@
       background:var(--bg);
       color:var(--text);
     }
-    .wrap{max-width:1860px;margin:0 auto;padding:24px;}
+    .wrap{max-width:1860px;margin:0 auto;padding:24px;overflow-x:auto;}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
     .back{
       border:none;background:none;cursor:pointer;color:var(--blue);
@@ -50,10 +50,10 @@
       margin-right:6px;animation:woSpin 1s linear infinite;
     }
     @keyframes woSpin{to{transform:rotate(360deg)}}
-    .grid{display:grid;grid-template-columns:minmax(520px,1fr) minmax(900px,1.2fr);gap:16px;align-items:start}
-    .card{background:var(--card);border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(15,23,42,.08)}
+    .grid{display:grid;grid-template-columns:minmax(500px,1fr) minmax(820px,1.15fr);gap:16px;align-items:start;min-width:1280px}
+    .card{background:var(--card);border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(15,23,42,.08);min-height:0}
     .hdr{padding:12px 16px;background:#f7f9fc;border-bottom:1px solid var(--line);font-size:16px;font-weight:800}
-    .form{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .form{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:calc(100vh - 190px);overflow:auto}
     .field{display:flex;flex-direction:column;gap:5px}
     .field.full{grid-column:1 / span 2}
     .field label{font-size:13px;font-weight:700;color:var(--muted)}
@@ -62,7 +62,7 @@
       font-size:14px;font-family:inherit;outline:none;background:#fff;
     }
     .inp:focus{border-color:var(--blue)}
-    .paper-wrap{padding:18px;background:#e2e8f0;overflow:auto}
+    .paper-wrap{padding:18px;background:#e2e8f0;overflow:auto;max-height:calc(100vh - 190px)}
     .paper{
       width:100%;max-width:198mm;min-height:297mm;background:#fff;margin:0 auto;
       border:1px solid #cbd5e1;box-shadow:0 4px 24px rgba(15,23,42,.12);padding:5mm 6mm;box-sizing:border-box;
@@ -92,7 +92,6 @@
     .logo-foot{margin-top:5mm;display:flex;justify-content:flex-end;align-items:center;}
     .logo-foot img{max-width:86mm;max-height:13mm;object-fit:contain;}
     @media (max-width:1200px){
-      .grid{grid-template-columns:1fr}
       .paper{width:min(210mm,100%)}
     }
     @media print{
