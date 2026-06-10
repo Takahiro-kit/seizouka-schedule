@@ -250,6 +250,37 @@ body.admin-mode .nav-admin-links{display:block;}
 .ni-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
 .post-meta-wrap{margin-left:auto;display:inline-flex;align-items:center;gap:6px;flex-shrink:0;}
 .post-author-meta{font-size:10px;font-weight:600;color:#94a3b8;white-space:nowrap;line-height:1.2;}
+.post-edit-btn{
+  border:none;background:transparent;color:#64748b;cursor:pointer;
+  padding:2px 4px;border-radius:4px;line-height:1;flex-shrink:0;
+  margin-left:auto;
+}
+#todo-section .ti-body .post-edit-btn{margin-left:4px;}
+#notice-section .ni-top .post-edit-btn{margin-left:6px;}
+.post-edit-btn:hover{color:#2563eb;background:#eff6ff;}
+.post-edit-panel{
+  margin-top:8px;padding:10px 12px;border:1px solid #dbeafe;border-radius:6px;background:#f8fbff;
+}
+.post-edit-panel input,
+.post-edit-panel textarea,
+.post-edit-panel select{
+  width:100%;border:1px solid var(--border2);border-radius:4px;padding:7px 10px;
+  font-size:13px;font-family:var(--sans);outline:none;background:#fff;
+}
+.post-edit-panel textarea{min-height:72px;resize:vertical;}
+.post-edit-grid{display:grid;grid-template-columns:120px 1fr;gap:8px;margin-top:8px;}
+.post-edit-grid .full{grid-column:1 / -1;}
+.post-edit-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;}
+.post-edit-actions .s-btn{padding:6px 14px;font-size:12px;}
+.todo-edit-grid{display:grid;grid-template-columns:minmax(0,1fr) 120px 150px;gap:8px;margin-top:8px;}
+.todo-edit-assignee-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.todo-edit-assignee-chip{
+  border:1px solid var(--border2);background:#fff;border-radius:999px;padding:4px 10px;
+  font-size:12px;cursor:pointer;font-family:var(--sans);color:var(--text);
+}
+.todo-edit-assignee-chip.selected{background:#eaf1ff;border-color:#93c5fd;color:#1e3a8a;font-weight:700;}
+.s-list-item.post-edit-active{align-items:flex-start;}
+.s-list-item .post-edit-panel{width:100%;margin-top:8px;}
 .notice-type{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.03em;padding:4px 10px;border-radius:4px;white-space:nowrap;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .notice-type i{font-size:13px;opacity:.95;}
 .notice-type--important{background:#dc2626;color:#fff;}
@@ -283,33 +314,37 @@ body.admin-mode .nav-admin-links{display:block;}
 .input-row button:hover{background:var(--blue-dk);}
 
 /* TODO */
-#todo-section .ti-row{display:flex;align-items:center;gap:8px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--border);font-size:14px;}
+#todo-section .ti-row{display:flex;align-items:flex-start;gap:8px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--border);font-size:14px;flex-wrap:wrap;}
 #todo-section .ti-row:last-child{border-bottom:none;}
 #todo-section .ti-body{flex:1;min-width:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 #todo-section .ti-body .tt{flex:1;min-width:100px;}
-#todo-section .ti-meta-panel{
-  flex-shrink:0;
+#todo-section .todo-row-foot{
+  flex:1 1 100%;
   display:flex;
   align-items:center;
   justify-content:flex-end;
   gap:6px;
-  padding-left:8px;
-  margin-left:auto;
-  border-left:1px solid var(--border);
-  white-space:nowrap;
-  max-width:220px;
-  overflow:hidden;
-  transition:max-width .2s ease, opacity .15s ease, padding .2s ease, border-color .2s ease, margin .2s ease;
+  padding:4px 0 0 26px;
 }
-#todo-section.todo-meta-collapsed .ti-meta-panel{
-  max-width:0;
-  opacity:0;
-  padding-left:0;
-  margin-left:0;
-  border-left-color:transparent;
-  pointer-events:none;
+#todo-section.todo-meta-collapsed .todo-row-foot{display:none;}
+#todo-section.todo-meta-expanded .todo-row-foot{display:flex;}
+#todo-section .todo-row-foot .post-author-meta{font-size:11px;}
+#todo-section .ti-body .post-edit-btn{
+  margin-left:2px;
+  flex-shrink:0;
+  width:28px;
+  height:28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  color:#2563eb;
 }
-#todo-section .ti-meta-panel--empty{min-width:0;border-left:none;padding:0;margin:0;}
+#todo-section .ti-body .post-edit-btn:hover{background:#dbeafe;color:#1d4ed8;}
+#todo-section .ti-meta-panel{
+  display:none;
+}
 .todo-meta-toggle-btn{
   border:1px solid var(--border2);
   border-radius:4px;
@@ -715,7 +750,7 @@ body.admin-mode .nav-admin-links{display:block;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:#222;color:#fff;border-radius:4px;padding:11px 20px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast{position:fixed;bottom:24px;right:24px;background:#222;color:#fff;border-radius:4px;padding:11px 20px;font-size:13px;z-index:10050;opacity:0;transition:opacity .3s;pointer-events:none;}
 .toast.show{opacity:1;}
 .pw-modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:1200;}
 .pw-modal.active{display:flex;}
@@ -766,6 +801,19 @@ body.admin-mode .nav-admin-links{display:block;}
   font-size:15px;
   border-radius:10px;
 }
+#portal-login-error{
+  display:none;
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:8px;
+  background:#fef2f2;
+  border:1px solid #fecaca;
+  color:#b91c1c;
+  font-size:13px;
+  font-weight:700;
+  line-height:1.45;
+}
+#portal-login-error.show{display:block;}
 #portal-login-modal .pw-actions{
   margin-top:16px;
 }
@@ -781,7 +829,11 @@ body.admin-mode .nav-admin-links{display:block;}
   padding-top:16px;
   border-top:1px solid #e2e8f0;
   text-align:center;
+  display:none;
 }
+html.guest-login-entry-pending #portal-login-guest-wrap,
+html.guest-login-entry-ready #portal-login-guest-wrap{display:block !important;}
+html.guest-login-entry-hidden #portal-login-guest-wrap{display:none !important;}
 .portal-login-guest-link{
   background:none;
   border:none;
@@ -951,6 +1003,23 @@ body.single-view-mode #page-home{padding:18px !important;max-width:1280px;margin
 </style>
 </head>
 <body class="prelogin">
+<script>
+(function(){
+  var KEY='portal_guest_login_cache';
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(!raw){
+      document.documentElement.classList.add('guest-login-entry-pending');
+      return;
+    }
+    var o=JSON.parse(raw);
+    var off=o.enabled===false||o.enabled===0||o.enabled==='0'||o.enabled==='false';
+    document.documentElement.classList.add(off?'guest-login-entry-hidden':'guest-login-entry-ready');
+  }catch(e){
+    document.documentElement.classList.add('guest-login-entry-pending');
+  }
+})();
+</script>
 
 <div class="toast" id="toast"></div>
 <div class="pw-modal" id="settings-pw-modal" aria-hidden="true">
@@ -992,10 +1061,11 @@ body.single-view-mode #page-home{padding:18px !important;max-width:1280px;margin
       <option value="津田啓次">津田啓次</option>
     </select>
     <input id="portal-login-password" class="pw-input" type="password" placeholder="パスワードを入力" autocomplete="current-password">
+    <div id="portal-login-error" role="alert" aria-live="polite"></div>
     <div class="pw-actions">
-      <button class="s-btn" type="button" onclick="submitPortalLogin()">ログイン</button>
+      <button class="s-btn" id="portal-login-submit-btn" type="button" onclick="submitPortalLogin()">ログイン</button>
     </div>
-    <div id="portal-login-guest-wrap" class="portal-login-guest-wrap" style="display:none;">
+    <div id="portal-login-guest-wrap" class="portal-login-guest-wrap">
       <button type="button" class="portal-login-guest-link" onclick="openPortalGuestLoginDialog()">ゲストとして閲覧（パスワード不要）</button>
     </div>
   </div>
@@ -1006,7 +1076,7 @@ body.single-view-mode #page-home{padding:18px !important;max-width:1280px;margin
     <div class="pw-desc">パスワード不要でポータルを閲覧できます。設定・管理画面や各種編集機能は利用できません。</div>
     <div class="pw-actions" style="justify-content:space-between;">
       <button class="s-btn" style="background:#64748b;" type="button" onclick="backToPortalLoginFromGuest()">通常ログインへ</button>
-      <button class="s-btn" style="background:#0f766e;" type="button" onclick="submitGuestLogin()">ゲストとして入る</button>
+      <button class="s-btn" style="background:#0f766e;" id="portal-guest-login-submit-btn" type="button" onclick="submitGuestLogin()">ゲストとして入る</button>
     </div>
   </div>
 </div>
@@ -1207,7 +1277,7 @@ body.single-view-mode #page-home{padding:18px !important;max-width:1280px;margin
                 <button id="add-notice-btn" onclick="addN()">投稿</button>
               </div>
             </div>
-            <div id="todo-section" class="todo-meta-collapsed" data-focusable="true">
+            <div id="todo-section" class="todo-meta-expanded" data-focusable="true">
               <div class="card-hdr yellow">
                 <div class="card-title clickable" onclick="openHomeSectionWindow('todo-section','TODO')"><i class="ti ti-checkbox"></i>TODO</div>
                 <div class="card-hdr-actions">
@@ -2149,9 +2219,14 @@ function getMemberLoginPassword(name){
   return String((prof && prof.password) || (aliasProf && aliasProf.password) || '').trim();
 }
 function getMemberProfileForLogin(name){
-  const base = getMemberProfile(name);
-  const pw = getMemberLoginPassword(name);
-  return normalizeMemberProfile({...base, password: pw});
+  const canonical = String(name || '').trim();
+  const base = getMemberProfile(canonical);
+  const alias = PORTAL_LOGIN_MEMBER_ALIAS[canonical] || '';
+  const aliasProf = alias ? getMemberProfile(alias) : null;
+  const pw = getMemberLoginPassword(canonical);
+  const loginOff = (p) => p.loginEnabled === false || p.loginEnabled === 0 || p.loginEnabled === '0' || p.loginEnabled === 'false';
+  const loginEnabled = !loginOff(base) && (!aliasProf || !loginOff(aliasProf));
+  return normalizeMemberProfile({...base, password: pw, loginEnabled});
 }
 function getPortalLoginMembersList(){
   return getMembersList()
@@ -2181,7 +2256,9 @@ function postMetaWrapHtml(parts){
 }
 const TODO_META_COLLAPSED_KEY = 'todo_meta_collapsed';
 function isTodoMetaCollapsed(){
-  return sessionStorage.getItem(TODO_META_COLLAPSED_KEY) !== '0';
+  const v = sessionStorage.getItem(TODO_META_COLLAPSED_KEY);
+  if(v === null) return false;
+  return v !== '0';
 }
 function applyTodoMetaPanelState(){
   const section = document.getElementById('todo-section');
@@ -2199,12 +2276,19 @@ function toggleTodoMetaPanel(){
   sessionStorage.setItem(TODO_META_COLLAPSED_KEY, isTodoMetaCollapsed() ? '0' : '1');
   applyTodoMetaPanelState();
 }
-function todoMetaPanelHtml(regDate, author){
+function todoRowFootHtml(regDate, author){
   const inner = [
     regDate ? `<span class="todo-date-pill">登録: ${esc(regDate)}</span>` : '',
     postAuthorMetaHtml(author)
   ].filter(Boolean).join('');
-  return `<div class="ti-meta-panel${inner ? '' : ' ti-meta-panel--empty'}">${inner}</div>`;
+  if(!inner) return '';
+  return `<div class="todo-row-foot">${inner}</div>`;
+}
+function canEditTodoItem(t){
+  if(isGuestOperatorSession()) return false;
+  const author = resolveTodoAuthor(t);
+  if(!author) return false;
+  return canEditAsAuthor(author);
 }
 function parseAssigneeNames(raw){
   if(Array.isArray(raw)){
@@ -2249,6 +2333,224 @@ function getTodoRegisteredDate(t){
 function getTodoDueDate(t){
   if(!t) return '';
   return formatDisplayYmd(t.dueDate || t.deadline);
+}
+let _noticeEditKey = null;
+let _todoEditId = '';
+let _todoEditAssignees = [];
+const TODO_AUTHOR_SESSION_KEY = 'portal_todo_author_map';
+function rememberTodoAuthor(id, author){
+  const key = String(id || '').trim();
+  const name = String(author || '').trim();
+  if(!key || !name) return;
+  try{
+    const raw = sessionStorage.getItem(TODO_AUTHOR_SESSION_KEY);
+    const map = raw ? JSON.parse(raw) : {};
+    map[key] = name;
+    sessionStorage.setItem(TODO_AUTHOR_SESSION_KEY, JSON.stringify(map));
+  }catch(e){}
+}
+function resolveTodoAuthor(t){
+  const direct = String(t?.author || '').trim();
+  if(direct) return direct;
+  const key = String(t?.id || '').trim();
+  if(!key) return '';
+  try{
+    const raw = sessionStorage.getItem(TODO_AUTHOR_SESSION_KEY);
+    const map = raw ? JSON.parse(raw) : {};
+    return String(map[key] || '').trim();
+  }catch(e){
+    return '';
+  }
+}
+function normalizeAuthorName(name){
+  return String(name || '').trim();
+}
+function canEditAsAuthor(storedAuthor){
+  if(isGuestOperatorSession()) return false;
+  const cur = normalizeAuthorName(getPortalPostAuthor());
+  const stored = normalizeAuthorName(storedAuthor);
+  if(!cur || !stored) return false;
+  if(cur === stored) return true;
+  if(PORTAL_LOGIN_MEMBER_ALIAS[cur] === stored) return true;
+  if(PORTAL_LOGIN_MEMBER_ALIAS[stored] === cur) return true;
+  return false;
+}
+function isNoticeWithinHomeWindow(n){
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - 2);
+  const d = parseNoticeDatetime(n.datetime);
+  return !(d && d < cutoff);
+}
+function noticeEditBtnHtml(row, context){
+  if(row == null || isNaN(Number(row))) return '';
+  return `<button type="button" class="post-edit-btn" onclick="startNoticeEdit(${Number(row)}, '${escAttr(context)}')" title="編集"><i class="ti ti-pencil"></i></button>`;
+}
+function todoEditBtnHtml(id){
+  const sid = String(id || '').trim();
+  if(!sid) return '';
+  return `<button type="button" class="post-edit-btn" onclick="startTodoEdit('${escAttr(sid)}')" title="編集"><i class="ti ti-pencil"></i></button>`;
+}
+function buildNoticeTypeOptionsHtml(selected){
+  return getNoticeTypesList().map(t =>
+    `<option value="${escAttr(t.label)}"${t.label === selected ? ' selected' : ''}>${esc(t.label)}</option>`
+  ).join('');
+}
+function buildTodoTagOptionsHtml(selected){
+  const tags = normalizeTodoTags(_todoTagsCache);
+  return ['<option value="">タグ</option>'].concat(tags.map(tag =>
+    `<option value="${escAttr(tag)}"${tag === selected ? ' selected' : ''}>${esc(tag)}</option>`
+  )).join('');
+}
+function noticeEditPanelHtml(n){
+  const type = n.type || '連絡';
+  const title = String(n.title || '').trim();
+  const text = String(n.text || '').trim();
+  return `<div class="post-edit-panel">
+    <div class="post-edit-grid">
+      <select id="notice-edit-type">${buildNoticeTypeOptionsHtml(type)}</select>
+      <input id="notice-edit-title" type="text" value="${escAttr(title)}" placeholder="タイトル">
+      <textarea id="notice-edit-body" class="full" placeholder="内容">${esc(text)}</textarea>
+    </div>
+    <div class="post-edit-actions">
+      <button type="button" class="s-btn" style="background:#64748b;" onclick="cancelNoticeEdit()">キャンセル</button>
+      <button type="button" class="s-btn" onclick="saveNoticeEdit(this)">保存</button>
+    </div>
+  </div>`;
+}
+function todoEditAssigneeChipsHtml(){
+  const list = getMembersList();
+  if(!list.length) return '<div style="font-size:12px;color:#94a3b8;">メンバーがありません</div>';
+  return list.map(m => {
+    const name = String(m.name || '').trim();
+    const selected = _todoEditAssignees.includes(name);
+    return `<button type="button" class="todo-edit-assignee-chip${selected ? ' selected' : ''}" onclick="toggleTodoEditAssignee('${escAttr(name)}')">${esc(name)}</button>`;
+  }).join('');
+}
+function todoEditPanelHtml(t){
+  const text = String(t.text || '').trim();
+  const tag = String(t.tag || '').trim();
+  const dueDate = getTodoDueDate(t);
+  return `<div class="post-edit-panel todo-edit-panel">
+    <div class="todo-edit-grid">
+      <input id="todo-edit-text" type="text" value="${escAttr(text)}" placeholder="タスク内容">
+      <select id="todo-edit-tag">${buildTodoTagOptionsHtml(tag)}</select>
+      <input id="todo-edit-due" type="date" value="${escAttr(dueDate)}" title="完了希望日" aria-label="完了希望日">
+    </div>
+    <div class="todo-edit-assignee-grid" id="todo-edit-assignee-grid">${todoEditAssigneeChipsHtml()}</div>
+    <div class="post-edit-actions">
+      <button type="button" class="s-btn" style="background:#64748b;" onclick="cancelTodoEdit()">キャンセル</button>
+      <button type="button" class="s-btn" onclick="saveTodoEdit(this)">保存</button>
+    </div>
+  </div>`;
+}
+function findNoticeByRow(row){
+  const target = Number(row);
+  return (_settingsNotices || []).find(n => Number(n.row) === target) || null;
+}
+function findTodoById(id){
+  const target = String(id || '').trim();
+  return (_settingsTodos || []).find(t => String(t.id) === target) || null;
+}
+function startNoticeEdit(row, context){
+  const n = findNoticeByRow(row);
+  if(!n){ showToast('投稿が見つかりません'); return; }
+  if(!canEditAsAuthor(n.author)){ showToast('投稿者のみ編集できます'); return; }
+  if(context === 'home' && !isNoticeWithinHomeWindow(n)){ showToast('2ヶ月より古い連絡は設定画面から編集してください'); return; }
+  _noticeEditKey = { row: Number(row), context: context || 'home' };
+  _todoEditId = '';
+  renderNotices(_settingsNotices);
+  renderSettingsLists();
+}
+function cancelNoticeEdit(){
+  _noticeEditKey = null;
+  renderNotices(_settingsNotices);
+  renderSettingsLists();
+}
+async function saveNoticeEdit(btnEl){
+  if(!_noticeEditKey || _noticeEditKey.row == null){ return; }
+  const n = findNoticeByRow(_noticeEditKey.row);
+  if(!n || !canEditAsAuthor(n.author)){ showToast('投稿者のみ編集できます'); return; }
+  const typeEl = document.getElementById('notice-edit-type');
+  const titleEl = document.getElementById('notice-edit-title');
+  const bodyEl = document.getElementById('notice-edit-body');
+  const noticeType = typeEl ? String(typeEl.value || '').trim() : '';
+  const noticeTitle = titleEl ? String(titleEl.value || '').trim() : '';
+  const noticeText = bodyEl ? String(bodyEl.value || '').trim() : '';
+  if(!noticeType){ showToast('種別を選択してください'); return; }
+  if(!noticeTitle){ showToast('タイトルを入力してください'); return; }
+  if(!noticeText){ showToast('内容を入力してください'); return; }
+  if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner"></span>保存中...'; }
+  try{
+    await gasPost({
+      sheet:'課内連絡_UPDATE',
+      row:_noticeEditKey.row,
+      noticeType,
+      noticeTitle,
+      noticeBody:buildNoticeBody(noticeTitle, noticeText)
+    });
+    _noticeEditKey = null;
+    showToast('課内連絡を更新しました');
+    await loadData();
+  }catch(e){
+    showToast('エラー: ' + e.message);
+  }finally{
+    if(btnEl){ btnEl.disabled = false; btnEl.innerHTML = '保存'; }
+  }
+}
+function startTodoEdit(id){
+  const t = findTodoById(id);
+  if(!t){ showToast('タスクが見つかりません'); return; }
+  if(!canEditTodoItem(t)){ showToast('投稿者のみ編集できます'); return; }
+  _todoEditId = String(id);
+  _todoEditAssignees = parseAssigneeNames(t.assignees && t.assignees.length ? t.assignees : t.assignee);
+  _noticeEditKey = null;
+  renderTodos(_settingsTodos);
+  renderSettingsLists();
+}
+function cancelTodoEdit(){
+  _todoEditId = '';
+  _todoEditAssignees = [];
+  renderTodos(_settingsTodos);
+  renderSettingsLists();
+}
+function toggleTodoEditAssignee(name){
+  const n = String(name || '').trim();
+  if(!n) return;
+  if(_todoEditAssignees.includes(n)) _todoEditAssignees = _todoEditAssignees.filter(x => x !== n);
+  else _todoEditAssignees.push(n);
+  const grid = document.getElementById('todo-edit-assignee-grid');
+  if(grid) grid.innerHTML = todoEditAssigneeChipsHtml();
+}
+async function saveTodoEdit(btnEl){
+  if(!_todoEditId) return;
+  const t = findTodoById(_todoEditId);
+  if(!t || !canEditTodoItem(t)){ showToast('投稿者のみ編集できます'); return; }
+  const textEl = document.getElementById('todo-edit-text');
+  const tagEl = document.getElementById('todo-edit-tag');
+  const dueEl = document.getElementById('todo-edit-due');
+  const text = textEl ? String(textEl.value || '').trim() : '';
+  const tag = tagEl ? String(tagEl.value || '').trim() : '';
+  const dueDate = dueEl ? String(dueEl.value || '').trim() : '';
+  if(!text){ showToast('内容を入力してください'); return; }
+  if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner"></span>保存中...'; }
+  try{
+    await gasPost({
+      sheet:'TODO_EDIT',
+      id:_todoEditId,
+      text,
+      tag,
+      dueDate,
+      assignee:assigneeNamesToPayload(_todoEditAssignees)
+    });
+    _todoEditId = '';
+    _todoEditAssignees = [];
+    showToast('TODOを更新しました');
+    await loadData();
+  }catch(e){
+    showToast('エラー: ' + e.message);
+  }finally{
+    if(btnEl){ btnEl.disabled = false; btnEl.innerHTML = '保存'; }
+  }
 }
 let _todoAssigneeSelected = [];
 function syncTodoAssigneeSelectedWithMembers(){
@@ -2624,6 +2926,7 @@ function goAdminSection(targetId){
 const SETTINGS_PASS_GLOBAL_KEY='settings_page_password';
 const ADMIN_PAGE_PASSWORD_KEY='admin_page_password';
 const GUEST_LOGIN_SETTINGS_KEY='guest_login_json';
+const GUEST_LOGIN_CACHE_KEY='portal_guest_login_cache';
 const GUEST_OPERATOR_NAME='ゲスト';
 const GUEST_ALLOWED_HOME_SECTIONS=new Set(['mgmt','calendar-section']);
 let _globalSettingsPassword='';
@@ -2639,22 +2942,57 @@ function normalizeGuestLoginSettings(x){
     label: label || 'ゲスト'
   };
 }
+function readGuestLoginCache(){
+  try{
+    const raw = localStorage.getItem(GUEST_LOGIN_CACHE_KEY);
+    if(!raw) return null;
+    return normalizeGuestLoginSettings(JSON.parse(raw));
+  }catch(e){
+    return null;
+  }
+}
+function writeGuestLoginCache(settings){
+  try{
+    localStorage.setItem(GUEST_LOGIN_CACHE_KEY, JSON.stringify(normalizeGuestLoginSettings(settings || {})));
+  }catch(e){}
+}
+function initGuestLoginSettingsFromCache(){
+  const cached = readGuestLoginCache();
+  if(cached) _guestLoginSettings = cached;
+}
+function syncGuestLoginEntryHtmlState(show){
+  const root = document.documentElement;
+  root.classList.remove('guest-login-entry-pending','guest-login-entry-ready','guest-login-entry-hidden');
+  if(show) root.classList.add('guest-login-entry-ready');
+  else if(_portalDataReady) root.classList.add('guest-login-entry-hidden');
+  else root.classList.add('guest-login-entry-pending');
+}
+function shouldShowGuestLoginLink(){
+  if(isGuestLoginEnabled()) return true;
+  if(_portalDataReady) return false;
+  const cached = readGuestLoginCache();
+  if(cached) return cached.enabled;
+  return true;
+}
 function applyGuestLoginSettingsFromData(d){
   const raw = d && d.settings && (d.settings[GUEST_LOGIN_SETTINGS_KEY] || d.settings.guest_login_json);
   if(raw){
     try{
       const o = typeof raw === 'string' ? JSON.parse(raw) : raw;
       _guestLoginSettings = normalizeGuestLoginSettings(o);
+      writeGuestLoginCache(_guestLoginSettings);
       return;
     }catch(e){}
   }
   _guestLoginSettings = normalizeGuestLoginSettings({});
+  writeGuestLoginCache(_guestLoginSettings);
 }
 function isGuestLoginEnabled(){
   return !!(_guestLoginSettings && _guestLoginSettings.enabled);
 }
 function getGuestLoginLabel(){
-  return String(_guestLoginSettings?.label || 'ゲスト').trim() || 'ゲスト';
+  const cached = readGuestLoginCache();
+  return String(_guestLoginSettings?.label || cached?.label || 'ゲスト').trim() || 'ゲスト';
 }
 function isGuestOperator(name){
   return String(name || '').trim() === GUEST_OPERATOR_NAME;
@@ -2678,8 +3016,9 @@ function updateGuestLoginUi(){
   const wrap = document.getElementById('portal-login-guest-wrap');
   const guestLink = wrap ? wrap.querySelector('.portal-login-guest-link') : null;
   const guestTitle = document.getElementById('portal-guest-login-title');
-  const enabled = isGuestLoginEnabled();
-  if(wrap) wrap.style.display = enabled ? 'block' : 'none';
+  const show = shouldShowGuestLoginLink();
+  if(wrap) wrap.style.display = show ? 'block' : 'none';
+  syncGuestLoginEntryHtmlState(show);
   if(guestLink) guestLink.textContent = `${getGuestLoginLabel()}として閲覧（パスワード不要）`;
   if(guestTitle) guestTitle.textContent = `${getGuestLoginLabel()}ログイン`;
   renderGuestLoginSettingsPanel();
@@ -2695,10 +3034,11 @@ async function saveGuestLoginSettings(btnEl){
     enabled: enabledEl ? enabledEl.checked : false,
     label: labelEl ? labelEl.value : 'ゲスト'
   });
+  writeGuestLoginCache(_guestLoginSettings);
+  updateGuestLoginUi();
   setAdminActionLoading(btnEl, true, '保存中...');
   try{
     await persistGuestLoginSettings();
-    updateGuestLoginUi();
     showToast('ゲストログイン設定を保存しました');
   }catch(e){
     showToast('エラー: '+e.message);
@@ -2917,6 +3257,22 @@ function submitAdminPasswordDialog(){
   const input = document.getElementById('admin-pw-entry');
   closeAdminPasswordDialog(input ? input.value : '');
 }
+function isPortalLoginDialogOpen(){
+  const loginModal = document.getElementById('portal-login-modal');
+  if(!loginModal) return false;
+  if(document.body.classList.contains('guest-login-mode')) return false;
+  return loginModal.classList.contains('active') || document.body.classList.contains('prelogin');
+}
+function showPortalLoginError(msg){
+  const el = document.getElementById('portal-login-error');
+  if(!el) return;
+  el.textContent = String(msg || '');
+  el.classList.toggle('show', !!msg);
+  if(msg) showToast(msg);
+}
+function clearPortalLoginError(){
+  showPortalLoginError('');
+}
 function renderPortalLoginMembers(){
   const sel = document.getElementById('portal-login-member');
   if(!sel) return;
@@ -2956,6 +3312,7 @@ function openPortalLoginDialog(){
   const modal = document.getElementById('portal-login-modal');
   const pw = document.getElementById('portal-login-password');
   const memberSel = document.getElementById('portal-login-member');
+  const loginBtn = document.getElementById('portal-login-submit-btn');
   if(!modal || !pw || !memberSel) return;
   closePortalGuestLoginDialog();
   renderPortalLoginMembers();
@@ -2963,6 +3320,13 @@ function openPortalLoginDialog(){
   modal.classList.add('active');
   modal.setAttribute('aria-hidden','false');
   pw.value = '';
+  clearPortalLoginError();
+  if(loginBtn) setAdminActionLoading(loginBtn, false);
+  if(!memberSel.dataset.loginErrorBound){
+    memberSel.addEventListener('change', clearPortalLoginError);
+    pw.addEventListener('input', clearPortalLoginError);
+    memberSel.dataset.loginErrorBound = '1';
+  }
   setTimeout(()=>memberSel.focus(), 0);
   startPortalDataLoad();
 }
@@ -2976,13 +3340,15 @@ function closePortalLoginDialog(){
   if(pw) pw.value = '';
 }
 function openPortalGuestLoginDialog(){
-  if(!isGuestLoginEnabled()){
+  if(!shouldShowGuestLoginLink()){
     showToast('ゲストログインは現在利用できません');
     return;
   }
   closePortalLoginDialog();
   const modal = document.getElementById('portal-guest-login-modal');
+  const guestBtn = document.getElementById('portal-guest-login-submit-btn');
   if(!modal) return;
+  setAdminActionLoading(guestBtn, false);
   updateGuestLoginUi();
   modal.classList.add('active');
   modal.setAttribute('aria-hidden','false');
@@ -3002,42 +3368,95 @@ function backToPortalLoginFromGuest(){
   openPortalLoginDialog();
 }
 async function submitGuestLogin(){
-  if(!isGuestLoginEnabled()){
-    showToast('ゲストログインは現在利用できません');
-    return;
+  const guestBtn = document.getElementById('portal-guest-login-submit-btn');
+  if(guestBtn && guestBtn.disabled) return;
+  setAdminActionLoading(guestBtn, true, 'ログイン中...');
+  try{
+    if(!shouldShowGuestLoginLink()){
+      showToast('ゲストログインは現在利用できません');
+      return;
+    }
+    await ensureInitialDataLoaded();
+    if(!isGuestLoginEnabled()){
+      showToast('ゲストログインは現在利用できません');
+      updateGuestLoginUi();
+      return;
+    }
+    const label = getGuestLoginLabel();
+    persistPortalOperatorSession(GUEST_OPERATOR_NAME);
+    document.body.classList.remove('prelogin');
+    closePortalGuestLoginDialog();
+    closePortalLoginDialog();
+    logPortalAudit('ログイン', GUEST_OPERATOR_NAME, { event: 'portal_guest_login', label });
+    await ensureInitialDataLoaded();
+    showPage('home', { fromHistory: true });
+    goHome('mgmt');
+    showToast(label + 'としてログインしました');
+  }catch(e){
+    showToast('ログイン処理でエラーが発生しました');
+    console.error(e);
+  }finally{
+    if(guestBtn && document.body.classList.contains('prelogin')){
+      setAdminActionLoading(guestBtn, false);
+    }
   }
-  const label = getGuestLoginLabel();
-  persistPortalOperatorSession(GUEST_OPERATOR_NAME);
-  document.body.classList.remove('prelogin');
-  closePortalGuestLoginDialog();
-  closePortalLoginDialog();
-  logPortalAudit('ログイン', GUEST_OPERATOR_NAME, { event: 'portal_guest_login', label });
-  await ensureInitialDataLoaded();
-  showPage('home', { fromHistory: true });
-  goHome('mgmt');
-  showToast(label + 'としてログインしました');
 }
 async function submitPortalLogin(){
   const memberSel = document.getElementById('portal-login-member');
   const pw = document.getElementById('portal-login-password');
+  const loginBtn = document.getElementById('portal-login-submit-btn');
+  if(loginBtn && loginBtn.disabled) return;
+  setAdminActionLoading(loginBtn, true, 'ログイン中...');
   const memberName = memberSel ? String(memberSel.value || '').trim() : '';
   const entered = pw ? String(pw.value || '').trim() : '';
+  clearPortalLoginError();
   if(!memberName){
-    showToast('メンバーを選択してください');
+    showPortalLoginError('メンバーを選択してください');
+    setAdminActionLoading(loginBtn, false);
+    return;
+  }
+  const loginMembers = getPortalLoginMembersList();
+  if(!loginMembers.some(m => m.memberName === memberName)){
+    showPortalLoginError('このユーザーはログインが無効です。管理者に「ログイン画面のユーザー一覧に表示」を確認してもらってください。');
+    setAdminActionLoading(loginBtn, false);
     return;
   }
   const memberPw = getMemberLoginPassword(memberName);
-  const canLogin = !memberPw || entered === memberPw;
-  if(!canLogin){
-    showToast('パスワードが違います');
+  if(memberPw && !entered){
+    showPortalLoginError('パスワードを入力してください');
+    if(pw) pw.focus();
+    setAdminActionLoading(loginBtn, false);
     return;
   }
-  persistPortalOperatorSession(memberName);
-  document.body.classList.remove('prelogin');
-  closePortalLoginDialog();
-  logPortalAudit('ログイン', memberName, { event: 'portal_login' });
-  await ensureInitialDataLoaded();
-  showToast(memberName + 'でログインしました');
+  if(memberPw && entered !== memberPw){
+    showPortalLoginError('パスワードが違います。管理画面のメンバー管理で設定したPCログイン用パスワードを確認してください。');
+    if(pw){
+      pw.focus();
+      pw.select();
+    }
+    setAdminActionLoading(loginBtn, false);
+    return;
+  }
+  try{
+    persistPortalOperatorSession(memberName);
+    document.body.classList.remove('prelogin');
+    closePortalLoginDialog();
+    logPortalAudit('ログイン', memberName, { event: 'portal_login' });
+    await ensureInitialDataLoaded();
+    showToast(memberName + 'でログインしました');
+  }catch(e){
+    clearPortalOperatorSession();
+    document.body.classList.add('prelogin');
+    openPortalLoginDialog();
+    if(memberSel && memberName) memberSel.value = memberName;
+    if(pw) pw.value = entered;
+    showPortalLoginError('ログイン処理でエラーが発生しました。時間をおいて再度お試しください。');
+    console.error(e);
+  }finally{
+    if(loginBtn && document.body.classList.contains('prelogin')){
+      setAdminActionLoading(loginBtn, false);
+    }
+  }
 }
 function ensurePortalLogin(){
   const name = String(sessionStorage.getItem('portal_operator_name') || '').trim();
@@ -3065,6 +3484,10 @@ function logoutPortal(){
   const operator = getCurrentPortalOperatorName();
   logPortalAudit('ログアウト', operator, { event: 'portal_logout' });
   clearPortalOperatorSession();
+  _noticeEditKey = null;
+  _todoEditId = '';
+  _todoEditAssignees = [];
+  try{ sessionStorage.removeItem(TODO_AUTHOR_SESSION_KEY); }catch(e){}
   document.body.classList.add('prelogin');
   document.body.classList.remove('guest-login-mode');
   openPortalLoginDialog();
@@ -3084,11 +3507,10 @@ document.addEventListener('click', (ev) => {
 document.addEventListener('keydown', (ev) => {
   const settingsModal = document.getElementById('settings-pw-modal');
   const adminModal = document.getElementById('admin-pw-modal');
-  const loginModal = document.getElementById('portal-login-modal');
   const guestModal = document.getElementById('portal-guest-login-modal');
   const settingsOpen = settingsModal && settingsModal.classList.contains('active');
   const adminOpen = adminModal && adminModal.classList.contains('active');
-  const loginOpen = loginModal && loginModal.classList.contains('active');
+  const loginOpen = isPortalLoginDialogOpen();
   const guestOpen = guestModal && guestModal.classList.contains('active');
   if(!settingsOpen && !adminOpen && !loginOpen && !guestOpen) return;
   if(ev.key === 'Escape'){
@@ -3853,7 +4275,10 @@ function toCalEventDateStr(v){
 function normalizePortalPayload(raw){
   const d = raw && typeof raw === 'object' ? {...raw} : {};
   d.notices = (d.notices || []).map(normalizeNoticeItem);
-  d.todos = d.todos || [];
+  d.todos = (d.todos || []).map(t => ({
+    ...t,
+    author: String(t.author || '').trim()
+  }));
   d.docs = d.docs || [];
   d.calEvents = (d.calEvents || []).map(ev => ({...ev, date: toCalEventDateStr(ev.date)}));
   d.settings = d.settings || {};
@@ -3886,6 +4311,10 @@ function applyLoadedPortalData(d, opts){
   parseDocCategoriesFromSettings(d);
   renderDocCategoryControls();
   applyPortalConfig(d);
+  (d.todos || []).forEach(t => {
+    const author = String(t.author || '').trim();
+    if(author && t.id) rememberTodoAuthor(t.id, author);
+  });
   renderNotices(d.notices);
   renderTodos(d.todos);
   renderDocs(d.docs);
@@ -4840,11 +5269,23 @@ function renderNotices(notices){
     const author = (n.author || '').trim();
     const title = String(n.title || '').trim();
     const regDate = extractYmdFromDateLike(n.datetime);
+    const rowNum = n.row != null ? Number(n.row) : null;
+    const editing = _noticeEditKey && _noticeEditKey.context === 'home' && rowNum != null && Number(_noticeEditKey.row) === rowNum;
+    const showEdit = rowNum != null && canEditAsAuthor(author) && isNoticeWithinHomeWindow(n);
+    if(editing){
+      return `<div class="ni" style="${noticeRowStyle(type)}">
+        <div class="ni-top">${noticeTypeHtml(type)}${postMetaWrapHtml([
+          regDate ? `<span class="todo-date-pill">登録: ${esc(regDate)}</span>` : '',
+          postAuthorMetaHtml(author)
+        ])}</div>
+        ${noticeEditPanelHtml(n)}
+      </div>`;
+    }
     return `<div class="ni" style="${noticeRowStyle(type)}">
       <div class="ni-top">${noticeTypeHtml(type)}${postMetaWrapHtml([
         regDate ? `<span class="todo-date-pill">登録: ${esc(regDate)}</span>` : '',
         postAuthorMetaHtml(author)
-      ])}</div>
+      ])}${showEdit ? noticeEditBtnHtml(rowNum, 'home') : ''}</div>
       <div class="ntx">
         ${title ? `<div class="ntx-title">${esc(title)}</div>` : ''}
         <div class="ntx-body">${esc(n.text)}</div>
@@ -4925,16 +5366,27 @@ function renderTodos(todos){
     const assignees = parseAssigneeNames(t.assignees && t.assignees.length ? t.assignees : t.assignee);
     const regDate = getTodoRegisteredDate(t);
     const dueDate = getTodoDueDate(t);
-    const author = String(t.author || '').trim();
-    return `<div class="ti-row" data-id="${esc(String(t.id))}">
+    const author = resolveTodoAuthor(t);
+    const tid = String(t.id || '');
+    const editing = _todoEditId && tid === String(_todoEditId);
+    const showEdit = canEditTodoItem(t);
+    if(editing){
+      return `<div class="ti-row" data-id="${esc(tid)}">
+        <div class="ti-body" style="display:block;width:100%;">
+          ${todoEditPanelHtml(t)}
+        </div>
+      </div>`;
+    }
+    return `<div class="ti-row" data-id="${esc(tid)}">
       <div class="ti-body">
-        <div class="tc ${done?'dn':''}" onclick="toggleTodo('${esc(String(t.id))}',this)"><i class="ti ti-check"></i></div>
+        <div class="tc ${done?'dn':''}" onclick="toggleTodo('${esc(tid)}',this)"><i class="ti ti-check"></i></div>
         <div class="tt ${done?'dn':''}">${esc(t.text)}</div>
         ${assignees.length ? assigneeTagsHtml(assignees) : ''}
         ${t.tag?`<span class="task-tag">${esc(t.tag)}</span>`:''}
         ${dueDate ? `<span class="todo-date-pill todo-date-pill--due">希望: ${esc(dueDate)}</span>` : ''}
+        ${showEdit ? todoEditBtnHtml(tid) : ''}
       </div>
-      ${todoMetaPanelHtml(regDate, author)}
+      ${todoRowFootHtml(regDate, author)}
     </div>`;
   }
   let html=active.map(rowHtml).join('');
@@ -4970,6 +5422,7 @@ async function addT(){
   const id='T'+Date.now();
   try{
     await gasPost({sheet:'TODO',id,datetime:fmtDT(),regDate,dueDate,assignee:as,text:tx,tag:tg,done:false,author});
+    rememberTodoAuthor(id, author);
     const nextTodos = [...(_settingsTodos||[]), {id, datetime:fmtDT(), regDate, dueDate, assignee:as, assignees, text:tx, tag:tg, done:false, doneAt:'', author}];
     renderTodos(nextTodos);
     renderSettingsLists();
@@ -5019,6 +5472,17 @@ function renderSettingsLists(){
       const rowKey = n.row != null ? Number(n.row) : null;
       const author = (n.author || '').trim();
       const regDate = extractYmdFromDateLike(n.datetime);
+      const editing = _noticeEditKey && _noticeEditKey.context === 'settings' && rowKey != null && Number(_noticeEditKey.row) === rowKey;
+      const showEdit = rowKey != null && canEditAsAuthor(author);
+      if(editing){
+        return `<div class="s-list-item post-edit-active">
+          <div style="flex:1;min-width:0;">
+            ${noticeTypeHtml(n.type||'連絡')}
+            <span style="margin-left:6px;font-size:12px;color:var(--text3);">編集中</span>
+            ${noticeEditPanelHtml(n)}
+          </div>
+        </div>`;
+      }
       return `<div class="s-list-item">
         <input type="checkbox" class="notice-chk" data-idx="${idx}" data-row="${rowKey}">
         <div class="s-list-item-body">
@@ -5027,7 +5491,7 @@ function renderSettingsLists(){
           ${postMetaWrapHtml([
             regDate ? `<span class="todo-date-pill">登録: ${esc(regDate)}</span>` : '',
             postAuthorMetaHtml(author)
-          ])}
+          ])}${showEdit ? noticeEditBtnHtml(rowKey, 'settings') : ''}
         </div>
       </div>`;
     }).join('');
@@ -5042,11 +5506,22 @@ function renderSettingsLists(){
     tl.innerHTML = _settingsTodos.map((t,idx)=>{
       const done = String(t.done)==='true'||t.done===true;
       const assignees = parseAssigneeNames(t.assignees && t.assignees.length ? t.assignees : t.assignee);
-      const author = String(t.author || '').trim();
+      const author = resolveTodoAuthor(t);
       const regDate = getTodoRegisteredDate(t);
       const dueDate = getTodoDueDate(t);
+      const tid = String(t.id || '');
+      const editing = _todoEditId && tid === String(_todoEditId);
+      const showEdit = canEditTodoItem(t);
+      if(editing){
+        return `<div class="s-list-item post-edit-active">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">TODO編集中</div>
+            ${todoEditPanelHtml(t)}
+          </div>
+        </div>`;
+      }
       return `<div class="s-list-item">
-        <input type="checkbox" class="todo-chk" data-id="${esc(String(t.id))}">
+        <input type="checkbox" class="todo-chk" data-id="${esc(tid)}">
         <div class="s-list-item-body">
           ${assignees.length ? assigneeTagsHtml(assignees) : ''}
           <span style="margin-left:4px;${done?'text-decoration:line-through;color:#999':''}">${esc(t.text)}</span>
@@ -5055,7 +5530,7 @@ function renderSettingsLists(){
             regDate ? `<span class="todo-date-pill">登録: ${esc(regDate)}</span>` : '',
             dueDate ? `<span class="todo-date-pill todo-date-pill--due">希望: ${esc(dueDate)}</span>` : '',
             postAuthorMetaHtml(author)
-          ])}
+          ])}${showEdit ? todoEditBtnHtml(tid) : ''}
         </div>
       </div>`;
     }).join('');
@@ -6217,6 +6692,9 @@ function setupPortalNavPrefetch(){
 }
 setupPortalNavPrefetch();
 setupPortalAuditCapture();
+initGuestLoginSettingsFromCache();
+updateGuestLoginUi();
+startPortalDataLoad();
 ensurePortalLogin();
 applyTodoMetaPanelState();
 // ホーム単独表示は新規ウィンドウ注入方式へ切替済み
