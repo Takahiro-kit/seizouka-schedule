@@ -3032,6 +3032,8 @@ function goAdminSection(targetId){
 const SETTINGS_PASS_GLOBAL_KEY='settings_page_password';
 const ADMIN_PAGE_PASSWORD_KEY='admin_page_password';
 const GUEST_LOGIN_SETTINGS_KEY='guest_login_json';
+const PORTAL_AFTER_LOGIN_QUERY_KEY='afterLogin';
+const PORTAL_AFTER_LOGIN_SESSION_KEY='portal_after_login_target';
 const GUEST_OPERATOR_NAME='ゲスト';
 const GUEST_ALLOWED_HOME_SECTIONS=new Set(['mgmt','calendar-section']);
 try{ localStorage.removeItem('portal_guest_login_cache'); }catch(_e){}
@@ -3141,6 +3143,48 @@ function normalizeGuestHomeSection(id){
   if(GUEST_ALLOWED_HOME_SECTIONS.has(target)) return target;
   if(target && target !== 'top') showToast('ゲストログインではこの項目は利用できません');
   return 'mgmt';
+}
+function normalizeAfterLoginTarget(raw){
+  const src = String(raw || '').trim();
+  if(!src) return '';
+  try{
+    const u = new URL(src, window.location.href);
+    if(u.origin !== window.location.origin) return '';
+    const name = (u.pathname.split('/').pop() || '').toLowerCase();
+    if(!name.endsWith('.html')) return '';
+    return u.pathname + u.search + u.hash;
+  }catch(_){
+    return '';
+  }
+}
+function stashAfterLoginTargetFromQuery(){
+  try{
+    const url = new URL(window.location.href);
+    const raw = url.searchParams.get(PORTAL_AFTER_LOGIN_QUERY_KEY);
+    if(raw != null){
+      const target = normalizeAfterLoginTarget(raw);
+      if(target) sessionStorage.setItem(PORTAL_AFTER_LOGIN_SESSION_KEY, target);
+      url.searchParams.delete(PORTAL_AFTER_LOGIN_QUERY_KEY);
+      history.replaceState(history.state || {}, '', url.toString());
+    }
+  }catch(_){}
+}
+function consumeAfterLoginTarget(){
+  try{
+    const raw = sessionStorage.getItem(PORTAL_AFTER_LOGIN_SESSION_KEY) || '';
+    sessionStorage.removeItem(PORTAL_AFTER_LOGIN_SESSION_KEY);
+    return normalizeAfterLoginTarget(raw);
+  }catch(_){
+    return '';
+  }
+}
+function redirectAfterLoginIfNeeded(){
+  const target = consumeAfterLoginTarget();
+  if(!target) return false;
+  const current = window.location.pathname + window.location.search + window.location.hash;
+  if(target === current) return false;
+  window.location.href = target;
+  return true;
 }
 function refreshSettingsLockStatus(){
   const s = document.getElementById('settings-lock-status');
@@ -3478,6 +3522,7 @@ async function submitGuestLogin(){
     closePortalLoginDialog();
     logPortalAudit('ログイン', GUEST_OPERATOR_NAME, { event: 'portal_guest_login', label });
     await ensureInitialDataLoaded();
+    if(redirectAfterLoginIfNeeded()) return;
     applySingleViewFromQuery();
     if(!new URLSearchParams(window.location.search).get('single')){
       showPage('home', { fromHistory: true });
@@ -3535,6 +3580,7 @@ async function submitPortalLogin(){
     closePortalLoginDialog();
     logPortalAudit('ログイン', memberName, { event: 'portal_login' });
     await ensureInitialDataLoaded();
+    if(redirectAfterLoginIfNeeded()) return;
     applySingleViewFromQuery();
     showToast(memberName + 'でログインしました');
   }catch(e){
@@ -3559,6 +3605,7 @@ function ensurePortalLogin(){
     closePortalLoginDialog();
     closePortalGuestLoginDialog();
     ensureInitialDataLoaded();
+    if(redirectAfterLoginIfNeeded()) return true;
     if(isGuestOperatorSession()){
       setTimeout(()=>{
         if(document.getElementById('page-home')?.classList.contains('active')) goHome('mgmt');
@@ -6798,6 +6845,7 @@ setupPortalNavPrefetch();
 setupPortalAuditCapture();
 updateGuestLoginUi();
 startPortalDataLoad();
+stashAfterLoginTargetFromQuery();
 ensurePortalLogin();
 applyTodoMetaPanelState();
 applySingleViewFromQuery();
