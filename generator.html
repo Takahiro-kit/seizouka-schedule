@@ -113,7 +113,7 @@
 
     <div class="note">
       出力ファイル名は <code>gansuke-viewer.html</code> 固定です。<br>
-      生成後、同名ファイルとして配置してください。
+      テンプレート異常時は生成せずエラー表示します。
     </div>
   </div>
 
@@ -131,6 +131,19 @@
     function setStatus(message, cls) {
       st.className = "status" + (cls ? " " + cls : "");
       st.textContent = message || "";
+    }
+
+    function assertTemplateHtml(html) {
+      const s = String(html || "").trim();
+      const hasHtmlTag = /<html[\s>]/i.test(s);
+      const hasBodyTag = /<body[\s>]/i.test(s);
+      const hasScriptTag = /<script[\s>]/i.test(s);
+      if (!hasHtmlTag || !hasBodyTag || !hasScriptTag) {
+        throw new Error(
+          "テンプレート(gansuke-viewer.html)が壊れています。正規HTMLを再アップロードしてください。"
+        );
+      }
+      return s;
     }
 
     function readFile(file) {
@@ -169,7 +182,7 @@
       try {
         const res = await fetch(TEMPLATE_URL + "?_=" + Date.now());
         if (!res.ok) throw new Error("テンプレート取得失敗: HTTP " + res.status);
-        let html = await res.text();
+        let html = assertTemplateHtml(await res.text());
 
         const xmlJson = JSON.stringify(xmlText);
         const embedScript = "<script>var EMBEDDED_XML=" + xmlJson + ";<\/script>\n";
