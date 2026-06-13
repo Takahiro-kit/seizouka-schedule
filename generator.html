@@ -146,13 +146,35 @@
       return s;
     }
 
+    function assertGansukeXml(xml) {
+      const s = String(xml || "");
+      if (!/<\s*schedule[\s>]/i.test(s) || !/<\s*item[\s>]/i.test(s)) {
+        throw new Error("XML構造が不正です（schedule/itemタグが見つかりません）");
+      }
+      const doc = new DOMParser().parseFromString(s, "text/xml");
+      if (doc.querySelector("parsererror")) {
+        throw new Error("XMLパースに失敗しました（文字コードまたは内容を確認してください）");
+      }
+      if (!doc.querySelector("item")) {
+        throw new Error("XMLに案件データがありません（itemが0件）");
+      }
+      return s;
+    }
+
     function readFile(file) {
       const rd = new FileReader();
       rd.onload = (e) => {
-        xmlText = String(e.target.result || "");
-        fileName.textContent = file.name + " 読み込み完了";
-        btn.disabled = !xmlText;
-        setStatus("");
+        try {
+          xmlText = assertGansukeXml(String(e.target.result || ""));
+          fileName.textContent = file.name + " 読み込み完了";
+          btn.disabled = !xmlText;
+          setStatus("");
+        } catch (err) {
+          xmlText = "";
+          btn.disabled = true;
+          fileName.textContent = file.name + " 読み込み失敗";
+          setStatus(err && err.message ? err.message : "XML検証に失敗しました。", "err");
+        }
       };
       rd.onerror = () => setStatus("XML読み込みに失敗しました。", "err");
       rd.readAsText(file, "Shift_JIS");
