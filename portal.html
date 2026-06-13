@@ -1116,7 +1116,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
       <div class="nav-settings-head">設定カテゴリ</div>
       <button class="nav-item" onclick="showPage('admin')"><i class="ti ti-lock"></i><span class="nav-item-label">設定/管理ロック</span></button>
       <button class="nav-item" data-settings-target="sec-shukka-update" onclick="goSettingsSection('sec-shukka-update')"><i class="ti ti-file-upload"></i><span class="nav-item-label">出荷連絡表更新</span></button>
-      <button class="nav-item" data-settings-target="sec-schedule-update" onclick="goSettingsSection('sec-schedule-update')"><i class="ti ti-calendar-up"></i><span class="nav-item-label">スケジュール更新</span></button>
+      <button class="nav-item" data-settings-target="sec-schedule-update" onclick="goSettingsSection('sec-schedule-update')"><i class="ti ti-calendar-up"></i><span class="nav-item-label">がんすけ更新</span></button>
       <button class="nav-item" data-settings-target="sec-notice-manage" onclick="goSettingsSection('sec-notice-manage')"><i class="ti ti-speakerphone"></i><span class="nav-item-label">課内連絡管理</span></button>
       <button class="nav-item" data-settings-target="sec-todo-manage" onclick="goSettingsSection('sec-todo-manage')"><i class="ti ti-checkbox"></i><span class="nav-item-label">TODO管理</span></button>
       <button class="nav-item" data-settings-target="sec-holiday" onclick="goSettingsSection('sec-holiday')"><i class="ti ti-calendar-off"></i><span class="nav-item-label">休日管理</span></button>
@@ -1209,7 +1209,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
               </div>
             </div>
                         <div class="tile sf-tile">
-              <img src="https://cdn.jsdelivr.net/gh/Takahiro-kit/seizouka-schedule@main/mitoco_logo.svg" class="tile-logo color mitoco-logo" alt="mitoco ロゴ">
+              <img src="https://cdn.jsdelivr.net/gh/Takahiro-kit/seizouka-portal@main/mitoco_logo.svg" class="tile-logo color mitoco-logo" alt="mitoco ロゴ">
               <div class="tile-name">mitoco</div>
               <div class="tile-desc">社内コミュニケーション</div>
               <div class="sf-shortcut-row">
@@ -1259,7 +1259,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
               <div><div class="mgmt-tile-name">出荷連絡表</div><div class="mgmt-tile-desc">SharePoint Excel</div></div>
               <i class="ti ti-arrow-right" style="margin-left:auto;font-size:20px;color:rgba(255,255,255,.8);flex-shrink:0;"></i>
             </a>
-            <a class="mgmt-tile" id="schedule-banner" href="https://takahiro-kit.github.io/seizouka-schedule/" target="_blank">
+            <a class="mgmt-tile" id="schedule-banner" href="https://takahiro-kit.github.io/seizouka-portal/gansuke-viewer.html" target="_blank">
               <img src="data:image/png;base64,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" style="width:48px;height:48px;object-fit:contain;flex-shrink:0;">
               <div><div class="mgmt-tile-name">工程管理表 スケジュールビューア</div><div class="mgmt-tile-desc">がんすけのスケジュールをブラウザで確認できます</div></div>
               <i class="ti ti-arrow-right" style="margin-left:auto;font-size:20px;color:rgba(255,255,255,.8);flex-shrink:0;"></i>
@@ -1528,18 +1528,30 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
         </div>
       </div>
 
-      <!-- スケジュールビューア更新 -->
+      <!-- がんすけビューワ更新 -->
       <div class="s-sec" id="sec-schedule-update">
-        <div class="s-sec-hdr"><div class="s-sec-title">📅 スケジュールビューア更新</div></div>
+        <div class="s-sec-hdr"><div class="s-sec-title">📅 がんすけビューワ更新</div></div>
         <div class="s-row">
-          <div class="s-row-icon"><i class="ti ti-refresh"></i></div>
-          <div class="s-row-body"><div class="s-row-title">ビューア生成ツールを開く</div><div class="s-row-desc">XMLをドロップするとindex.htmlが生成されます</div></div>
-          <a class="s-btn" href="https://takahiro-kit.github.io/seizouka-schedule/generator.html" target="_blank">生成ツールを開く</a>
+          <div class="s-row-icon"><i class="ti ti-info-circle"></i></div>
+          <div class="s-row-body" style="display:grid;gap:8px;">
+            <div class="s-row-title">更新手順（変換なし）</div>
+            <div class="s-row-desc">元の「ガンすけ（製造課用）.xml」をそのままGitHubへ上書きしてください。ファイル変換は不要です。</div>
+          </div>
+          <span class="s-btn" style="background:#6b7280;cursor:default;">変換不要</span>
         </div>
         <div class="s-row">
           <div class="s-row-icon"><i class="ti ti-upload"></i></div>
           <div class="s-row-body"><div class="s-row-title">GitHubにアップロード</div></div>
-          <a class="s-btn" href="https://github.com/Takahiro-kit/seizouka-schedule" target="_blank">GitHubを開く</a>
+          <a class="s-btn" id="schedule-github-link" href="https://github.com/Takahiro-kit/seizouka-portal" target="_blank">GitHubを開く</a>
+        </div>
+        <div class="s-row">
+          <div class="s-row-icon"><i class="ti ti-link"></i></div>
+          <div class="s-row-body" style="display:grid;gap:8px;">
+            <div class="s-row-title">スケジュール関連URL（設定シート管理）</div>
+            <input id="s-schedule-viewer-url" class="s-input" placeholder="スケジュールビューアURL">
+            <input id="s-schedule-github-url" class="s-input" placeholder="GitHubURL">
+          </div>
+          <button class="s-btn" onclick="saveScheduleViewerLinks(this)">URLを保存</button>
         </div>
       </div>
 
@@ -4586,6 +4598,10 @@ const WORKORDER_DB_SPREADSHEET_KEY = 'workorder_db_spreadsheet_id';
 const WORKORDER_DB_GAS_URL_KEY = 'workorder_db_gas_url';
 const TRANSPORT_DB_SPREADSHEET_KEY = 'transport_db_spreadsheet_id';
 const TRANSPORT_DB_GAS_URL_KEY = 'transport_db_gas_url';
+const SCHEDULE_VIEWER_URL_KEY = 'schedule_viewer_url';
+const SCHEDULE_VIEWER_GITHUB_URL_KEY = 'schedule_viewer_github_url';
+const DEFAULT_SCHEDULE_VIEWER_URL = 'https://takahiro-kit.github.io/seizouka-portal/gansuke-viewer.html';
+const DEFAULT_SCHEDULE_VIEWER_GITHUB_URL = 'https://github.com/Takahiro-kit/seizouka-portal';
 const DEFAULT_WORKORDER_DEPARTMENTS = ['ジェイピーネクスト株式会社　製造部　製造課'];
 const DEFAULT_WORKORDER_PLACES = ['テックセンタ'];
 let _workorderDepartments = [...DEFAULT_WORKORDER_DEPARTMENTS];
@@ -4594,6 +4610,8 @@ let _workorderDbSpreadsheetId = '';
 let _workorderDbGasUrl = '';
 let _transportDbSpreadsheetId = '';
 let _transportDbGasUrl = '';
+let _scheduleViewerUrl = DEFAULT_SCHEDULE_VIEWER_URL;
+let _scheduleViewerGithubUrl = DEFAULT_SCHEDULE_VIEWER_GITHUB_URL;
 
 function normalizeWorkorderList(arr, fallback){
   const src = Array.isArray(arr) ? arr : fallback;
@@ -4639,6 +4657,53 @@ function applyWorkorderOptionsFromData(d){
   _workorderDbGasUrl = String(gasRaw || '').trim();
   _transportDbSpreadsheetId = extractSpreadsheetId(transportSheetRaw);
   _transportDbGasUrl = String(transportGasRaw || '').trim();
+}
+function normalizeScheduleUrl(raw, fallback){
+  const s = String(raw || '').trim();
+  return s || fallback;
+}
+function applyScheduleViewerLinksFromData(d){
+  const settings = (d && d.settings) || {};
+  _scheduleViewerUrl = normalizeScheduleUrl(
+    settings[SCHEDULE_VIEWER_URL_KEY] || settings.schedule_viewer_url,
+    DEFAULT_SCHEDULE_VIEWER_URL
+  );
+  _scheduleViewerGithubUrl = normalizeScheduleUrl(
+    settings[SCHEDULE_VIEWER_GITHUB_URL_KEY] || settings.schedule_viewer_github_url,
+    DEFAULT_SCHEDULE_VIEWER_GITHUB_URL
+  );
+  renderScheduleViewerLinks();
+  renderScheduleViewerSettings();
+}
+function renderScheduleViewerLinks(){
+  const viewerEl = document.getElementById('schedule-banner');
+  const githubEl = document.getElementById('schedule-github-link');
+  if(viewerEl) viewerEl.href = _scheduleViewerUrl || DEFAULT_SCHEDULE_VIEWER_URL;
+  if(githubEl) githubEl.href = _scheduleViewerGithubUrl || DEFAULT_SCHEDULE_VIEWER_GITHUB_URL;
+}
+function renderScheduleViewerSettings(){
+  const viewerInput = document.getElementById('s-schedule-viewer-url');
+  const githubInput = document.getElementById('s-schedule-github-url');
+  if(viewerInput) viewerInput.value = _scheduleViewerUrl || DEFAULT_SCHEDULE_VIEWER_URL;
+  if(githubInput) githubInput.value = _scheduleViewerGithubUrl || DEFAULT_SCHEDULE_VIEWER_GITHUB_URL;
+}
+async function saveScheduleViewerLinks(btnEl){
+  if(btnEl && btnEl.disabled) return;
+  const viewerInput = document.getElementById('s-schedule-viewer-url');
+  const githubInput = document.getElementById('s-schedule-github-url');
+  _scheduleViewerUrl = normalizeScheduleUrl(viewerInput ? viewerInput.value : '', DEFAULT_SCHEDULE_VIEWER_URL);
+  _scheduleViewerGithubUrl = normalizeScheduleUrl(githubInput ? githubInput.value : '', DEFAULT_SCHEDULE_VIEWER_GITHUB_URL);
+  renderScheduleViewerLinks();
+  setAdminActionLoading(btnEl, true, '保存中...');
+  try{
+    await gasPost({sheet:'設定_UPDATE', key:SCHEDULE_VIEWER_URL_KEY, value:_scheduleViewerUrl});
+    await gasPost({sheet:'設定_UPDATE', key:SCHEDULE_VIEWER_GITHUB_URL_KEY, value:_scheduleViewerGithubUrl});
+    showToast('スケジュール関連URLを保存しました');
+  }catch(e){
+    showToast('エラー: ' + e.message);
+  }finally{
+    setAdminActionLoading(btnEl, false);
+  }
 }
 async function persistWorkorderOptions(){
   await gasPost({sheet:'設定_UPDATE', key:WORKORDER_DEPARTMENTS_KEY, value:JSON.stringify(_workorderDepartments)});
@@ -4825,6 +4890,7 @@ function applyPortalConfig(d){
   applyMemberProfilesFromData(d || {});
   applyGuestLoginSettingsFromData(d || {});
   applyWorkorderOptionsFromData(d || {});
+  applyScheduleViewerLinksFromData(d || {});
   if(d && d.members && d.members.length) _membersCache = d.members;
   applyNoticeTypesFromData(d || {});
   applyTodoTagsFromData(d || {});
