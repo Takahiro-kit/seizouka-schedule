@@ -1541,11 +1541,6 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
           <button class="s-btn" onclick="buildGansukeViewerFromUploadedXml(this)">gansuke.xml を生成</button>
         </div>
         <div class="s-row">
-          <div class="s-row-icon"><i class="ti ti-refresh"></i></div>
-          <div class="s-row-body"><div class="s-row-title">ビューア生成ツールを開く</div><div class="s-row-desc">XMLをドロップするとgansuke-viewer.htmlを生成して配置します</div></div>
-          <a class="s-btn" id="schedule-generator-link" href="https://takahiro-kit.github.io/seizouka-portal/generator.html" target="_blank">生成ツールを開く</a>
-        </div>
-        <div class="s-row">
           <div class="s-row-icon"><i class="ti ti-upload"></i></div>
           <div class="s-row-body"><div class="s-row-title">GitHubにアップロード</div></div>
           <a class="s-btn" id="schedule-github-link" href="https://github.com/Takahiro-kit/seizouka-portal" target="_blank">GitHubを開く</a>
@@ -1555,7 +1550,6 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
           <div class="s-row-body" style="display:grid;gap:8px;">
             <div class="s-row-title">スケジュール関連URL（設定シート管理）</div>
             <input id="s-schedule-viewer-url" class="s-input" placeholder="スケジュールビューアURL">
-            <input id="s-schedule-generator-url" class="s-input" placeholder="生成ツールURL">
             <input id="s-schedule-github-url" class="s-input" placeholder="GitHubURL">
           </div>
           <button class="s-btn" onclick="saveScheduleViewerLinks(this)">URLを保存</button>
@@ -4606,10 +4600,8 @@ const WORKORDER_DB_GAS_URL_KEY = 'workorder_db_gas_url';
 const TRANSPORT_DB_SPREADSHEET_KEY = 'transport_db_spreadsheet_id';
 const TRANSPORT_DB_GAS_URL_KEY = 'transport_db_gas_url';
 const SCHEDULE_VIEWER_URL_KEY = 'schedule_viewer_url';
-const SCHEDULE_VIEWER_GENERATOR_URL_KEY = 'schedule_viewer_generator_url';
 const SCHEDULE_VIEWER_GITHUB_URL_KEY = 'schedule_viewer_github_url';
 const DEFAULT_SCHEDULE_VIEWER_URL = 'https://takahiro-kit.github.io/seizouka-portal/gansuke-viewer.html';
-const DEFAULT_SCHEDULE_VIEWER_GENERATOR_URL = 'https://takahiro-kit.github.io/seizouka-portal/generator.html';
 const DEFAULT_SCHEDULE_VIEWER_GITHUB_URL = 'https://github.com/Takahiro-kit/seizouka-portal';
 const DEFAULT_WORKORDER_DEPARTMENTS = ['ジェイピーネクスト株式会社　製造部　製造課'];
 const DEFAULT_WORKORDER_PLACES = ['テックセンタ'];
@@ -4620,7 +4612,6 @@ let _workorderDbGasUrl = '';
 let _transportDbSpreadsheetId = '';
 let _transportDbGasUrl = '';
 let _scheduleViewerUrl = DEFAULT_SCHEDULE_VIEWER_URL;
-let _scheduleViewerGeneratorUrl = DEFAULT_SCHEDULE_VIEWER_GENERATOR_URL;
 let _scheduleViewerGithubUrl = DEFAULT_SCHEDULE_VIEWER_GITHUB_URL;
 
 function normalizeWorkorderList(arr, fallback){
@@ -4678,10 +4669,6 @@ function applyScheduleViewerLinksFromData(d){
     settings[SCHEDULE_VIEWER_URL_KEY] || settings.schedule_viewer_url,
     DEFAULT_SCHEDULE_VIEWER_URL
   );
-  _scheduleViewerGeneratorUrl = normalizeScheduleUrl(
-    settings[SCHEDULE_VIEWER_GENERATOR_URL_KEY] || settings.schedule_viewer_generator_url,
-    DEFAULT_SCHEDULE_VIEWER_GENERATOR_URL
-  );
   _scheduleViewerGithubUrl = normalizeScheduleUrl(
     settings[SCHEDULE_VIEWER_GITHUB_URL_KEY] || settings.schedule_viewer_github_url,
     DEFAULT_SCHEDULE_VIEWER_GITHUB_URL
@@ -4691,33 +4678,26 @@ function applyScheduleViewerLinksFromData(d){
 }
 function renderScheduleViewerLinks(){
   const viewerEl = document.getElementById('schedule-banner');
-  const generatorEl = document.getElementById('schedule-generator-link');
   const githubEl = document.getElementById('schedule-github-link');
   if(viewerEl) viewerEl.href = _scheduleViewerUrl || DEFAULT_SCHEDULE_VIEWER_URL;
-  if(generatorEl) generatorEl.href = _scheduleViewerGeneratorUrl || DEFAULT_SCHEDULE_VIEWER_GENERATOR_URL;
   if(githubEl) githubEl.href = _scheduleViewerGithubUrl || DEFAULT_SCHEDULE_VIEWER_GITHUB_URL;
 }
 function renderScheduleViewerSettings(){
   const viewerInput = document.getElementById('s-schedule-viewer-url');
-  const generatorInput = document.getElementById('s-schedule-generator-url');
   const githubInput = document.getElementById('s-schedule-github-url');
   if(viewerInput) viewerInput.value = _scheduleViewerUrl || DEFAULT_SCHEDULE_VIEWER_URL;
-  if(generatorInput) generatorInput.value = _scheduleViewerGeneratorUrl || DEFAULT_SCHEDULE_VIEWER_GENERATOR_URL;
   if(githubInput) githubInput.value = _scheduleViewerGithubUrl || DEFAULT_SCHEDULE_VIEWER_GITHUB_URL;
 }
 async function saveScheduleViewerLinks(btnEl){
   if(btnEl && btnEl.disabled) return;
   const viewerInput = document.getElementById('s-schedule-viewer-url');
-  const generatorInput = document.getElementById('s-schedule-generator-url');
   const githubInput = document.getElementById('s-schedule-github-url');
   _scheduleViewerUrl = normalizeScheduleUrl(viewerInput ? viewerInput.value : '', DEFAULT_SCHEDULE_VIEWER_URL);
-  _scheduleViewerGeneratorUrl = normalizeScheduleUrl(generatorInput ? generatorInput.value : '', DEFAULT_SCHEDULE_VIEWER_GENERATOR_URL);
   _scheduleViewerGithubUrl = normalizeScheduleUrl(githubInput ? githubInput.value : '', DEFAULT_SCHEDULE_VIEWER_GITHUB_URL);
   renderScheduleViewerLinks();
   setAdminActionLoading(btnEl, true, '保存中...');
   try{
     await gasPost({sheet:'設定_UPDATE', key:SCHEDULE_VIEWER_URL_KEY, value:_scheduleViewerUrl});
-    await gasPost({sheet:'設定_UPDATE', key:SCHEDULE_VIEWER_GENERATOR_URL_KEY, value:_scheduleViewerGeneratorUrl});
     await gasPost({sheet:'設定_UPDATE', key:SCHEDULE_VIEWER_GITHUB_URL_KEY, value:_scheduleViewerGithubUrl});
     showToast('スケジュール関連URLを保存しました');
   }catch(e){
