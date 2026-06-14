@@ -67,6 +67,7 @@
     .field label{font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap}
     .inp{border:1px solid #cbd5e1;border-radius:6px;padding:9px 11px;font-size:15px;font-family:inherit;background:#fff;outline:none}
     .inp:focus{border-color:var(--blue)}
+    .portal-date-input{min-width:10.5em;}
     .inline-group{display:flex;gap:8px;align-items:center}
     .inline-group .short{max-width:120px}
     .inline-group .pick{max-width:210px}
@@ -213,7 +214,7 @@
       <div class="card">
         <div class="hdr">運送手配依頼書 入力</div>
         <div class="form">
-          <div class="field"><label>発信日</label><input id="sendDate" class="inp" type="date" oninput="renderPreview()"></div>
+          <div class="field"><label>発信日</label><input id="sendDate" class="inp portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" oninput="renderPreview()"></div>
           <div class="field"><label>送付枚数</label><input id="pages" class="inp" type="text" value="1" oninput="renderPreview()"></div>
           <div class="field"><label>連絡先TEL</label><input id="contactNo" class="inp" type="text" value="052-383-4622" oninput="renderPreview()"></div>
           <div class="field"><label>要件</label><input id="subject" class="inp" type="text" value="配車依頼" oninput="renderPreview()"></div>
@@ -287,7 +288,7 @@
           <div class="field">
             <label>集荷日時</label>
             <div class="inline-group">
-              <input id="loadDate" class="inp date-inp" type="date" onchange="onTimeRangeInput('load')">
+              <input id="loadDate" class="inp date-inp portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" onchange="onTimeRangeInput('load')">
               <select id="loadStartTime" class="inp time-inp" onchange="onTimeRangeInput('load')">
                 <option value="">時刻</option>
               </select>
@@ -311,7 +312,7 @@
           <div class="field">
             <label>配送日時</label>
             <div class="inline-group">
-              <input id="unloadDate" class="inp date-inp" type="date" onchange="onTimeRangeInput('unload')">
+              <input id="unloadDate" class="inp date-inp portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" onchange="onTimeRangeInput('unload')">
               <select id="unloadStartTime" class="inp time-inp" onchange="onTimeRangeInput('unload')">
                 <option value="">時刻</option>
               </select>
@@ -454,6 +455,7 @@
     </div>
   </div>
 
+  <script src="portal-date-utils.js"></script>
   <script>
     function goBackOrDefault(fallbackUrl){
       try{
@@ -621,19 +623,13 @@
       }, true);
     }
     function fmtDate(v){
-      const s = String(v||"").trim();
-      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-      return m ? `${m[1]}/${m[2]}/${m[3]}` : s;
+      return PortalDate.normalizePortalDateValue(v) || String(v||"").trim();
     }
     function nowStr(){
-      const d = new Date();
-      const p = n => String(n).padStart(2,"0");
-      return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+      return PortalDate.portalNowDateTime();
     }
     function fmtDateTime(v){
-      const s = String(v||"").trim();
-      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
-      return m ? `${m[1]}/${m[2]}/${m[3]} ${m[4]}:${m[5]}` : s;
+      return PortalDate.formatPortalDateTimeDisplay(v);
     }
     function normalizeDateTimeValue(v){
       const s = String(v || "").trim();
@@ -687,7 +683,7 @@
       return m ? { date:m[1], time:m[2] } : { date:"", time:"" };
     }
     function onTimeRangeInput(prefix, keepRaw){
-      const date = val(`${prefix}Date`);
+      const date = valDate(`${prefix}Date`);
       const start = val(`${prefix}StartTime`);
       const end = val(`${prefix}EndTime`);
       if(!keepRaw){
@@ -707,7 +703,7 @@
       if(s && e && e < s) setVal(`${prefix}EndTime`, s);
     }
     function buildDateTimeRange(prefix){
-      const date = val(`${prefix}Date`);
+      const date = valDate(`${prefix}Date`);
       const startTime = val(`${prefix}StartTime`);
       if(!date || !startTime) return "";
       const startIso = normalizeDateTimeValue(`${date}T${startTime}`);
@@ -987,6 +983,7 @@
       }
     }
     function val(id){ const el=$(id); return el ? String(el.value||"").trim() : ""; }
+    function valDate(id){ return PortalDate.readPortalDateInputValue($(id)); }
     function out(id, text){ const el=$(id); if(el) el.textContent = text || " "; }
     function buildUnloadPlaceText(){
       const addr = val("unloadAddress");
@@ -997,7 +994,7 @@
     function renderPreview(){
       const caseNoFull = getCaseNoCombined();
       const toPersons = getToPersonEntries().map(x => formatDisplayName(x.name, x.noHonorific)).join("\n");
-      out("pSendDate", fmtDate(val("sendDate")));
+      out("pSendDate", fmtDate(valDate("sendDate")));
       out("pPages", val("pages") || "1");
       out("pSubject", val("subject"));
       out("pCaseNoTop", caseNoFull);
@@ -1015,7 +1012,7 @@
       out("pGeneratedAt", nowStr());
     }
     function resetForm(){
-      $("sendDate").value = new Date().toISOString().slice(0,10);
+      $("sendDate").value = PortalDate.getTodayIsoDate();
       ["caseNo","toPerson1","toPerson2","toPerson3","unloadName","unloadAddress","unloadPerson","unloadTel","loadDate","loadStartTime","loadEndTime","unloadDate","unloadStartTime","unloadEndTime"].forEach(id => { if($(id)) $(id).value = ""; });
       ["loadCaseNoQuery","loadNameQuery"].forEach(id => { if($(id)) $(id).value = ""; });
       ["toPerson1NoHonorific","toPerson2NoHonorific","toPerson3NoHonorific","unloadPersonNoHonorific"].forEach(id => setChecked(id, false));
@@ -1086,7 +1083,7 @@
     function fillFormFromRow(row){
       // 先に時刻候補を構築しておかないと、setValした時刻が消える
       populateTimeRangeSelects();
-      const today = new Date().toISOString().slice(0,10);
+      const today = PortalDate.getTodayIsoDate();
       // 発信日はDB値ではなく当日を採用
       setVal("sendDate", today);
       setVal("pages", row.pages || row["送付枚数"] || "1");
@@ -1159,10 +1156,10 @@
       if(!raw) return "-";
       const p2 = n => String(Number(n || 0)).padStart(2, "0");
       const m = raw.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})\s+(\d{1,2}):(\d{1,2})/);
-      if(m) return `${m[1]}/${p2(m[2])}/${p2(m[3])} ${p2(m[4])}:${p2(m[5])}`;
+      if(m) return `${m[1]}-${p2(m[2])}-${p2(m[3])} ${p2(m[4])}:${p2(m[5])}`;
       const d = new Date(raw);
       if(!Number.isNaN(d.getTime())){
-        return `${d.getFullYear()}/${p2(d.getMonth()+1)}/${p2(d.getDate())} ${p2(d.getHours())}:${p2(d.getMinutes())}`;
+        return PortalDate.formatPortalDateTimeStorage(d);
       }
       return raw;
     }
@@ -1305,7 +1302,7 @@
         recordId: _transportRecordId || "",
         savedAt: nowStr(),
         caseNo,
-        sendDate: val("sendDate"),
+        sendDate: valDate("sendDate"),
         pages: val("pages"),
         contactNo: val("contactNo"),
         subject: val("subject"),
@@ -1411,7 +1408,7 @@
       }catch(e){}
       const prefill = {
         caseNo: currentCaseNo,
-        requestDate: val("sendDate"),
+        requestDate: valDate("sendDate"),
         carrierCompany: "",
         destinationCompany,
         destinationPostalAddress: val("unloadAddress"),

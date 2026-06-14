@@ -67,6 +67,8 @@
     .chk{width:16px;height:16px;accent-color:var(--blue)}
     .inp{border:1px solid #cbd5e1;border-radius:6px;padding:9px 11px;font-size:14px;font-family:inherit;background:#fff;outline:none}
     .inp:focus{border-color:var(--blue)}
+    .portal-date-input{min-width:10.5em;}
+    .portal-date-input{min-width:10.5em;}
     .items-grid{display:grid;grid-template-columns:1fr 170px;gap:6px}
     .items-head{font-size:12px;font-weight:900;color:#475569}
     .qty-with-unit{display:grid;grid-template-columns:1fr 58px;gap:6px}
@@ -259,7 +261,7 @@
       <div class="card">
         <div class="hdr">送状 入力</div>
         <div class="form">
-          <div class="field"><label>発送日</label><input id="requestDate" class="inp" type="date" oninput="renderPreview()"></div>
+          <div class="field"><label>発送日</label><input id="requestDate" class="inp portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" oninput="renderPreview()"></div>
           <div class="field"><label>案件番号</label><input id="caseNo" class="inp" type="text" oninput="renderPreview()"></div>
 
           <div class="field"><label>運送会社</label><input id="carrierCompany" class="inp" type="text" oninput="renderPreview()"></div>
@@ -371,6 +373,7 @@
     </div>
   </div>
 
+  <script src="portal-date-utils.js"></script>
   <script>
     function goBackOrDefault(fallbackUrl){
       try{
@@ -391,6 +394,7 @@
     let _searchCandidates = [];
     const $ = id => document.getElementById(id);
     function val(id){ const el = $(id); return el ? String(el.value || "").trim() : ""; }
+    function valDate(id){ return PortalDate.readPortalDateInputValue($(id)); }
     function setDbStatus(text, isError){
       const el = $("db-status");
       if(!el) return;
@@ -428,11 +432,11 @@
       const m = raw.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})(?:[ T](\d{1,2}):(\d{1,2}))?/);
       if(m){
         const hm = (m[4] != null && m[5] != null) ? ` ${p2(m[4])}:${p2(m[5])}` : "";
-        return `${m[1]}/${p2(m[2])}/${p2(m[3])}${hm}`;
+        return `${m[1]}-${p2(m[2])}-${p2(m[3])}${hm}`;
       }
       const d = new Date(raw);
       if(!Number.isNaN(d.getTime())){
-        return `${d.getFullYear()}/${p2(d.getMonth()+1)}/${p2(d.getDate())} ${p2(d.getHours())}:${p2(d.getMinutes())}`;
+        return PortalDate.formatPortalDateTimeStorage(d);
       }
       return raw;
     }
@@ -571,9 +575,7 @@
       }, true);
     }
     function nowStr(){
-      const d = new Date();
-      const p = n => String(n).padStart(2,"0");
-      return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+      return PortalDate.portalNowDateTime();
     }
     function p2(n){ return String(Number(n || 0)).padStart(2,"0"); }
     function parseDateParts(raw){
@@ -682,7 +684,7 @@
       return { qty:s, unit:"個" };
     }
     function buildSheet(label){
-      const requestDate = fmtDateJp(val("requestDate"));
+      const requestDate = fmtDateJp(valDate("requestDate"));
       const caseNo = val("caseNo");
       const carrierCompany = val("carrierCompany");
       const vehicleNo = val("vehicleNo");
@@ -791,7 +793,7 @@
         recordId: _slipRecordId || "",
         savedAt: nowStr(),
         caseNo: caseNo,
-        requestDate: val("requestDate"),
+        requestDate: valDate("requestDate"),
         carrierCompany: val("carrierCompany"),
         vehicleNo: val("vehicleNo"),
         driverName: val("driverName"),
@@ -993,7 +995,7 @@
         const raw = sessionStorage.getItem("shippingSlipPrefill");
         if(!raw) return;
         const p = JSON.parse(raw);
-        setVal("requestDate", toDateInputValue(p.requestDate || p.sendDate || "") || new Date().toISOString().slice(0,10));
+        setVal("requestDate", toDateInputValue(p.requestDate || p.sendDate || "") || PortalDate.getTodayIsoDate());
         setVal("caseNo", p.caseNo || "");
         setVal("carrierCompany", p.carrierCompany || "");
         setVal("destinationCompany", p.destinationCompany || "");
@@ -1011,7 +1013,7 @@
       }catch(e){}
     }
     function resetSlip(){
-      setVal("requestDate", new Date().toISOString().slice(0,10));
+      setVal("requestDate", PortalDate.getTodayIsoDate());
       [
         "caseNo","carrierCompany","vehicleNo","driverName","driverMobile",
         "destinationCompany","destinationDept","destinationContact","destinationPostal","destinationAddress","destinationTel","arrivalDateTime",
@@ -1029,7 +1031,7 @@
       applyOperatorAutoFill();
     }
     applyPrefill();
-    if(!val("requestDate")) setVal("requestDate", new Date().toISOString().slice(0,10));
+    if(!valDate("requestDate")) setVal("requestDate", PortalDate.getTodayIsoDate());
     if(!val("senderCompany")) setVal("senderCompany", "ジェイピーネクスト株式会社");
     if(!val("senderAddress")) setVal("senderAddress", "名古屋市中川区万町302番地");
     if(!val("senderTel")) setVal("senderTel", "052-353-3146");

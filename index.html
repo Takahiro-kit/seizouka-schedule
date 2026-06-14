@@ -226,6 +226,7 @@ body.admin-mode .nav-admin-links{display:block;}
 .mgmt-tile-updated{display:none;margin-top:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.78);letter-spacing:.02em;}
 .mgmt-updated-inputs{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px;align-items:center;}
 .mgmt-updated-time{width:120px;}
+.portal-date-input{min-width:10.5em;}
 .mgmt-tile-arr{margin-left:auto;font-size:8px;color:rgba(255,255,255,.7);flex-shrink:0;}
 
 /* CARD */
@@ -1310,7 +1311,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
                 </select>
                 <div class="todo-due-wrap">
                   <span class="todo-due-label">完了希望日</span>
-                  <input id="t-due-date" type="date" title="完了希望日" aria-label="完了希望日">
+                  <input id="t-due-date" class="portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="完了希望日（YYYY-MM-DD）" aria-label="完了希望日">
                 </div>
                 <button id="add-todo-btn" type="button" onclick="submitTodoForm()">追加</button>
                 <button id="cancel-todo-edit-btn" type="button" onclick="cancelTodoEdit()">キャンセル</button>
@@ -1363,10 +1364,10 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
             <div id="img-rule-workreport" style="display:none;grid-template-columns:1fr 1fr 180px;gap:8px;margin-bottom:8px;">
               <input type="text" id="img-report-number" placeholder="FKまたはFS番号（例: FK1234）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
               <input type="text" id="img-report-user" placeholder="ユーザー名（例: 山田）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
-              <input type="date" id="img-report-date" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="text" id="img-report-date" class="portal-date-input" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
             </div>
             <div id="img-rule-slip" style="display:none;grid-template-columns:180px 1fr 1fr;gap:8px;margin-bottom:8px;">
-              <input type="date" id="img-slip-date" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="text" id="img-slip-date" class="portal-date-input" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
               <input type="text" id="img-slip-company" placeholder="客先会社名（例: 株式会社〇〇）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
               <input type="text" id="img-slip-customer" placeholder="お客様名（例: 山田太郎）" style="border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;">
             </div>
@@ -1538,7 +1539,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
             <div class="s-row-title">ホーム表示の更新日</div>
             <div class="s-row-desc">ファイル選択時は自動で現在の日時を保存します。必要に応じて手入力でも修正できます。</div>
             <div class="mgmt-updated-inputs">
-              <input id="s-shukka-updated-date" class="s-input" type="date" aria-label="出荷連絡表更新日">
+              <input id="s-shukka-updated-date" class="s-input portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" aria-label="出荷連絡表更新日">
               <input id="s-shukka-updated-time" class="s-input mgmt-updated-time" type="time" aria-label="出荷連絡表更新時刻">
             </div>
           </div>
@@ -1572,7 +1573,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
             <div class="s-row-title">ホーム表示の更新日</div>
             <div class="s-row-desc">「更新日を保存」を押すと現在の日時が保存されます。日付だけ変更した場合も、その日付＋現在時刻で保存します。</div>
             <div class="mgmt-updated-inputs">
-              <input id="s-schedule-updated-date" class="s-input" type="date" aria-label="GansukeViewer更新日">
+              <input id="s-schedule-updated-date" class="s-input portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" aria-label="GansukeViewer更新日">
               <input id="s-schedule-updated-time" class="s-input mgmt-updated-time" type="time" aria-label="GansukeViewer更新時刻">
             </div>
           </div>
@@ -1619,7 +1620,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;">
-            <input type="date" id="hol-date" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <input type="text" id="hol-date" class="portal-date-input" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
             <button class="s-btn" onclick="addHoliday(this)">追加</button>
           </div>
           <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px;">
@@ -1710,7 +1711,7 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
             <div style="display:flex;gap:8px;">
               <input type="text" id="doc-name" placeholder="ファイル名（例：出荷手順書 v3.2）" style="flex:1;border:1px solid var(--border2);border-radius:4px;padding:8px 12px;font-size:13px;font-family:var(--sans);outline:none;">
               <select id="doc-type" style="width:160px;border:1px solid var(--border2);border-radius:4px;padding:8px 10px;font-size:13px;font-family:var(--sans);background:#fff;outline:none;cursor:pointer;"></select>
-              <input type="date" id="doc-date" style="width:200px;border:1px solid var(--border2);border-radius:4px;padding:8px 12px;font-size:13px;font-family:var(--sans);outline:none;">
+              <input type="text" id="doc-date" class="portal-date-input" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" style="width:200px;border:1px solid var(--border2);border-radius:4px;padding:8px 12px;font-size:13px;font-family:var(--sans);outline:none;">
             </div>
             <div style="display:flex;gap:8px;">
               <input type="url" id="doc-url" placeholder="SharePointのURL（ファイルを右クリック→リンクのコピー）" style="flex:1;border:1px solid var(--border2);border-radius:4px;padding:8px 12px;font-size:13px;font-family:var(--sans);outline:none;">
@@ -1851,8 +1852,8 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:center;">
-            <input type="date" id="ev-date" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
-            <input type="date" id="ev-date-end" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;" title="期間登録する場合の終了日（任意）">
+            <input type="text" id="ev-date" class="portal-date-input" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
+            <input type="text" id="ev-date-end" class="portal-date-input" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="期間登録する場合の終了日（YYYY-MM-DD・任意）" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;">
             <select id="ev-type" style="border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:var(--sans);outline:none;background:#fff;">
               <option value="tenj">展示会</option>
               <option value="kekki">決起会</option>
@@ -2756,7 +2757,7 @@ async function saveTodoEdit(btnEl){
   if(!t || !canEditTodoItem(t)){ showToast('投稿者のみ編集できます'); return; }
   const text = String(document.getElementById('tinp')?.value || '').trim();
   const tag = String(document.getElementById('t-tag')?.value || '').trim();
-  const dueDate = String(document.getElementById('t-due-date')?.value || '').trim();
+  const dueDate = readPortalDateInputValue(document.getElementById('t-due-date'));
   if(!text){ showToast('内容を入力してください'); return; }
   if(btnEl){ btnEl.disabled = true; btnEl.innerHTML = '<span class="btn-spinner"></span>保存中...'; }
   try{
@@ -3763,8 +3764,10 @@ async function requestAdminAccess(){
 function formatWorkOrderDate(v){
   const s = String(v || '').trim();
   const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(!m) return '';
-  return `${m[1]}/${m[2]}/${m[3]}`;
+  if(m) return `${m[1]}-${m[2]}-${m[3]}`;
+  const m2 = s.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
+  if(m2) return `${m2[1]}-${m2[2]}-${m2[3]}`;
+  return '';
 }
 function workOrderValue(id){
   const el = document.getElementById(id);
@@ -4047,7 +4050,7 @@ function fillSelectOptions(sel, items, opts){
   if(cur && [...sel.options].some(o => o.value === cur)) sel.value = cur;
   else if(opts.defaultValue) sel.value = opts.defaultValue;
 }
-function fmtDT(){const n=new Date();return n.getFullYear()+'/'+p(n.getMonth()+1)+'/'+p(n.getDate())+' '+p(n.getHours())+':'+p(n.getMinutes());}
+function fmtDT(){const n=new Date();return n.getFullYear()+'-'+p(n.getMonth()+1)+'-'+p(n.getDate())+' '+p(n.getHours())+':'+p(n.getMinutes());}
 function parseNoticeDatetime(v){
   if(v == null || v === '') return null;
   if(v instanceof Date) return isNaN(v) ? null : v;
@@ -4779,6 +4782,13 @@ function normalizePortalDateValue(raw){
   if(!d) return '';
   return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
 }
+function readPortalDateInputValue(el){
+  return normalizePortalDateValue(el ? el.value : '');
+}
+function setPortalDateInputValue(el, raw){
+  if(!el) return;
+  el.value = normalizePortalDateValue(raw);
+}
 function normalizePortalTimeValue(raw){
   const d = parsePortalDateTime(raw);
   if(!d) return '';
@@ -4822,9 +4832,9 @@ function renderManagementUpdateDateSettings(){
   const shukkaTimeInput = document.getElementById('s-shukka-updated-time');
   const scheduleInput = document.getElementById('s-schedule-updated-date');
   const scheduleTimeInput = document.getElementById('s-schedule-updated-time');
-  if(shukkaInput) shukkaInput.value = normalizePortalDateValue(_shukkaUpdatedDate);
+  if(shukkaInput) setPortalDateInputValue(shukkaInput, _shukkaUpdatedDate);
   if(shukkaTimeInput) shukkaTimeInput.value = normalizePortalTimeValue(_shukkaUpdatedDate);
-  if(scheduleInput) scheduleInput.value = normalizePortalDateValue(_scheduleViewerUpdatedDate);
+  if(scheduleInput) setPortalDateInputValue(scheduleInput, _scheduleViewerUpdatedDate);
   if(scheduleTimeInput) scheduleTimeInput.value = normalizePortalTimeValue(_scheduleViewerUpdatedDate);
 }
 function applyManagementUpdateDatesFromData(d){
@@ -5855,7 +5865,7 @@ async function addT(){
   const tg=document.getElementById('t-tag').value;
   const author = getPortalPostAuthor();
   const regDate=getTodayIsoDate();
-  const dueDate=document.getElementById('t-due-date').value || '';
+  const dueDate=readPortalDateInputValue(document.getElementById('t-due-date'));
   if(!tx){ if(btn){btn.disabled=false;btn.textContent='追加';} return; }
   if(!author){ showToast('ログインしてください'); if(btn){btn.disabled=false;btn.innerHTML='追加';} return; }
   const id='T'+Date.now();
@@ -5995,7 +6005,7 @@ async function addHoliday(btnEl){
   const btn = btnEl || document.querySelector('[onclick="addHoliday(this)"]');
   if(btn && btn.disabled) return;
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>追加中...'; }
-  const dateStr = document.getElementById('hol-date').value;
+  const dateStr = readPortalDateInputValue(document.getElementById('hol-date'));
   if(!dateStr){
     showToast('日付を選択してください');
     if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
@@ -6369,7 +6379,7 @@ function renderMemberPage(name){
     </div>
     <div class="member-grid">
       ${row('氏名', 'ti-id', p.fullName || m.name)}
-      ${row('生年月日', 'ti-cake', p.birthDate)}
+      ${row('生年月日', 'ti-cake', formatDisplayYmd(p.birthDate))}
       ${row('住所', 'ti-map-pin', p.address)}
       ${row('電話番号', 'ti-phone', p.phone)}
       ${row('服のサイズ', 'ti-shirt', p.clothSize)}
@@ -6413,7 +6423,7 @@ function renderMemberEditPage(name){
       <div class="member-panel-title"><i class="ti ti-edit"></i>プロフィール情報を編集</div>
       <div class="member-form-grid">
         <div class="member-field"><label>氏名</label><input id="mpv-fullName" class="member-input" value="${escAttr(p.fullName || m.name)}"></div>
-        <div class="member-field"><label>生年月日</label><input id="mpv-birthDate" class="member-input" type="date" value="${escAttr(p.birthDate)}"></div>
+        <div class="member-field"><label>生年月日</label><input id="mpv-birthDate" class="member-input portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" value="${escAttr(normalizePortalDateValue(p.birthDate))}"></div>
         <div class="member-field full"><label>住所</label><input id="mpv-address" class="member-input" value="${escAttr(p.address)}"></div>
         <div class="member-field"><label>電話番号</label><input id="mpv-phone" class="member-input" value="${escAttr(p.phone)}"></div>
         <div class="member-field"><label>肩書き・役割（見出し）</label><input id="mpv-headline" class="member-input" value="${escAttr(p.headline)}"></div>
@@ -6449,7 +6459,7 @@ async function saveActiveMemberProfile(){
   const profile = normalizeMemberProfile({
     ...current,
     fullName: v('mpv-fullName'),
-    birthDate: v('mpv-birthDate'),
+    birthDate: normalizePortalDateValue(v('mpv-birthDate')),
     address: v('mpv-address'),
     phone: v('mpv-phone'),
     headline: v('mpv-headline'),
@@ -6691,7 +6701,7 @@ async function addDoc(){
   const name = document.getElementById('doc-name').value.trim();
   const url = document.getElementById('doc-url').value.trim();
   const type = resolveDocCategoryLabel(document.getElementById('doc-type').value);
-  const date = document.getElementById('doc-date').value.trim();
+  const date = readPortalDateInputValue(document.getElementById('doc-date'));
   if(!name||!url){
     showToast('ファイル名とURLを入力してください');
     if(btn){ btn.disabled=false; btn.innerHTML='追加'; }
@@ -6943,8 +6953,8 @@ async function addCalEvent(btnEl){
   const btn = btnEl || document.querySelector('[onclick="addCalEvent(this)"]');
   if(btn && btn.disabled) return;
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>追加中...'; }
-  const date = document.getElementById('ev-date').value;
-  const endDate = document.getElementById('ev-date-end').value;
+  const date = readPortalDateInputValue(document.getElementById('ev-date'));
+  const endDate = readPortalDateInputValue(document.getElementById('ev-date-end'));
   const type = document.getElementById('ev-type').value;
   const label = document.getElementById('ev-label').value.trim();
   if(!date){

@@ -95,6 +95,7 @@
       font-size:14px;font-family:inherit;outline:none;background:#fff;
     }
     .inp:focus{border-color:var(--blue)}
+    .portal-date-input{min-width:10.5em;}
     .paper-wrap{padding:18px;background:#e2e8f0;overflow:auto;max-height:calc(100vh - 190px)}
     .paper{
       width:100%;max-width:198mm;min-height:297mm;background:#fff;margin:0 auto;
@@ -191,7 +192,7 @@
           <label for="loadCustomerQuery">顧客名</label>
           <input id="loadCustomerQuery" class="inp" type="text" placeholder="例: 〇〇ファーマ様">
           <label for="fileDate">出力日付</label>
-          <input id="fileDate" class="inp inp-date" type="date" title="PDFファイル名用">
+          <input id="fileDate" class="inp inp-date portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="PDFファイル名用（YYYY-MM-DD）">
         </div>
         <button class="btn alt" type="button" onclick="loadWorkorder(this)">案件呼び出し</button>
         <button class="btn alt" type="button" onclick="loadWorkorderList(this)">全件表示</button>
@@ -230,11 +231,11 @@
           </div>
           <div class="field">
             <label for="requestDate">依頼日</label>
-            <input id="requestDate" class="inp" type="date" oninput="renderPreview()">
+            <input id="requestDate" class="inp portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" oninput="renderPreview()">
           </div>
           <div class="field">
             <label for="deadline">作業期限</label>
-            <input id="deadline" class="inp" type="date" oninput="renderPreview()">
+            <input id="deadline" class="inp portal-date-input" type="text" placeholder="YYYY-MM-DD" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" title="YYYY-MM-DD" oninput="renderPreview()">
           </div>
           <div class="field">
             <label for="docCaseNo">案件番号</label>
@@ -338,6 +339,7 @@
     </div>
   </div>
 
+  <script src="portal-date-utils.js"></script>
   <script>
     function goBackOrDefault(fallbackUrl){
       try{
@@ -456,14 +458,10 @@
       }, true);
     }
     function fmtDate(v){
-      const s = String(v || "").trim();
-      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-      return m ? `${m[1]}/${m[2]}/${m[3]}` : "";
+      return PortalDate.normalizePortalDateValue(v);
     }
     function nowStr(){
-      const d = new Date();
-      const p = n => String(n).padStart(2, "0");
-      return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+      return PortalDate.portalNowDateTime();
     }
     function renderPreview(){
       $("pRequester").textContent = textOrSpace($("requester").value);
@@ -483,11 +481,11 @@
       ["request","work","note","docCaseNo","customerName","loadCaseNoQuery","loadCustomerQuery"].forEach(id => setVal(id, ""));
       if($("requester")) $("requester").value = "";
       if($("contractor")) $("contractor").value = "";
-      $("requestDate").value = new Date().toISOString().slice(0,10);
+      $("requestDate").value = PortalDate.getTodayIsoDate();
       $("deadline").value = "";
       if($("workDept")) $("workDept").value = DEFAULT_WORK_DEPARTMENTS[0] || "";
       if($("workPlace")) $("workPlace").value = DEFAULT_WORK_PLACES[0] || "";
-      $("fileDate").value = new Date().toISOString().slice(0,10);
+      $("fileDate").value = PortalDate.getTodayIsoDate();
       _workorderRecordId = "";
       _loadedCaseNo = "";
       setDbStatus("DB状態: 新規入力モード", false);
@@ -553,8 +551,8 @@
       return {
         requester: $("requester") ? $("requester").value : "",
         contractor: $("contractor") ? $("contractor").value : "",
-        requestDate: $("requestDate") ? $("requestDate").value : "",
-        deadline: $("deadline") ? $("deadline").value : "",
+        requestDate: PortalDate.readPortalDateInputValue($("requestDate")),
+        deadline: PortalDate.readPortalDateInputValue($("deadline")),
         docCaseNo: $("docCaseNo") ? $("docCaseNo").value : "",
         customerName: $("customerName") ? $("customerName").value : "",
         request: $("request") ? $("request").value : "",
@@ -562,7 +560,7 @@
         note: $("note") ? $("note").value : "",
         workDept: val("workDept"),
         workPlace: val("workPlace"),
-        fileDate: val("fileDate")
+        fileDate: PortalDate.readPortalDateInputValue($("fileDate"))
       };
     }
     function applyFormData(data){
@@ -777,10 +775,10 @@
       if(!raw) return "-";
       const p2 = n => String(Number(n || 0)).padStart(2, "0");
       const m = raw.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})\s+(\d{1,2}):(\d{1,2})/);
-      if(m) return `${m[1]}/${p2(m[2])}/${p2(m[3])} ${p2(m[4])}:${p2(m[5])}`;
+      if(m) return `${m[1]}-${p2(m[2])}-${p2(m[3])} ${p2(m[4])}:${p2(m[5])}`;
       const d = new Date(raw);
       if(!Number.isNaN(d.getTime())){
-        return `${d.getFullYear()}/${p2(d.getMonth()+1)}/${p2(d.getDate())} ${p2(d.getHours())}:${p2(d.getMinutes())}`;
+        return PortalDate.formatPortalDateTimeStorage(d);
       }
       return raw;
     }
@@ -907,7 +905,7 @@
       }
     }
     function fileDateToken(v){
-      const s = String(v || "").trim();
+      const s = PortalDate.normalizePortalDateValue(v);
       const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
       return m ? `${m[1]}${m[2]}${m[3]}` : "";
     }
@@ -964,8 +962,8 @@
         savedAt: nowStr(),
         requester: val("requester"),
         contractor: val("contractor"),
-        requestDate: val("requestDate"),
-        deadline: val("deadline"),
+        requestDate: PortalDate.readPortalDateInputValue($("requestDate")),
+        deadline: PortalDate.readPortalDateInputValue($("deadline")),
         caseNo,
         customerName: val("customerName"),
         request: val("request"),
@@ -973,8 +971,8 @@
         note: val("note"),
         workDept: val("workDept"),
         workPlace: val("workPlace"),
-        outputFileDate: val("fileDate"),
-        outputFileName: `${safeFileName(caseNo)}_${fileDateToken(val("fileDate"))}_作業指示書`
+        outputFileDate: PortalDate.readPortalDateInputValue($("fileDate")),
+        outputFileName: `${safeFileName(caseNo)}_${fileDateToken(PortalDate.readPortalDateInputValue($("fileDate")))}_作業指示書`
       };
       try{
         await gasPost(_workorderDbGasUrl, payload);
@@ -1053,8 +1051,8 @@
       logPortalAudit("PDF出力", casePart, { kind: "workorder_pdf", caseNo: casePart });
       setTimeout(() => setActionLoading(btn, false), 3000);
     }
-    $("requestDate").value = new Date().toISOString().slice(0,10);
-    $("fileDate").value = new Date().toISOString().slice(0,10);
+    $("requestDate").value = PortalDate.getTodayIsoDate();
+    $("fileDate").value = PortalDate.getTodayIsoDate();
     loadMasterOptions();
     resetForm();
     renderPreview();
