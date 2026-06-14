@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>製造課 スケジュールビューア（2026/06/14 16:17更新）</title>
+<title>製造課 スケジュールビューア（2026/06/12 22:51更新）</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -176,10 +176,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .lrow.highlight .lrow-main{color:var(--accent);font-weight:700;}
 #print-list{display:none;}
 @media print{
-  @page{size:A4 landscape;margin:5mm;}
-  body{height:auto;overflow:visible;background:#fff;color:#111;display:block;font-size:10pt;}
+  @page{size:A4 landscape;margin:0;}
+  body{height:auto;overflow:visible;background:#fff;color:#111;display:block;font-size:10pt;padding:5mm;}
   #up,#app,.mbg,.tip{display:none!important;}
-  #print-list{display:block;}
+  #print-list{display:block;width:100%;box-sizing:border-box;}
   .print-title{font-size:14pt;font-weight:700;margin:0 0 2mm;}
   .print-sub{font-size:8pt;color:#444;margin:0 0 3mm;}
   .print-table{width:100%;max-width:100%;border-collapse:collapse;font-size:6.6pt;table-layout:fixed;box-sizing:border-box;}
@@ -597,7 +597,7 @@ function parseItemMeta(text){
   afterDue=afterDue.replace(/^[\s　/、,]+/,'');
   const orderMatch=afterDue.match(/\b\d{2}[A-Z]?-\d{3}[A-Z]?\b/);
   const customerBase=orderMatch?afterDue.slice(0,orderMatch.index).trim().replace(/[\s　/、,]+$/,''):afterDue;
-  const customer=extractCorporateCustomer(customerBase)||customerBase;
+  const customer=extractCorporateCustomer(afterDue)||extractCorporateCustomer(customerBase)||customerBase;
   const orderNo=orderMatch?.[0]||'';
   const destination=orderMatch?afterDue.slice(orderMatch.index+orderNo.length).trim().replace(/^[\s　/、,]+/,''):'';
   const confidence=[
@@ -624,7 +624,7 @@ function extractCorporateCustomer(text){
   if(!src)return '';
   const corporateRe=/(株式会社|有限会社|合同会社|合資会社|合名会社|㈱|㈲|（株）|（有）|\(株\)|\(有\)|株|有限)/;
   const parts=src.split(/[\s　/、,]+/).map(p=>p.trim()).filter(Boolean);
-  const idx=parts.findIndex(p=>corporateRe.test(p));
+  const idx=parts.map((p,i)=>corporateRe.test(p)?i:-1).filter(i=>i>=0).pop();
   if(idx<0)return '';
   let name=parts[idx];
   const markerOnly=/^(㈱|㈲|（株）|（有）|\(株\)|\(有\)|株|有限|株式会社|有限会社)$/;
@@ -1463,14 +1463,44 @@ function rowMatchesPrintRange(row,range){
   return getShipmentSpans(row).some(s=>spanOverlaps(s,range.start,range.end));
 }
 
-function getShipmentText(row){
-  const spans=getShipmentSpans(row);
+function clampSpanToRange(span,range){
+  if(!range)return span;
+  const start=span.start&&span.start<range.start?range.start:span.start;
+  const end=span.end&&span.end>range.end?range.end:span.end;
+  return {...span,start,end};
+}
+
+function getShipmentText(row,range){
+  const spans=getShipmentSpans(row)
+    .filter(s=>!range||spanOverlaps(s,range.start,range.end))
+    .map(s=>clampSpanToRange(s,range));
   if(!spans.length)return '';
   return spans.map(s=>`${fd(s.start||s.end)}〜${fd(s.end||s.start)}`).join('\n');
 }
 
-function getChartSummary(row){
-  return row.charts.slice(0,3).map(c=>`${c.label} ${c.start}〜${c.end}`).join(' / ');
+function getRangeCharts(row,range){
+  if(!range)return row.charts;
+  return row.charts.filter(c=>{
+    const s=pd(c.start),e=pd(c.end);
+    return s&&e&&spanOverlaps({start:s,end:e},range.start,range.end);
+  });
+}
+
+function getRangeEvents(row,range){
+  if(!range)return row.events;
+  return row.events.filter(ev=>dateInRange(pd(ev.date),range.start,range.end));
+}
+
+function chartDateText(c,range){
+  if(!range)return `${c.start}〜${c.end}`;
+  const s=pd(c.start),e=pd(c.end);
+  if(!s||!e)return `${c.start}〜${c.end}`;
+  const clipped=clampSpanToRange({start:s,end:e},range);
+  return `${fd(clipped.start)}〜${fd(clipped.end)}`;
+}
+
+function getChartSummary(row,range){
+  return getRangeCharts(row,range).slice(0,3).map(c=>`${c.label} ${chartDateText(c,range)}`).join(' / ');
 }
 
 function getPrintTemplates(){
@@ -1554,10 +1584,10 @@ const PRINT_FIELD_DEFS={
   orderNo:{label:'見積番号',cls:'print-code',value:row=>row.meta?.orderNo||'-'},
   owner:{label:'技術担当',cls:'print-owner',value:row=>row.meta?.owner||'-'},
   due:{label:'納期',cls:'print-date',value:row=>fd(getDueDate(row))||'-'},
-  ship:{label:'出荷日',cls:'print-range',value:row=>getShipmentText(row)||'-'},
-  summary:{label:'予定概要',cls:'print-summary',value:row=>getChartSummary(row)||'-'},
-  charts:{label:'チャート明細',cls:'print-detail',value:row=>row.charts.map(c=>`${c.label} ${c.start}〜${c.end}${c.nissuu?` (${c.nissuu}日)`:''}${c.bikou?` ${c.bikou}`:''}`).join(' / ')||'-'},
-  events:{label:'イベント',cls:'print-detail',value:row=>row.events.map(ev=>`${ev.date} ${ev.marker||''} ${ev.name}`).join(' / ')||'-'}
+  ship:{label:'出荷日',cls:'print-range',value:(row,i,range)=>getShipmentText(row,range)||'-'},
+  summary:{label:'予定概要',cls:'print-summary',value:(row,i,range)=>getChartSummary(row,range)||'-'},
+  charts:{label:'チャート明細',cls:'print-detail',value:(row,i,range)=>getRangeCharts(row,range).map(c=>`${c.label} ${chartDateText(c,range)}${c.nissuu?` (${c.nissuu}日)`:''}${c.bikou?` ${c.bikou}`:''}`).join(' / ')||'-'},
+  events:{label:'イベント',cls:'print-detail',value:(row,i,range)=>getRangeEvents(row,range).map(ev=>`${ev.date} ${ev.marker||''} ${ev.name}`).join(' / ')||'-'}
 };
 
 function printDueList(){
@@ -1588,7 +1618,7 @@ function printDueList(){
   const head=fields.map(f=>`<th class="${PRINT_FIELD_DEFS[f].cls}">${esc(PRINT_FIELD_DEFS[f].label)}</th>`).join('');
   const body=rows.map((row,i)=>`<tr>${fields.map(f=>{
     const def=PRINT_FIELD_DEFS[f];
-    return `<td class="${def.cls}">${esc(def.value(row,i))}</td>`;
+    return `<td class="${def.cls}">${esc(def.value(row,i,range))}</td>`;
   }).join('')}</tr>`).join('');
   document.getElementById('print-list').innerHTML=`
     <div class="print-title">範囲指定案件リスト（納期順）</div>
