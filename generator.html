@@ -1,282 +1,168 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>がんすけビューア 生成ツール</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #f3f5f9;
-      color: #1a2035;
-      font-family: "Noto Sans JP", system-ui, sans-serif;
-    }
-    .card {
-      width: min(560px, 92vw);
-      background: #fff;
-      border: 1px solid #dfe5ef;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 20px;
-    }
-    .sub {
-      margin: 0 0 16px;
-      font-size: 13px;
-      color: #4a5270;
-      line-height: 1.8;
-    }
-    .dz {
-      border: 2px dashed #c8d1e4;
-      border-radius: 10px;
-      background: #f7f9fe;
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: 120ms ease;
-    }
-    .dz.drag {
-      border-color: #1d4ed8;
-      background: #eff4ff;
-    }
-    .dz .line1 {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .dz .line2 {
-      color: #5b6587;
-      font-size: 12px;
-    }
-    .actions {
-      margin-top: 16px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    button {
-      border: none;
-      background: #1d4ed8;
-      color: #fff;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    button:disabled {
-      background: #c8d1e4;
-      color: #f5f7fb;
-      cursor: not-allowed;
-    }
-    .status {
-      font-size: 12px;
-      color: #4a5270;
-      min-height: 1.2em;
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }
-    .ok { color: #166534; font-weight: 700; }
-    .err { color: #b91c1c; font-weight: 700; }
-    .note {
-      margin-top: 14px;
-      color: #6b7390;
-      font-size: 12px;
-      line-height: 1.8;
-      border-top: 1px solid #ecf0f6;
-      padding-top: 12px;
-    }
-    code { background: #eef3ff; border-radius: 4px; padding: 1px 6px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GansukeViewer 生成ツール</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#eef4fb;color:#0f172a;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px}
+.card{background:#fff;border:1px solid #d6dde8;border-radius:12px;box-shadow:0 4px 20px rgba(15,23,42,.08);padding:24px}
+h1{font-size:22px;margin:0 0 8px}
+.desc{font-size:13px;color:#475569;line-height:1.8;margin-bottom:18px}
+.drop{border:2px dashed #94a3b8;border-radius:10px;background:#f8fafc;padding:28px;text-align:center;cursor:pointer;transition:.15s}
+.drop.drag,.drop:hover{border-color:#1d4ed8;background:#eff6ff}
+.drop strong{display:block;font-size:16px;margin-bottom:6px}
+.drop span{font-size:12px;color:#64748b}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+button{border:none;border-radius:8px;background:#1d4ed8;color:#fff;font-weight:700;font-size:14px;padding:10px 16px;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.status{font-size:13px;color:#475569;margin-top:14px;line-height:1.7;white-space:pre-wrap}
+.status.ok{color:#166534}
+.status.err{color:#b91c1c}
+code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:1px 5px}
+.note{margin-top:16px;font-size:12px;color:#64748b;line-height:1.7}
+</style>
 </head>
 <body>
+<div class="wrap">
   <div class="card">
-    <h1>がんすけビューア 生成ツール</h1>
-    <p class="sub">XMLを読み込み、埋め込み済みのビューアHTMLを生成します。</p>
-
-    <div id="dz" class="dz">
-      <div class="line1">XMLをドロップ、またはクリックして選択</div>
-      <div class="line2" id="file-name">未選択</div>
+    <h1>GansukeViewer 生成ツール</h1>
+    <div class="desc">
+      「ガンすけ（製造課用）.xml」を読み込み、現在の <code>gansuke-viewer.html</code> をテンプレートとしてXMLだけ差し替えます。<br>
+      画面デザインや列幅などの修正は、生成後も引き継がれます。
     </div>
-    <input id="fi" type="file" accept=".xml,text/xml" hidden>
-
+    <div class="drop" id="drop">
+      <strong>XMLファイルを選択またはドロップ</strong>
+      <span id="fileName">未選択</span>
+    </div>
+    <input id="fileInput" type="file" accept=".xml,text/xml" hidden>
     <div class="actions">
-      <button id="btn" type="button" disabled>ビューアHTMLを生成</button>
-      <div id="st" class="status"></div>
+      <button id="generateBtn" disabled>gansuke-viewer.html を生成</button>
     </div>
-
+    <div id="status" class="status"></div>
     <div class="note">
       出力ファイル名は <code>gansuke-viewer.html</code> 固定です。<br>
-      テンプレート異常時は生成せずエラー表示します。
+      生成後、<code>gansuke-viewer.html</code> をGitHubへ上書きアップしてください。
     </div>
   </div>
+</div>
+<script>
+const OUTPUT_FILENAME = 'gansuke-viewer.html';
+const TEMPLATE_URL = 'gansuke-viewer.html';
 
-  <script>
-    const OUTPUT_FILENAME = "gansuke-viewer.html";
-    const TEMPLATE_URL = "gansuke-viewer.html";
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzueRIitHcmbZIjfS1iT7qsAY3awEHioinFms0NO6e9ieVtlJY-ekogHjzmwDhZjUfyBA/exec";
-    const SCHEDULE_VIEWER_UPDATED_DATE_KEY = "schedule_viewer_updated_date";
+let xmlText = '';
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('fileInput');
+const fileName = document.getElementById('fileName');
+const generateBtn = document.getElementById('generateBtn');
+const statusEl = document.getElementById('status');
 
-    let xmlText = "";
-    const dz = document.getElementById("dz");
-    const fi = document.getElementById("fi");
-    const btn = document.getElementById("btn");
-    const st = document.getElementById("st");
-    const fileName = document.getElementById("file-name");
+function setStatus(text, cls){
+  statusEl.className = 'status' + (cls ? ' ' + cls : '');
+  statusEl.textContent = text || '';
+}
 
-    function setStatus(message, cls) {
-      st.className = "status" + (cls ? " " + cls : "");
-      st.textContent = message || "";
-    }
+function p(n){ return String(n).padStart(2, '0'); }
+function nowStamp(){
+  const d = new Date();
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
 
-    function p(n) {
-      return String(n).padStart(2, "0");
-    }
+function assertTemplateHtml(html){
+  const s = String(html || '');
+  if(!/<html[\s>]/i.test(s) || !/<body[\s>]/i.test(s) || !/<script[\s>]/i.test(s)){
+    throw new Error('テンプレート(gansuke-viewer.html)が壊れています。修正済みの正規HTMLを再アップロードしてください。');
+  }
+  if(!/startApp\s*\(/.test(s)){
+    throw new Error('テンプレートにビューア本体が見つかりません。gansuke-viewer.htmlを確認してください。');
+  }
+  return s;
+}
 
-    function nowStamp() {
-      const ts = new Date();
-      return ts.getFullYear() + "-" +
-        p(ts.getMonth() + 1) + "-" +
-        p(ts.getDate()) + " " +
-        p(ts.getHours()) + ":" +
-        p(ts.getMinutes());
-    }
+function stripEmbeddedXml(html){
+  return String(html || '')
+    .replace(/<script>\s*var\s+EMBEDDED_XML\s*=\s*[\s\S]*?;\s*<\/script>\s*/g, '')
+    .replace(/<script>\s*window\.EMBEDDED_XML\s*=\s*[\s\S]*?;\s*<\/script>\s*/g, '');
+}
 
-    function assertTemplateHtml(html) {
-      const s = String(html || "").trim();
-      const hasHtmlTag = /<html[\s>]/i.test(s);
-      const hasBodyTag = /<body[\s>]/i.test(s);
-      const hasScriptTag = /<script[\s>]/i.test(s);
-      if (!hasHtmlTag || !hasBodyTag || !hasScriptTag) {
-        throw new Error(
-          "テンプレート(gansuke-viewer.html)が壊れています。正規HTMLを再アップロードしてください。"
-        );
-      }
-      if (!/startApp\s*\(/.test(s)) {
-        throw new Error("テンプレートにビューア本体が見つかりません。gansuke-viewer.htmlを確認してください。");
-      }
-      return s;
-    }
+function embedXml(html, xml){
+  const embedScript = '<script>var EMBEDDED_XML=' + JSON.stringify(xml) + ';<\/script>\n';
+  const stripped = stripEmbeddedXml(html);
+  if(/<script\s+src=["']portal-date-utils\.js["']\s*><\/script>/i.test(stripped)){
+    return stripped.replace(/<script\s+src=["']portal-date-utils\.js["']\s*><\/script>/i, embedScript + '$&');
+  }
+  if(/<script\b/i.test(stripped)){
+    return stripped.replace(/<script\b/i, embedScript + '<script');
+  }
+  if(/<\/body>/i.test(stripped)){
+    return stripped.replace(/<\/body>/i, embedScript + '</body>');
+  }
+  return stripped + '\n' + embedScript;
+}
 
-    function stripEmbeddedXml(html) {
-      return String(html || "")
-        .replace(/<script>\s*var\s+EMBEDDED_XML\s*=\s*[\s\S]*?;\s*<\/script>\s*/g, "")
-        .replace(/<script>\s*window\.EMBEDDED_XML\s*=\s*[\s\S]*?;\s*<\/script>\s*/g, "");
-    }
+function updateTitle(html, stamp){
+  const title = '製造課 スケジュールビューア（' + stamp + '更新）';
+  if(/<title>[\s\S]*?<\/title>/i.test(html)){
+    return html.replace(/<title>[\s\S]*?<\/title>/i, '<title>' + title + '</title>');
+  }
+  return html.replace(/<\/head>/i, '<title>' + title + '</title></head>');
+}
 
-    function embedXml(html, xml) {
-      const embedScript = "<script>var EMBEDDED_XML=" + JSON.stringify(xml) + ";<\/script>\n";
-      const stripped = stripEmbeddedXml(html);
-      if (/<script\s+src=["']portal-date-utils\.js["']\s*><\/script>/i.test(stripped)) {
-        return stripped.replace(/<script\s+src=["']portal-date-utils\.js["']\s*><\/script>/i, embedScript + "$&");
-      }
-      if (/<script\b/i.test(stripped)) {
-        return stripped.replace(/<script\b/i, embedScript + "<script");
-      }
-      if (/<\/body>/i.test(stripped)) {
-        return stripped.replace(/<\/body>/i, embedScript + "</body>");
-      }
-      return stripped + "\n" + embedScript;
-    }
+function readFile(file){
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    xmlText = String(ev.target.result || '');
+    fileName.textContent = file.name + ' 読み込み完了';
+    generateBtn.disabled = !xmlText;
+    setStatus('');
+  };
+  reader.onerror = ()=>setStatus('XML読み込みに失敗しました。', 'err');
+  reader.readAsText(file, 'Shift_JIS');
+}
 
-    function updateTitle(html, stamp) {
-      const title = "製造課 スケジュールビューア（" + stamp + "更新）";
-      if (/<title>[\s\S]*?<\/title>/i.test(html)) {
-        return html.replace(/<title>[\s\S]*?<\/title>/i, "<title>" + title + "</title>");
-      }
-      return html.replace(/<\/head>/i, "<title>" + title + "</title></head>");
-    }
+drop.addEventListener('click', ()=>fileInput.click());
+drop.addEventListener('dragover', (ev)=>{ ev.preventDefault(); drop.classList.add('drag'); });
+drop.addEventListener('dragleave', ()=>drop.classList.remove('drag'));
+drop.addEventListener('drop', (ev)=>{
+  ev.preventDefault();
+  drop.classList.remove('drag');
+  const file = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+  if(file) readFile(file);
+});
+fileInput.addEventListener('change', ()=>{
+  const file = fileInput.files && fileInput.files[0];
+  if(file) readFile(file);
+});
 
-    async function saveScheduleViewerUpdatedDate(stamp) {
-      const payload = {
-        sheet: "設定_UPDATE",
-        key: SCHEDULE_VIEWER_UPDATED_DATE_KEY,
-        value: stamp,
-        operator: "GansukeViewer生成ツール"
-      };
-      const body = "data=" + encodeURIComponent(JSON.stringify(payload));
-      const res = await fetch(GAS_URL, {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body
-      });
-      const text = await res.text();
-      let json;
-      try {
-        json = JSON.parse(text);
-      } catch (_e) {
-        throw new Error("更新日時保存のGAS応答を解析できませんでした");
-      }
-      if (!res.ok || json.status === "error") {
-        throw new Error(json.error || ("更新日時保存に失敗しました: HTTP " + res.status));
-      }
-    }
+generateBtn.addEventListener('click', async ()=>{
+  if(!xmlText){
+    setStatus('先にXMLを読み込んでください。', 'err');
+    return;
+  }
+  generateBtn.disabled = true;
+  setStatus('生成中です...');
+  try{
+    const res = await fetch(TEMPLATE_URL + '?_=' + Date.now(), { cache: 'no-store' });
+    if(!res.ok) throw new Error('テンプレート取得失敗: HTTP ' + res.status);
+    let html = assertTemplateHtml(await res.text());
+    const stamp = nowStamp();
+    html = updateTitle(embedXml(html, xmlText), stamp);
 
-    function readFile(file) {
-      const rd = new FileReader();
-      rd.onload = (e) => {
-        xmlText = String(e.target.result || "");
-        fileName.textContent = file.name + " 読み込み完了";
-        btn.disabled = !xmlText;
-        setStatus("");
-      };
-      rd.onerror = () => setStatus("XML読み込みに失敗しました。", "err");
-      rd.readAsText(file, "Shift_JIS");
-    }
-
-    dz.addEventListener("click", () => fi.click());
-    dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("drag"); });
-    dz.addEventListener("dragleave", () => dz.classList.remove("drag"));
-    dz.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dz.classList.remove("drag");
-      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-      if (f) readFile(f);
-    });
-    fi.addEventListener("change", () => {
-      const f = fi.files && fi.files[0];
-      if (f) readFile(f);
-    });
-
-    async function generate() {
-      if (!xmlText) {
-        setStatus("先にXMLを読み込んでください。", "err");
-        return;
-      }
-      btn.disabled = true;
-      setStatus("生成中です...");
-      try {
-        const res = await fetch(TEMPLATE_URL + "?_=" + Date.now(), { cache: "no-store" });
-        if (!res.ok) throw new Error("テンプレート取得失敗: HTTP " + res.status);
-        let html = assertTemplateHtml(await res.text());
-        const stamp = nowStamp();
-        html = updateTitle(embedXml(html, xmlText), stamp);
-
-        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = OUTPUT_FILENAME;
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-
-        await saveScheduleViewerUpdatedDate(stamp);
-        setStatus("生成完了: " + OUTPUT_FILENAME + "（" + stamp + "）\n更新日時を設定シートへ保存しました。", "ok");
-      } catch (err) {
-        setStatus("エラー: " + (err && err.message ? err.message : String(err)), "err");
-      } finally {
-        btn.disabled = !xmlText;
-      }
-    }
-
-    btn.addEventListener("click", generate);
-  </script>
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = OUTPUT_FILENAME;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+    setStatus('生成完了（' + stamp + '更新）\nGitHubへ gansuke-viewer.html を上書きアップしてください。', 'ok');
+  }catch(err){
+    setStatus('エラー: ' + (err && err.message ? err.message : err), 'err');
+  }finally{
+    generateBtn.disabled = !xmlText;
+  }
+});
+</script>
 </body>
 </html>
