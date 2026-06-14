@@ -4698,8 +4698,8 @@ function renderMgmtUpdatedLabel(id, value){
   const el = document.getElementById(id);
   if(!el) return;
   const text = formatMgmtUpdatedDate(value);
-  el.textContent = text ? `更新日: ${text}` : '';
-  el.style.display = text ? 'block' : 'none';
+  el.textContent = `更新日: ${text || '未設定'}`;
+  el.style.display = 'block';
 }
 function renderManagementTileUpdatedDates(){
   renderMgmtUpdatedLabel('shukka-updated-label', _shukkaUpdatedDate);
