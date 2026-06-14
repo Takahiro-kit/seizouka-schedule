@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>製造課 スケジュールビューア（2026/06/14 19:52更新）</title>
+<title>製造課 スケジュールビューア（2026/06/12 22:51更新）</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -21,7 +21,7 @@
   --bar-h:22px;--bar-top:9px;--bar-font:12px;
   --ui-font:12px;--ui-small-font:11px;
   --event-top:3px;--event-font:15px;
-  --lrow-main-font:11px;--lrow-sub-font:9px;
+  --lrow-main-font:12px;--lrow-sub-font:11px;
   --sans:'Noto Sans JP',sans-serif;
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column;font-size:var(--ui-font);}
@@ -82,7 +82,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .lrow:hover{background:var(--acc-light);}
 .lrow-main{font-size:var(--lrow-main-font);font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--label-w) - 24px);}
 .lrow-sub{font-size:var(--lrow-sub-font);color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--label-w) - 24px);margin-top:1px;}
-.lrow-meta{display:grid;grid-template-columns:minmax(58px,.7fr) minmax(126px,1.55fr);gap:9px;min-width:0;max-width:calc(var(--label-w) - 24px);}
+.lrow-meta{display:grid;grid-template-columns:minmax(50px,.55fr) minmax(136px,1.7fr);gap:9px;min-width:0;max-width:calc(var(--label-w) - 24px);}
 .lm-cell{display:grid;gap:2px;min-width:0;}
 .lm-field{display:flex;align-items:baseline;gap:3px;min-width:0;white-space:nowrap;overflow:hidden;}
 .lm-label{font-size:max(7px,calc(var(--lrow-sub-font) - 1px));color:var(--text3);font-weight:700;flex-shrink:0;}
@@ -163,12 +163,14 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .mk-save:hover{background:#166534;}
 /* sort/filter header */
 .lhead{user-select:none;}
-.lh-grid{display:grid;grid-template-columns:minmax(58px,.7fr) minmax(126px,1.55fr);gap:9px;width:100%;min-width:0;}
+.lh-grid{display:grid;grid-template-columns:minmax(50px,.55fr) minmax(136px,1.7fr);gap:9px;width:100%;min-width:0;}
 .lh-cell{display:grid;gap:3px;min-width:0;}
 .lh-sort{appearance:none;border:none;background:transparent;color:var(--text3);font:inherit;font-weight:700;text-align:left;cursor:pointer;padding:1px 0;line-height:1.1;display:flex;align-items:center;gap:3px;min-width:0;}
 .lh-sort:hover,.lh-sort.active{color:var(--accent);}
 .lh-sort.filtered::after{content:'●';font-size:7px;color:var(--green);}
 .lh-ind{font-size:9px;color:var(--accent);min-width:9px;}
+.lh-quick-sort{border:1px solid var(--border);background:var(--white);color:var(--text2);border-radius:6px;padding:4px 7px;font-size:var(--ui-small-font);font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap;margin-left:7px;flex-shrink:0;}
+.lh-quick-sort:hover,.lh-quick-sort.active{border-color:var(--accent);color:var(--accent);background:var(--acc-light);}
 .sort-menu{position:fixed;display:none;z-index:1000;width:240px;background:var(--white);border:1px solid var(--border2);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:10px;}
 .sort-menu.open{display:block;}
 .sort-menu-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;}
@@ -245,7 +247,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 <!-- APP -->
 <div id="app">
   <div class="bar">
-    <span class="bar-title">📋 製造課ビューア</span>
+    <span class="bar-title">📋 がんすけビューワー</span>
     <span class="bar-file" id="hdr-file"></span>
     <div class="vbtns" id="vbtns">
       <button class="vb" data-v="day">日</button>
@@ -362,6 +364,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
             <button type="button" class="lh-sort" data-sort-field="model" onclick="openSortMenu('model',this)">型番<span class="lh-ind"></span></button>
           </div>
         </div>
+        <button type="button" class="lh-quick-sort" id="ship-sort-btn" onclick="setQuickSort('ship')">出荷順</button>
       </div>
       <div class="lbody" id="lbody"></div>
       <div class="lresize" id="lresize" title="案件名欄の幅を調整"></div>
@@ -770,6 +773,8 @@ function updateSortUi(){
     btn.classList.toggle('filtered',!!columnFilters[field]);
     if(ind)ind.textContent=field===sortField?(sortDir==='asc'?'▲':'▼'):'';
   });
+  const shipBtn=document.getElementById('ship-sort-btn');
+  if(shipBtn)shipBtn.classList.toggle('active',sortField==='ship');
 }
 
 function getSorted(arr){
@@ -806,6 +811,13 @@ function setMenuSort(dir){
   if(!activeSortField)return;
   sortField=activeSortField;
   sortDir=dir==='desc'?'desc':'asc';
+  updateSortUi();
+  applyFilterAndSort();
+}
+
+function setQuickSort(field){
+  sortField=field||'ship';
+  sortDir='asc';
   updateSortUi();
   applyFilterAndSort();
 }
@@ -1233,8 +1245,8 @@ function applyZoomVars(){
   document.documentElement.style.setProperty('--bar-font', dayFont + 'px');
   document.documentElement.style.setProperty('--event-top', eventTop + 'px');
   document.documentElement.style.setProperty('--event-font', eventFont + 'px');
-  document.documentElement.style.setProperty('--lrow-main-font', Math.max(9, Math.round(11 * z)) + 'px');
-  document.documentElement.style.setProperty('--lrow-sub-font', Math.max(8, Math.round(9 * z)) + 'px');
+  document.documentElement.style.setProperty('--lrow-main-font', Math.max(10, Math.round(12 * z)) + 'px');
+  document.documentElement.style.setProperty('--lrow-sub-font', Math.max(9, Math.round(11 * z)) + 'px');
 }
 function zoomTimeline(dir){
   const factor = dir > 0 ? 1.25 : 0.8;
@@ -1323,9 +1335,12 @@ function renderTimeline(){
   // update label
   document.getElementById('period-label').innerHTML=periodLabelHtml(period);
 
-  // ── pxPerDayはフォーカス期間の幅で決める（スケール固定） ──
+  // ── pxPerDayはフォーカス期間が画面内に収まる幅で決める ──
+  // zoomLevelは文字サイズ・行高の見た目拡大に使い、日幅には直接掛けない。
   const availW=document.getElementById('tlsc').clientWidth||800;
-  const pxPerDay=Math.max(1.5, (availW/focusDays) * zoomLevel);
+  const focusSidePad=12;
+  const fitW=Math.max(1,availW-focusSidePad*2);
+  const pxPerDay=Math.max(1.5,fitW/focusDays);
 
   // ── 描画範囲: 前後に同スケールで拡張（スクロール用） ──
   // フォーカス期間の2倍分を前後に追加
@@ -1497,7 +1512,7 @@ function renderTimeline(){
   requestAnimationFrame(()=>{
     const sc=document.getElementById('tlsc');
     const focusX=diffD(S,focusS)*pxPerDay;
-    sc.scrollLeft=Math.max(0,focusX-12);
+    sc.scrollLeft=Math.max(0,focusX-focusSidePad);
   });
 }
 
