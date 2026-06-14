@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>製造課 スケジュールビューア（2026/06/14 11:50更新）</title>
+<title>製造課 スケジュールビューア（2026/06/12 22:51更新）</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -19,11 +19,12 @@
   --row-h:40px;--label-w:290px;--dh-h:66px;
   --dh-top-h:32px;--dh-bot-h:34px;--dh-font:12px;--dh-month-font:15px;
   --bar-h:22px;--bar-top:9px;--bar-font:12px;
+  --ui-font:12px;--ui-small-font:11px;
   --event-top:3px;--event-font:15px;
   --lrow-main-font:11px;--lrow-sub-font:9px;
   --sans:'Noto Sans JP',sans-serif;
 }
-body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column;font-size:12px;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column;font-size:var(--ui-font);}
 
 /* ── UPLOAD ── */
 #up{display:flex;align-items:center;justify-content:center;height:100vh;}
@@ -38,24 +39,24 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 
 /* TOPBAR */
 .bar{display:flex;align-items:center;gap:8px;padding:7px 14px;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;}
-.bar-title{font-size:13px;font-weight:700;}
-.bar-file{font-size:10px;color:var(--text3);padding:2px 7px;background:var(--bg);border-radius:4px;}
+.bar-title{font-size:calc(var(--ui-font) + 1px);font-weight:700;}
+.bar-file{font-size:calc(var(--ui-small-font) - 1px);color:var(--text3);padding:2px 7px;background:var(--bg);border-radius:4px;}
 .vbtns{display:flex;border:1.5px solid var(--border2);border-radius:8px;overflow:hidden;}
-.vb{padding:6px 13px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text2);background:var(--white);border:none;border-right:1px solid var(--border);font-family:var(--sans);transition:.12s;white-space:nowrap;}
+.vb{padding:6px 13px;font-size:var(--ui-font);font-weight:500;cursor:pointer;color:var(--text2);background:var(--white);border:none;border-right:1px solid var(--border);font-family:var(--sans);transition:.12s;white-space:nowrap;}
 .vb:last-child{border-right:none;}
 .vb.on{background:var(--accent);color:#fff;font-weight:700;}
 .vb:hover:not(.on){background:var(--acc-light);}
-.nav-btn{background:var(--white);border:1.5px solid var(--border2);border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer;color:var(--text2);}
+.nav-btn{background:var(--white);border:1.5px solid var(--border2);border-radius:6px;padding:5px 10px;font-size:calc(var(--ui-font) + 1px);cursor:pointer;color:var(--text2);}
 .nav-btn:hover{background:var(--bg);}
 .zoom-btn{width:32px;height:30px;padding:3px;display:inline-flex;align-items:center;justify-content:center;}
 .zoom-icon{width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
-.period-label{font-size:12px;font-weight:600;color:var(--text);min-width:160px;text-align:center;}
-.today-btn{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);}
+.period-label{font-size:var(--ui-font);font-weight:600;color:var(--text);min-width:160px;text-align:center;}
+.today-btn{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:var(--ui-font);font-weight:600;cursor:pointer;font-family:var(--sans);}
 .today-btn:hover{background:#1840b0;}
 .srch{display:flex;align-items:center;gap:5px;background:var(--bg);border:1.5px solid var(--border);border-radius:7px;padding:4px 9px;}
 .srch input{border:none;background:transparent;font-size:11px;color:var(--text);outline:none;width:160px;font-family:var(--sans);}
-.reset-btn{background:none;border:1.5px solid var(--border);border-radius:7px;padding:5px 11px;font-size:11px;cursor:pointer;color:var(--text2);font-family:var(--sans);}
-.print-btn{background:#166534;color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--sans);}
+.reset-btn{background:none;border:1.5px solid var(--border);border-radius:7px;padding:5px 11px;font-size:var(--ui-small-font);cursor:pointer;color:var(--text2);font-family:var(--sans);}
+.print-btn{background:#166534;color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:var(--ui-small-font);font-weight:600;cursor:pointer;font-family:var(--sans);}
 .print-btn:hover{background:#14532d;}
 
 /* LEGEND */
@@ -72,8 +73,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .lcol{width:var(--label-w);min-width:var(--label-w);flex-shrink:0;border-right:2px solid var(--border2);background:var(--white);display:flex;flex-direction:column;z-index:10;position:relative;}
 .lresize{position:absolute;top:0;right:-5px;width:10px;height:100%;cursor:col-resize;z-index:25;background:transparent;}
 .lresize:hover{background:rgba(29,78,216,.12);}
-.lhead{height:var(--dh-h);display:flex;align-items:center;padding:0 12px;background:var(--bg);border-bottom:1.5px solid var(--border2);font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;}
-.lbody{flex:1;overflow:hidden;}
+.lhead{height:var(--dh-h);display:flex;align-items:center;padding:0 12px;background:var(--bg);border-bottom:1.5px solid var(--border2);font-size:var(--ui-small-font);font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;}
+.lbody{flex:1;overflow-y:auto;overflow-x:hidden;}
 .lrow{height:var(--row-h);display:flex;flex-direction:column;justify-content:center;padding:0 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;position:relative;}
 .lrow:hover{background:var(--acc-light);}
 .lrow-main{font-size:var(--lrow-main-font);font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--label-w) - 24px);}
@@ -92,6 +93,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .dh-bot{display:flex;height:var(--dh-bot-h);}
 .dhc{display:flex;align-items:center;justify-content:center;font-size:var(--dh-font);font-weight:600;color:var(--text2);border-right:1px solid var(--border);flex-shrink:0;overflow:hidden;white-space:nowrap;}
 .dhc.mth{background:var(--bg);font-size:var(--dh-month-font);font-weight:700;color:var(--text);}
+.dh-year{font-size:.65em;font-weight:600;color:var(--text3);margin-right:.2em;}
+.dh-month{font-size:1em;font-weight:700;color:var(--text);}
 .dhc.we{background:#fef9ef;color:#b45309;}
 .dhc.td{background:#fef2f2;color:var(--today);font-weight:800;}
 
@@ -134,7 +137,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .past-row{opacity:.45;}
 
 /* TOOLTIP */
-.tip{position:fixed;background:rgba(22,28,46,.93);color:#fff;border-radius:7px;padding:8px 12px;font-size:11px;max-width:260px;z-index:100;pointer-events:none;display:none;line-height:1.8;}
+.tip{position:fixed;background:rgba(22,28,46,.93);color:#fff;border-radius:7px;padding:8px 12px;font-size:var(--bar-font);max-width:320px;z-index:100;pointer-events:none;display:none;line-height:1.8;}
 .tip b{color:#93c5fd;}
 /* marker legend */
 .mkpanel{background:var(--white);border-bottom:2px solid var(--border);padding:0;max-height:0;overflow:hidden;transition:max-height .25s ease,padding .25s ease;flex-shrink:0;}
@@ -157,8 +160,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .spanel{background:var(--white);border-bottom:1px solid var(--border);padding:6px 10px;display:none;flex-direction:column;gap:6px;flex-shrink:0;}
 .spanel.open{display:flex;}
 .spanel-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.sp-label{font-size:10px;color:var(--text3);white-space:nowrap;}
-.sp-input{flex:1;min-width:160px;border:1.5px solid var(--border2);border-radius:6px;padding:5px 8px;font-size:12px;font-family:var(--sans);color:var(--text);outline:none;}
+.sp-label{font-size:var(--ui-small-font);color:var(--text3);white-space:nowrap;}
+.sp-input{flex:1;min-width:160px;border:1.5px solid var(--border2);border-radius:6px;padding:5px 8px;font-size:var(--ui-font);font-family:var(--sans);color:var(--text);outline:none;}
 .sp-input:focus{border-color:var(--accent);}
 .sp-btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--sans);white-space:nowrap;}
 .sp-btn.clear{background:var(--bg);color:var(--text2);border:1.5px solid var(--border);}
@@ -237,6 +240,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
     <button class="reset-btn" onclick="saveAppearance()" title="列幅・行高さ・倍率を保存">見た目保存</button>
     <button class="reset-btn" onclick="resetAppearance()" title="保存した見た目を標準に戻す">見た目リセット</button>
     <button class="today-btn" onclick="goToday()">今日</button>
+    <button class="today-btn" onclick="goThisMonth()">今月表示</button>
     <button class="reset-btn" id="search-toggle-btn" onclick="toggleSearch()">🔍 検索・絞り込み</button>
     <button class="reset-btn" onclick="openManual()">📂 手動で開く</button>
   </div>
@@ -244,22 +248,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
     <div class="spanel-row">
       <span class="sp-label">🔍 検索</span>
       <input type="text" class="sp-input" id="sp-input" placeholder="FK番号・FS番号・案件名・担当者など..." oninput="doSearch()">
-      <button class="sp-btn clear" onclick="clearSearch()">クリア</button>
+      <button class="sp-btn clear" onclick="resetSearchConditions()">検索条件リセット</button>
       <span class="sp-count" id="sp-count"></span>
     </div>
     <div class="spanel-row">
-      <span class="sp-label">並び替え</span>
-      <select class="sp-input" id="sort-select" onchange="setSortMode(this.value)" style="max-width:150px;">
-        <option value="original">元順</option>
-        <option value="due">納期順</option>
-        <option value="fk">FK番号順</option>
-      </select>
-      <span class="sp-label">出荷月</span>
-      <input type="month" class="sp-input" id="ship-month" onchange="applyFilterAndSort()" style="max-width:140px;">
-      <span class="sp-label">出荷範囲</span>
-      <input type="date" class="sp-input" id="ship-start" onchange="applyFilterAndSort()" style="max-width:140px;">
+      <span class="sp-label">出荷月（その月に出荷する案件）</span>
+      <input type="month" class="sp-input" id="ship-month" onchange="activateShipmentMonth()" style="max-width:140px;">
+      <button class="sp-btn" onclick="setShipmentThisMonth()">今月出荷</button>
+      <span class="sp-label">範囲指定（期間内の工数/予定確認）</span>
+      <input type="date" class="sp-input" id="ship-start" onchange="activateWorkRange()" style="max-width:140px;">
       <span style="font-size:11px;color:var(--text2)">〜</span>
-      <input type="date" class="sp-input" id="ship-end" onchange="applyFilterAndSort()" style="max-width:140px;">
+      <input type="date" class="sp-input" id="ship-end" onchange="activateWorkRange()" style="max-width:140px;">
       <span class="sp-label">件数</span>
       <select class="sp-input" id="row-limit" onchange="applyFilterAndSort()" style="max-width:90px;">
         <option value="all">全件</option>
@@ -286,7 +285,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
   <div class="shell">
     <div class="lcol">
       <div class="lhead" id="lhead" onclick="cycleSort()" title="クリックでソート">
-        <span>案件名</span><span class="sort-icon" id="sort-icon">⇅</span>
+        <span>案件名</span>
+        <select class="sp-input" id="sort-select" onchange="setSortMode(this.value)" onclick="event.stopPropagation()" title="並び替え" style="min-width:0;max-width:110px;font-size:var(--ui-small-font);padding:3px 6px;">
+          <option value="original">元順</option>
+          <option value="due">納期順</option>
+          <option value="fk">FK番号順</option>
+        </select>
+        <span class="sort-icon" id="sort-icon">⇅</span>
       </div>
       <div class="lbody" id="lbody"></div>
       <div class="lresize" id="lresize" title="案件名欄の幅を調整"></div>
@@ -674,6 +679,12 @@ function getShipmentSpans(row){
     .filter(s=>s.start||s.end);
 }
 
+function getWorkSpans(row){
+  return row.charts
+    .map(c=>({start:pd(c.start),end:pd(c.end)}))
+    .filter(s=>s.start||s.end);
+}
+
 function spanOverlaps(s,a,b){
   const ss=s.start||s.end,ee=s.end||s.start;
   if(!ss||!ee)return false;
@@ -696,10 +707,20 @@ function matchesShipmentRange(row,startValue,endValue){
   return getShipmentSpans(row).some(s=>spanOverlaps(s,a,b));
 }
 
+function matchesWorkRange(row,startValue,endValue){
+  if(!startValue&&!endValue)return true;
+  const a=startValue?new Date(startValue):new Date(1900,0,1);
+  const b=endValue?new Date(endValue):new Date(2999,11,31);
+  a.setHours(0,0,0,0);b.setHours(0,0,0,0);
+  if(a>b)return false;
+  return getWorkSpans(row).some(s=>spanOverlaps(s,a,b));
+}
+
 // ══════════════════════════════
 // SEARCH & FILTER
 // ══════════════════════════════
 let searchTerms=[];  // アクティブな検索キーワード群
+let shipmentFilterMode='none'; // none | month | range
 
 function toggleSearch(){
   const p=document.getElementById('spanel');
@@ -742,7 +763,7 @@ function removeTag(i){
   applyFilterAndSort();
 }
 
-function clearSearch(){
+function resetSearchConditions(){
   searchTerms=[];
   document.getElementById('sp-input').value='';
   document.getElementById('sp-tags').innerHTML='';
@@ -750,7 +771,28 @@ function clearSearch(){
   const ss=document.getElementById('ship-start');if(ss)ss.value='';
   const se=document.getElementById('ship-end');if(se)se.value='';
   const rl=document.getElementById('row-limit');if(rl)rl.value='all';
+  shipmentFilterMode='none';
   applyFilterAndSort();
+}
+function clearSearch(){resetSearchConditions();}
+
+function activateShipmentMonth(){
+  shipmentFilterMode='month';
+  const ss=document.getElementById('ship-start');if(ss)ss.value='';
+  const se=document.getElementById('ship-end');if(se)se.value='';
+  applyFilterAndSort();
+}
+
+function activateWorkRange(){
+  shipmentFilterMode='range';
+  const sm=document.getElementById('ship-month');if(sm)sm.value='';
+  applyFilterAndSort();
+}
+
+function setShipmentThisMonth(){
+  const d=new Date(TODAY);
+  document.getElementById('ship-month').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  activateShipmentMonth();
 }
 
 function applyFilterAndSort(){
@@ -763,8 +805,8 @@ function applyFilterAndSort(){
   let filtered=ALL.filter(r=>{
     const hay=rowText(r).toLowerCase();
     if(allTerms.length&& !allTerms.every(t=>hay.includes(t)))return false;
-    if(!matchesShipmentMonth(r,shipMonth))return false;
-    if(!matchesShipmentRange(r,shipStart,shipEnd))return false;
+    if(shipmentFilterMode==='month'&&!matchesShipmentMonth(r,shipMonth))return false;
+    if(shipmentFilterMode==='range'&&!matchesWorkRange(r,shipStart,shipEnd))return false;
     return true;
   });
   const totalAfterFilter=filtered.length;
@@ -784,6 +826,12 @@ function updateCount(){
 
 function doFilter(){applyFilterAndSort();}  // 後方互換
 function goToday(){periodStart=new Date(TODAY);renderAll();}
+function goThisMonth(){
+  VIEW='month';
+  periodStart=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
+  document.querySelectorAll('.vb').forEach(x=>x.classList.toggle('on',x.dataset.v==='month'));
+  renderAll();
+}
 function applyZoomVars(){
   const z = zoomLevel;
   const rowH = Math.max(24, Math.min(180, Math.round(baseRowHeight * z)));
@@ -801,6 +849,8 @@ function applyZoomVars(){
   document.documentElement.style.setProperty('--dh-h', (dhTopH + dhBotH) + 'px');
   document.documentElement.style.setProperty('--dh-font', dayFont + 'px');
   document.documentElement.style.setProperty('--dh-month-font', monthFont + 'px');
+  document.documentElement.style.setProperty('--ui-font', Math.max(11, Math.round(12 * z)) + 'px');
+  document.documentElement.style.setProperty('--ui-small-font', Math.max(10, Math.round(11 * z)) + 'px');
   document.documentElement.style.setProperty('--bar-h', barH + 'px');
   document.documentElement.style.setProperty('--bar-top', barTop + 'px');
   document.documentElement.style.setProperty('--bar-font', dayFont + 'px');
@@ -895,14 +945,14 @@ function renderTimeline(){
   days.forEach(col=>{
     const key=`${col.d.getFullYear()}-${col.d.getMonth()}`;
     if(!mgroups.length||mgroups[mgroups.length-1].key!==key)
-      mgroups.push({key,x:col.x,w:col.w,label:`${col.d.getFullYear()}年${col.d.getMonth()+1}月`});
+      mgroups.push({key,x:col.x,w:col.w,year:col.d.getFullYear(),month:col.d.getMonth()+1});
     else mgroups[mgroups.length-1].w+=col.w;
   });
   mgroups.forEach(mg=>{
     const c=document.createElement('div');
     c.className='dhc mth';
     c.style.width=mg.w+'px';c.style.minWidth=mg.w+'px';
-    c.textContent=mg.label;
+    c.innerHTML=`<span class="dh-year">${mg.year}年</span><span class="dh-month">${mg.month}月</span>`;
     dht.appendChild(c);
   });
 
@@ -1183,11 +1233,11 @@ function getSelectedPrintRange(){
     const end=ev?new Date(ev):new Date(2999,11,31);
     start.setHours(0,0,0,0);end.setHours(0,0,0,0);
     if(start>end)return {error:'開始日は終了日以前にしてください'};
-    return {start,end,label:`${sv||'指定なし'} 〜 ${ev||'指定なし'}`};
+    return {start,end,label:`${sv||'指定なし'} 〜 ${ev||'指定なし'}`,mode:'range'};
   }
   if(month){
     const [y,m]=month.split('-').map(Number);
-    return {start:new Date(y,m-1,1),end:new Date(y,m,0),label:`${y}年${m}月`};
+    return {start:new Date(y,m-1,1),end:new Date(y,m,0),label:`${y}年${m}月`,mode:'month'};
   }
   return null;
 }
@@ -1199,6 +1249,7 @@ function dateInRange(d,start,end){
 function rowMatchesPrintRange(row,range){
   const due=getDueDate(row);
   if(dateInRange(due,range.start,range.end))return true;
+  if(range.mode==='range')return getWorkSpans(row).some(s=>spanOverlaps(s,range.start,range.end));
   return getShipmentSpans(row).some(s=>spanOverlaps(s,range.start,range.end));
 }
 
