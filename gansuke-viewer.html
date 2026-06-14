@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>製造課 スケジュールビューア（2026/06/14 14:25更新）</title>
+<title>製造課 スケジュールビューア（2026/06/12 22:51更新）</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -182,12 +182,18 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
   #print-list{display:block;}
   .print-title{font-size:14pt;font-weight:700;margin:0 0 2mm;}
   .print-sub{font-size:8pt;color:#444;margin:0 0 3mm;}
-  .print-table{width:100%;border-collapse:collapse;font-size:7.5pt;table-layout:fixed;}
-  .print-table th,.print-table td{border:1px solid #999;padding:1.2mm 1mm;vertical-align:top;word-break:break-word;}
+  .print-table{width:100%;border-collapse:collapse;font-size:7pt;table-layout:fixed;}
+  .print-table th,.print-table td{border:1px solid #999;padding:1mm .9mm;vertical-align:top;word-break:break-word;overflow-wrap:anywhere;line-height:1.25;}
   .print-table th{background:#eee;font-weight:700;text-align:left;}
   .print-table .print-no{width:7mm;text-align:right;}
-  .print-table .print-date{width:20mm;white-space:nowrap;}
-  .print-table .print-days{width:12mm;text-align:right;white-space:nowrap;}
+  .print-table .print-code{width:18mm;}
+  .print-table .print-owner{width:16mm;}
+  .print-table .print-date{width:20mm;}
+  .print-table .print-range{width:28mm;white-space:pre-line;}
+  .print-table .print-model{width:40mm;}
+  .print-table .print-customer{width:45mm;}
+  .print-table .print-item{font-size:6.5pt;}
+  .print-table .print-days{width:12mm;text-align:right;}
   .print-table .print-marker{width:12mm;text-align:center;}
 }
 </style>
@@ -1440,7 +1446,7 @@ function rowMatchesPrintRange(row,range){
 function getShipmentText(row){
   const spans=getShipmentSpans(row);
   if(!spans.length)return '';
-  return spans.map(s=>`${fd(s.start||s.end)}〜${fd(s.end||s.start)}`).join(' / ');
+  return spans.map(s=>`${fd(s.start||s.end)}〜${fd(s.end||s.start)}`).join('\n');
 }
 
 function getChartSummary(row){
@@ -1521,14 +1527,14 @@ function deletePrintTemplate(){
 const PRINT_FIELD_DEFS={
   no:{label:'No.',cls:'print-no',value:(row,i)=>String(i+1)},
   item:{label:'基本データ',cls:'print-item',value:row=>row.item},
-  projectNo:{label:'案件番号',cls:'print-date',value:row=>row.meta?.projectNo||'-'},
-  model:{label:'型番',cls:'print-detail',value:row=>row.meta?.model||'-'},
-  customer:{label:'顧客名',cls:'print-detail',value:row=>row.meta?.customer||'-'},
+  projectNo:{label:'案件番号',cls:'print-code',value:row=>row.meta?.projectNo||'-'},
+  model:{label:'型番',cls:'print-model',value:row=>row.meta?.model||'-'},
+  customer:{label:'顧客名',cls:'print-customer',value:row=>row.meta?.customer||'-'},
   textDue:{label:'記載納期',cls:'print-date',value:row=>row.meta?.textDue||'-'},
-  orderNo:{label:'見積番号',cls:'print-date',value:row=>row.meta?.orderNo||'-'},
-  owner:{label:'技術担当',cls:'print-date',value:row=>row.meta?.owner||'-'},
+  orderNo:{label:'見積番号',cls:'print-code',value:row=>row.meta?.orderNo||'-'},
+  owner:{label:'技術担当',cls:'print-owner',value:row=>row.meta?.owner||'-'},
   due:{label:'納期',cls:'print-date',value:row=>fd(getDueDate(row))||'-'},
-  ship:{label:'出荷日',cls:'print-date',value:row=>getShipmentText(row)||'-'},
+  ship:{label:'出荷日',cls:'print-range',value:row=>getShipmentText(row)||'-'},
   summary:{label:'予定概要',cls:'print-summary',value:row=>getChartSummary(row)||'-'},
   charts:{label:'チャート明細',cls:'print-detail',value:row=>row.charts.map(c=>`${c.label} ${c.start}〜${c.end}${c.nissuu?` (${c.nissuu}日)`:''}${c.bikou?` ${c.bikou}`:''}`).join(' / ')||'-'},
   events:{label:'イベント',cls:'print-detail',value:row=>row.events.map(ev=>`${ev.date} ${ev.marker||''} ${ev.name}`).join(' / ')||'-'}
