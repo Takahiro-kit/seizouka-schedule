@@ -4804,8 +4804,7 @@ function buildScheduleViewerUpdatedDateTimeForSave(){
 }
 function formatMgmtUpdatedDateTime(raw){
   const d = parsePortalDateTime(raw);
-  if(!d) return '';
-  return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  return d ? formatPortalDateTimeStorage(d) : '';
 }
 function renderMgmtUpdatedLabel(id, value){
   const el = document.getElementById(id);
