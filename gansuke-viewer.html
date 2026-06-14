@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>製造課 スケジュールビューア（2026/06/12 22:51更新）</title>
+<title>製造課 スケジュールビューア（2026/06/14 19:05更新）</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -16,7 +16,7 @@
   --cyan:#0e7490;--cyan-bg:#cffafe;
   --red:#b91c1c;--red-bg:#fee2e2;
   --blue:#1d4ed8;--blue-bg:#dbeafe;
-  --row-h:48px;--label-w:290px;--dh-h:66px;
+  --row-h:40px;--label-w:290px;--dh-h:66px;
   --dh-top-h:32px;--dh-bot-h:34px;--dh-font:12px;--dh-month-font:15px;
   --bar-h:22px;--bar-top:9px;--bar-font:12px;
   --ui-font:12px;--ui-small-font:11px;
@@ -82,12 +82,6 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .lrow:hover{background:var(--acc-light);}
 .lrow-main{font-size:var(--lrow-main-font);font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--label-w) - 24px);}
 .lrow-sub{font-size:var(--lrow-sub-font);color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--label-w) - 24px);margin-top:1px;}
-.lrow-meta{display:grid;gap:2px;min-width:0;max-width:calc(var(--label-w) - 24px);}
-.lm-line{display:grid;grid-template-columns:minmax(54px,.82fr) minmax(82px,1.18fr);gap:7px;align-items:center;min-width:0;}
-.lm-field{display:flex;align-items:baseline;gap:3px;min-width:0;white-space:nowrap;overflow:hidden;}
-.lm-label{font-size:max(7px,calc(var(--lrow-sub-font) - 1px));color:var(--text3);font-weight:700;flex-shrink:0;}
-.lm-value{font-size:var(--lrow-sub-font);color:var(--text2);overflow:hidden;text-overflow:ellipsis;min-width:0;}
-.lm-field.primary .lm-value{font-size:var(--lrow-main-font);color:var(--text);font-weight:600;}
 .row-resize{position:absolute;left:0;right:0;bottom:-4px;height:8px;cursor:row-resize;z-index:8;background:transparent;}
 .row-resize:hover{background:rgba(29,78,216,.12);}
 
@@ -337,14 +331,11 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
   <div class="shell">
     <div class="lcol">
       <div class="lhead" id="lhead" onclick="cycleSort()" title="クリックでソート">
-        <span>案件情報</span>
-        <select class="sp-input" id="sort-select" onchange="setSortMode(this.value)" onclick="event.stopPropagation()" title="並び替え" style="min-width:0;max-width:124px;font-size:var(--ui-small-font);padding:3px 6px;">
+        <span>案件名</span>
+        <select class="sp-input" id="sort-select" onchange="setSortMode(this.value)" onclick="event.stopPropagation()" title="並び替え" style="min-width:0;max-width:110px;font-size:var(--ui-small-font);padding:3px 6px;">
           <option value="original">元順</option>
           <option value="due">納期順</option>
-          <option value="fk">案件番号順</option>
-          <option value="customer">顧客名順</option>
-          <option value="owner">技術担当順</option>
-          <option value="model">型番順</option>
+          <option value="fk">FK番号順</option>
         </select>
         <span class="sort-icon" id="sort-icon">⇅</span>
       </div>
@@ -387,7 +378,7 @@ let ALL=[], ROWS=[];
 let VIEW='month';
 let periodStart=null; // 表示期間の開始日（その期間の初日）
 let zoomLevel=1;
-let baseRowHeight=48;
+let baseRowHeight=40;
 const APPEARANCE_KEY='gansuke_appearance';
 const PRINT_TEMPLATE_KEY='gansuke_print_templates';
 const DEFAULT_PRINT_FIELDS=['no','projectNo','customer','owner','ship','due','model','item','orderNo','events'];
@@ -726,11 +717,11 @@ function bCls(l){if(l.includes('作業'))return'g';if(l.includes('出荷'))retur
 // SORT
 // ══════════════════════════════
 let sortMode='original';
-const SORT_ICONS={original:'⇅',due:'納',fk:'案',customer:'顧',owner:'担',model:'型'};
-const SORT_LABELS={original:'元の順番',due:'納期順',fk:'案件番号順',customer:'顧客名順',owner:'技術担当順',model:'型番順'};
+const SORT_ICONS={original:'⇅',due:'納',fk:'FK'};
+const SORT_LABELS={original:'元の順番',due:'納期順',fk:'FK番号順'};
 
 function cycleSort(){
-  const order=['original','due','fk','customer','owner','model'];
+  const order=['original','due','fk'];
   sortMode=order[(order.indexOf(sortMode)+1)%order.length];
   const sel=document.getElementById('sort-select');
   if(sel)sel.value=sortMode;
@@ -761,41 +752,11 @@ function getSorted(arr){
       if(!ad&&bd)return 1;
     }
     if(sortMode==='fk'){
-      const c=compareProjectNo(a.meta?.projectNo,b.meta?.projectNo);
-      if(c!==0)return c;
-    }
-    if(['customer','owner','model'].includes(sortMode)){
-      const c=compareText(sortMetaValue(a,sortMode),sortMetaValue(b,sortMode));
-      if(c!==0)return c;
+      const af=getFkNumber(a),bf=getFkNumber(b);
+      if(af!==bf)return af-bf;
     }
     return (a.sourceIndex||0)-(b.sourceIndex||0);
   });
-}
-
-function sortMetaValue(row,key){
-  if(key==='customer')return row.meta?.customer||'';
-  if(key==='owner')return row.meta?.owner||'';
-  if(key==='model')return row.meta?.model||'';
-  return '';
-}
-
-function compareText(a,b){
-  const av=String(a||''),bv=String(b||'');
-  if(av&&!bv)return -1;
-  if(!av&&bv)return 1;
-  return av.localeCompare(bv,'ja',{numeric:true,sensitivity:'base'});
-}
-
-function compareProjectNo(a,b){
-  const parse=v=>{
-    const m=String(v||'').match(/^([A-Z]+)\s*0*(\d+)(.*)$/i);
-    return m?{prefix:m[1].toUpperCase(),num:Number(m[2]),suffix:m[3]||'',raw:String(v||'')}:{prefix:'ZZZ',num:Number.MAX_SAFE_INTEGER,suffix:'',raw:String(v||'')};
-  };
-  const av=parse(a),bv=parse(b);
-  const pc=av.prefix.localeCompare(bv.prefix,'ja',{numeric:true,sensitivity:'base'});
-  if(pc!==0)return pc;
-  if(av.num!==bv.num)return av.num-bv.num;
-  return av.suffix.localeCompare(bv.suffix,'ja',{numeric:true,sensitivity:'base'});
 }
 
 function rowText(row){
@@ -1066,7 +1027,7 @@ function goThisMonth(){
 }
 function applyZoomVars(){
   const z = zoomLevel;
-  const rowH = Math.max(42, Math.min(180, Math.round(baseRowHeight * z)));
+  const rowH = Math.max(24, Math.min(180, Math.round(baseRowHeight * z)));
   const barH = Math.max(12, Math.min(rowH - 8, Math.round(22 * z)));
   const barTop = Math.max(2, Math.round((rowH - barH) / 2));
   const eventFont = Math.max(10, Math.min(rowH - 6, Math.round(15 * z)));
@@ -1143,25 +1104,14 @@ function renderLeft(){
   body.innerHTML='';
   ROWS.forEach((row,i)=>{
     const div=document.createElement('div');
-    const matched=allTerms.length>0&&allTerms.every(t=>rowText(row).toLowerCase().includes(t));
+    const matched=allTerms.length>0&&allTerms.every(t=>row.item.toLowerCase().includes(t));
     div.className='lrow'+(matched?' highlight':'');
-    const meta=row.meta||{};
-    const projectNo=meta.projectNo||'-';
-    const customer=meta.customer||'-';
-    const owner=meta.owner||'-';
-    const model=meta.model||'-';
-    div.innerHTML=`
-      <div class="lrow-meta" title="${esc(row.item)}">
-        <div class="lm-line">
-          <div class="lm-field primary"><span class="lm-label">案件</span><span class="lm-value">${esc(projectNo)}</span></div>
-          <div class="lm-field primary"><span class="lm-label">顧客</span><span class="lm-value">${esc(customer)}</span></div>
-        </div>
-        <div class="lm-line">
-          <div class="lm-field"><span class="lm-label">担当</span><span class="lm-value">${esc(owner)}</span></div>
-          <div class="lm-field"><span class="lm-label">型番</span><span class="lm-value">${esc(model)}</span></div>
-        </div>
-      </div>
-      <div class="row-resize" title="全案件の行高さを調整"></div>`;
+    const parts=row.item.split(/(?:\s{2,}|\n)/);
+    const main=parts[0]||row.item;
+    const sub=parts.slice(1).join(' ').trim();
+    div.innerHTML=`<div class="lrow-main" title="${esc(row.item)}">${esc(main)}</div>`+
+      (sub?`<div class="lrow-sub">${esc(sub.slice(0,50))}</div>`:'')+
+      '<div class="row-resize" title="全案件の行高さを調整"></div>';
     div.addEventListener('click',e=>{if(e.target.closest('.row-resize'))return;openM(i);});
     body.appendChild(div);
   });
@@ -1442,7 +1392,7 @@ function loadAppearance(){
   try{
     const saved=JSON.parse(localStorage.getItem(APPEARANCE_KEY)||'{}');
     if(Number.isFinite(saved.zoomLevel))zoomLevel=Math.max(0.35,Math.min(4,saved.zoomLevel));
-    if(Number.isFinite(saved.baseRowHeight))baseRowHeight=Math.max(42,Math.min(180,saved.baseRowHeight));
+    if(Number.isFinite(saved.baseRowHeight))baseRowHeight=Math.max(24,Math.min(180,saved.baseRowHeight));
     if(Number.isFinite(saved.labelWidth))setLabelWidth(saved.labelWidth);
   }catch(e){}
 }
@@ -1473,7 +1423,7 @@ function saveAppearance(){
 
 function resetAppearance(){
   zoomLevel=1;
-  baseRowHeight=48;
+  baseRowHeight=40;
   setLabelWidth(290);
   try{localStorage.removeItem(APPEARANCE_KEY);}catch(e){}
   applyZoomVars();
@@ -1795,7 +1745,7 @@ function initRowResize(){
   });
   window.addEventListener('mousemove',e=>{
     if(!dragging)return;
-    baseRowHeight=Math.max(42,Math.min(180,Math.round(startBase+(e.clientY-startY)/zoomLevel)));
+    baseRowHeight=Math.max(24,Math.min(180,Math.round(startBase+(e.clientY-startY)/zoomLevel)));
     applyZoomVars();
     renderTimeline();
   });
