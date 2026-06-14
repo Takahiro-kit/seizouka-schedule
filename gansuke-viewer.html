@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>製造課 スケジュールビューア（2026/06/14 19:41更新）</title>
+<title>製造課 スケジュールビューア（2026/06/12 22:51更新）</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -76,14 +76,14 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .lcol{width:var(--label-w);min-width:var(--label-w);flex-shrink:0;border-right:2px solid var(--border2);background:var(--white);display:flex;flex-direction:column;z-index:10;position:relative;}
 .lresize{position:absolute;top:0;right:-5px;width:10px;height:100%;cursor:col-resize;z-index:25;background:transparent;}
 .lresize:hover{background:rgba(29,78,216,.12);}
-.lhead{height:var(--dh-h);display:flex;align-items:center;padding:0 12px;background:var(--bg);border-bottom:1.5px solid var(--border2);font-size:var(--ui-small-font);font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;}
+.lhead{height:var(--dh-h);display:flex;align-items:center;padding:0 12px;background:var(--bg);border-bottom:1.5px solid var(--border2);font-size:var(--ui-small-font);font-weight:700;color:var(--text3);letter-spacing:.04em;flex-shrink:0;}
 .lbody{flex:1;overflow-y:auto;overflow-x:hidden;}
 .lrow{height:var(--row-h);display:flex;flex-direction:column;justify-content:center;padding:0 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;position:relative;}
 .lrow:hover{background:var(--acc-light);}
 .lrow-main{font-size:var(--lrow-main-font);font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--label-w) - 24px);}
 .lrow-sub{font-size:var(--lrow-sub-font);color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--label-w) - 24px);margin-top:1px;}
-.lrow-meta{display:grid;gap:2px;min-width:0;max-width:calc(var(--label-w) - 24px);}
-.lm-line{display:grid;grid-template-columns:minmax(54px,.82fr) minmax(82px,1.18fr);gap:7px;align-items:center;min-width:0;}
+.lrow-meta{display:grid;grid-template-columns:minmax(58px,.7fr) minmax(126px,1.55fr);gap:9px;min-width:0;max-width:calc(var(--label-w) - 24px);}
+.lm-cell{display:grid;gap:2px;min-width:0;}
 .lm-field{display:flex;align-items:baseline;gap:3px;min-width:0;white-space:nowrap;overflow:hidden;}
 .lm-label{font-size:max(7px,calc(var(--lrow-sub-font) - 1px));color:var(--text3);font-weight:700;flex-shrink:0;}
 .lm-value{font-size:var(--lrow-sub-font);color:var(--text2);overflow:hidden;text-overflow:ellipsis;min-width:0;}
@@ -161,10 +161,25 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 .mk-toggle:hover{background:var(--bg);}
 .mk-save{background:var(--green);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--sans);}
 .mk-save:hover{background:#166534;}
-/* sort */
-.lhead{cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;}
-.lhead:hover{background:var(--acc-light);}
-.sort-icon{font-size:11px;color:var(--text3);margin-left:4px;}
+/* sort/filter header */
+.lhead{user-select:none;}
+.lh-grid{display:grid;grid-template-columns:minmax(58px,.7fr) minmax(126px,1.55fr);gap:9px;width:100%;min-width:0;}
+.lh-cell{display:grid;gap:3px;min-width:0;}
+.lh-sort{appearance:none;border:none;background:transparent;color:var(--text3);font:inherit;font-weight:700;text-align:left;cursor:pointer;padding:1px 0;line-height:1.1;display:flex;align-items:center;gap:3px;min-width:0;}
+.lh-sort:hover,.lh-sort.active{color:var(--accent);}
+.lh-sort.filtered::after{content:'●';font-size:7px;color:var(--green);}
+.lh-ind{font-size:9px;color:var(--accent);min-width:9px;}
+.sort-menu{position:fixed;display:none;z-index:1000;width:240px;background:var(--white);border:1px solid var(--border2);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:10px;}
+.sort-menu.open{display:block;}
+.sort-menu-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.sort-menu-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.sort-menu-btn{border:1px solid var(--border);background:var(--bg);border-radius:6px;padding:6px 8px;font-size:11px;color:var(--text2);font-family:var(--sans);cursor:pointer;}
+.sort-menu-btn:hover{border-color:var(--accent);color:var(--accent);}
+.sort-menu-tools{display:flex;gap:6px;margin-bottom:6px;}
+.sort-filter-list{max-height:180px;overflow:auto;border:1px solid var(--border);border-radius:7px;padding:5px;background:#fff;}
+.sort-filter-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);padding:3px 2px;}
+.sort-filter-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sort-menu-footer{display:flex;justify-content:flex-end;gap:6px;margin-top:8px;}
 /* search panel */
 .spanel{background:var(--white);border-bottom:1px solid var(--border);padding:6px 10px;display:none;flex-direction:column;gap:6px;flex-shrink:0;}
 .spanel.open{display:flex;}
@@ -336,17 +351,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
   </div>
   <div class="shell">
     <div class="lcol">
-      <div class="lhead" id="lhead" onclick="cycleSort()" title="クリックでソート">
-        <span>案件情報</span>
-        <select class="sp-input" id="sort-select" onchange="setSortMode(this.value)" onclick="event.stopPropagation()" title="並び替え" style="min-width:0;max-width:124px;font-size:var(--ui-small-font);padding:3px 6px;">
-          <option value="original">元順</option>
-          <option value="due">納期順</option>
-          <option value="fk">案件番号順</option>
-          <option value="customer">顧客名順</option>
-          <option value="owner">技術担当順</option>
-          <option value="model">型番順</option>
-        </select>
-        <span class="sort-icon" id="sort-icon">⇅</span>
+      <div class="lhead" id="lhead">
+        <div class="lh-grid">
+          <div class="lh-cell">
+            <button type="button" class="lh-sort" data-sort-field="projectNo" onclick="openSortMenu('projectNo',this)">案件番号<span class="lh-ind"></span></button>
+            <button type="button" class="lh-sort" data-sort-field="owner" onclick="openSortMenu('owner',this)">担当者<span class="lh-ind"></span></button>
+          </div>
+          <div class="lh-cell">
+            <button type="button" class="lh-sort" data-sort-field="customer" onclick="openSortMenu('customer',this)">顧客名<span class="lh-ind"></span></button>
+            <button type="button" class="lh-sort" data-sort-field="model" onclick="openSortMenu('model',this)">型番<span class="lh-ind"></span></button>
+          </div>
+        </div>
       </div>
       <div class="lbody" id="lbody"></div>
       <div class="lresize" id="lresize" title="案件名欄の幅を調整"></div>
@@ -377,6 +392,22 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 </div>
 
 <div class="tip" id="tip"></div>
+<div class="sort-menu" id="sort-menu">
+  <div class="sort-menu-title" id="sort-menu-title"></div>
+  <div class="sort-menu-actions">
+    <button type="button" class="sort-menu-btn" onclick="setMenuSort('asc')">昇順</button>
+    <button type="button" class="sort-menu-btn" onclick="setMenuSort('desc')">降順</button>
+  </div>
+  <div class="sort-menu-tools">
+    <button type="button" class="sort-menu-btn" onclick="selectAllMenuFilter(true)">すべて</button>
+    <button type="button" class="sort-menu-btn" onclick="selectAllMenuFilter(false)">解除</button>
+  </div>
+  <div class="sort-filter-list" id="sort-filter-list"></div>
+  <div class="sort-menu-footer">
+    <button type="button" class="sort-menu-btn" onclick="closeSortMenu()">キャンセル</button>
+    <button type="button" class="sort-menu-btn" onclick="applyMenuFilter()">適用</button>
+  </div>
+</div>
 <div id="print-list"></div>
 
 <script>
@@ -386,7 +417,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
 let ALL=[], ROWS=[];
 let VIEW='month';
 let periodStart=null; // 表示期間の開始日（その期間の初日）
-let zoomLevel=1;
+let zoomLevel=1.15;
 let baseRowHeight=48;
 const APPEARANCE_KEY='gansuke_appearance';
 const PRINT_TEMPLATE_KEY='gansuke_print_templates';
@@ -520,7 +551,6 @@ function startApp(text, filename){
   document.getElementById('hdr-file').textContent = filename;
   document.getElementById('up').style.display='none';
   document.getElementById('app').style.display='flex';
-  ROWS=[...ALL];
   periodStart=new Date(TODAY);
   collectMarkers();
   updateSortUi();
@@ -529,8 +559,7 @@ function startApp(text, filename){
   initColumnResize();
   initRowResize();
   initPrintTemplates();
-  renderAll();
-  updateCount();
+  applyFilterAndSort();
 }
 
 function openManual(){
@@ -720,63 +749,169 @@ function addD(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function diffD(a,b){return Math.round((b-a)/864e5);}
 function isWE(d){return d.getDay()===0||d.getDay()===6;}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escA(s){return esc(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function bCls(l){if(l.includes('作業'))return'g';if(l.includes('出荷'))return'c';if(l.includes('納品'))return'r';return'b';}
 
 // ══════════════════════════════
 // SORT
 // ══════════════════════════════
-let sortMode='original';
-const SORT_ICONS={original:'⇅',due:'納',fk:'案',customer:'顧',owner:'担',model:'型'};
-const SORT_LABELS={original:'元の順番',due:'納期順',fk:'案件番号順',customer:'顧客名順',owner:'技術担当順',model:'型番順'};
-
-function cycleSort(){
-  const order=['original','due','fk','customer','owner','model'];
-  sortMode=order[(order.indexOf(sortMode)+1)%order.length];
-  const sel=document.getElementById('sort-select');
-  if(sel)sel.value=sortMode;
-  updateSortUi();
-  applyFilterAndSort();
-}
-
-function setSortMode(v){
-  sortMode=v||'original';
-  updateSortUi();
-  applyFilterAndSort();
-}
+let sortField='ship';
+let sortDir='asc';
+let activeSortField='';
+let pendingFilterValues=new Set();
+const columnFilters={projectNo:null,owner:null,customer:null,model:null};
+const SORT_FIELD_LABELS={ship:'出荷日',due:'納期',projectNo:'案件番号',owner:'担当者',customer:'顧客名',model:'型番'};
 
 function updateSortUi(){
-  const icon=document.getElementById('sort-icon');
-  const head=document.getElementById('lhead');
-  if(icon)icon.textContent=SORT_ICONS[sortMode]||'⇅';
-  if(head)head.title=SORT_LABELS[sortMode]||'元の順番';
+  document.querySelectorAll('.lh-sort').forEach(btn=>{
+    const field=btn.dataset.sortField;
+    const ind=btn.querySelector('.lh-ind');
+    btn.classList.toggle('active',field===sortField);
+    btn.classList.toggle('filtered',!!columnFilters[field]);
+    if(ind)ind.textContent=field===sortField?(sortDir==='asc'?'▲':'▼'):'';
+  });
 }
 
 function getSorted(arr){
-  if(sortMode==='original')return [...arr].sort((a,b)=>(a.sourceIndex||0)-(b.sourceIndex||0));
   return [...arr].sort((a,b)=>{
-    if(sortMode==='due'){
-      const ad=getDueDate(a),bd=getDueDate(b);
+    let c=0;
+    if(sortField==='ship'||sortField==='due'){
+      const ad=sortField==='ship'?getFirstShipmentDate(a):getDueDate(a);
+      const bd=sortField==='ship'?getFirstShipmentDate(b):getDueDate(b);
+      if(ad&&bd&&ad.getTime()!==bd.getTime())c=ad-bd;
+      else if(ad&&!bd)c=-1;
+      else if(!ad&&bd)c=1;
+    }else if(sortField==='projectNo'){
+      c=compareProjectNo(a.meta?.projectNo,b.meta?.projectNo);
+    }else if(['customer','owner','model'].includes(sortField)){
+      c=compareText(getFieldRawValue(a,sortField),getFieldRawValue(b,sortField));
+    }
+    if(c!==0)return sortDir==='desc'?-c:c;
+    const ad=getDueDate(a),bd=getDueDate(b);
+    if(sortField!=='due'){
       if(ad&&bd&&ad.getTime()!==bd.getTime())return ad-bd;
       if(ad&&!bd)return -1;
       if(!ad&&bd)return 1;
-    }
-    if(sortMode==='fk'){
-      const c=compareProjectNo(a.meta?.projectNo,b.meta?.projectNo);
-      if(c!==0)return c;
-    }
-    if(['customer','owner','model'].includes(sortMode)){
-      const c=compareText(sortMetaValue(a,sortMode),sortMetaValue(b,sortMode));
-      if(c!==0)return c;
     }
     return (a.sourceIndex||0)-(b.sourceIndex||0);
   });
 }
 
-function sortMetaValue(row,key){
-  if(key==='customer')return row.meta?.customer||'';
-  if(key==='owner')return row.meta?.owner||'';
-  if(key==='model')return row.meta?.model||'';
+function getFirstShipmentDate(row){
+  const dates=getShipmentSpans(row).flatMap(s=>[s.start,s.end]).filter(Boolean).sort((a,b)=>a-b);
+  return dates[0]||null;
+}
+
+function setMenuSort(dir){
+  if(!activeSortField)return;
+  sortField=activeSortField;
+  sortDir=dir==='desc'?'desc':'asc';
+  updateSortUi();
+  applyFilterAndSort();
+}
+
+function openSortMenu(field,anchor){
+  activeSortField=field;
+  const menu=document.getElementById('sort-menu');
+  const title=document.getElementById('sort-menu-title');
+  if(title)title.textContent=`${SORT_FIELD_LABELS[field]||field} の並び替え・絞り込み`;
+  const values=getFilterOptions(field);
+  const current=columnFilters[field]||new Set(values.map(v=>v.key));
+  pendingFilterValues=new Set(current);
+  renderSortFilterList(values);
+  const rect=anchor.getBoundingClientRect();
+  menu.style.left=Math.min(window.innerWidth-250,Math.max(8,rect.left))+'px';
+  menu.style.top=Math.min(window.innerHeight-260,rect.bottom+6)+'px';
+  menu.classList.add('open');
+}
+
+function closeSortMenu(){
+  document.getElementById('sort-menu')?.classList.remove('open');
+  activeSortField='';
+}
+
+function renderSortFilterList(values){
+  const box=document.getElementById('sort-filter-list');
+  if(!box)return;
+  box.innerHTML=values.map(v=>`
+    <label class="sort-filter-item" title="${escA(v.label)}">
+      <input type="checkbox" data-filter-key="${escA(v.key)}" ${pendingFilterValues.has(v.key)?'checked':''}>
+      <span>${esc(v.label)} <small>(${v.count})</small></span>
+    </label>`).join('');
+  box.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      const key=cb.dataset.filterKey||'';
+      if(cb.checked)pendingFilterValues.add(key);
+      else pendingFilterValues.delete(key);
+    });
+  });
+}
+
+function selectAllMenuFilter(checked){
+  document.querySelectorAll('#sort-filter-list input[type="checkbox"]').forEach(cb=>{
+    cb.checked=checked;
+    const key=cb.dataset.filterKey||'';
+    if(checked)pendingFilterValues.add(key);
+    else pendingFilterValues.delete(key);
+  });
+}
+
+function applyMenuFilter(){
+  if(!activeSortField)return;
+  const allKeys=getFilterOptions(activeSortField).map(v=>v.key);
+  columnFilters[activeSortField]=pendingFilterValues.size===allKeys.length?null:new Set(pendingFilterValues);
+  closeSortMenu();
+  updateSortUi();
+  applyFilterAndSort();
+}
+
+function getFilterOptions(field){
+  const map=new Map();
+  ALL.forEach(row=>{
+    const label=getFieldLabel(row,field);
+    const key=getFieldKey(row,field);
+    if(!map.has(key))map.set(key,{key,label,count:0});
+    map.get(key).count++;
+  });
+  return [...map.values()].sort((a,b)=>compareText(a.label,b.label));
+}
+
+function rowPassesColumnFilters(row){
+  return Object.entries(columnFilters).every(([field,set])=>!set||set.has(getFieldKey(row,field)));
+}
+
+function hasActiveColumnFilters(){
+  return Object.values(columnFilters).some(Boolean);
+}
+
+function getFieldLabel(row,field){
+  return getFieldRawValue(row,field)||'(空欄)';
+}
+
+function getFieldKey(row,field){
+  return getFieldLabel(row,field).toLowerCase();
+}
+
+function getFieldRawValue(row,field){
+  if(field==='projectNo')return row.meta?.projectNo||'';
+  if(field==='owner')return row.meta?.owner||'';
+  if(field==='customer')return row.meta?.customer||'';
+  if(field==='model')return row.meta?.model||'';
   return '';
+}
+
+function setSortMode(v){
+  sortField=v==='fk'?'projectNo':(v||'ship');
+  sortDir='asc';
+  updateSortUi();
+  applyFilterAndSort();
+}
+
+function cycleSort(){
+  sortField='ship';
+  sortDir='asc';
+  updateSortUi();
+  applyFilterAndSort();
 }
 
 function compareText(a,b){
@@ -797,6 +932,13 @@ function compareProjectNo(a,b){
   if(av.num!==bv.num)return av.num-bv.num;
   return av.suffix.localeCompare(bv.suffix,'ja',{numeric:true,sensitivity:'base'});
 }
+
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('sort-menu');
+  if(!menu||!menu.classList.contains('open'))return;
+  if(menu.contains(e.target)||e.target.closest('.lh-sort'))return;
+  closeSortMenu();
+});
 
 function rowText(row){
   return [
@@ -938,6 +1080,8 @@ function resetSearchConditions(){
   const se=document.getElementById('ship-end');if(se)se.value='';
   const rl=document.getElementById('row-limit');if(rl)rl.value='all';
   shipmentFilterMode='none';
+  Object.keys(columnFilters).forEach(k=>columnFilters[k]=null);
+  updateSortUi();
   applyFilterAndSort();
 }
 function clearSearch(){resetSearchConditions();}
@@ -997,6 +1141,7 @@ function applyFilterAndSort(){
   let filtered=ALL.filter(r=>{
     const hay=rowText(r).toLowerCase();
     if(allTerms.length&& !allTerms.every(t=>hay.includes(t)))return false;
+    if(!rowPassesColumnFilters(r))return false;
     if(shipmentFilterMode==='month'&&!matchesShipmentMonth(r,shipMonth))return false;
     if(shipmentFilterMode==='range'&&!matchesWorkRange(r,shipStart,shipEnd))return false;
     return true;
@@ -1044,7 +1189,7 @@ function getFocusDateForRow(row,ctx){
 }
 
 function focusFilteredRows(rows,ctx){
-  const hasCondition=(ctx.allTerms&&ctx.allTerms.length>0)||shipmentFilterMode!=='none';
+  const hasCondition=(ctx.allTerms&&ctx.allTerms.length>0)||shipmentFilterMode!=='none'||hasActiveColumnFilters();
   if(!hasCondition||!rows.length)return;
   const dates=rows.map(r=>getFocusDateForRow(r,ctx)).filter(Boolean).sort((a,b)=>a-b);
   if(!dates.length)return;
@@ -1098,7 +1243,7 @@ function zoomTimeline(dir){
   renderAll();
 }
 function resetTimelineZoom(){
-  zoomLevel = 1;
+  zoomLevel = 1.15;
   applyZoomVars();
   renderAll();
 }
@@ -1152,12 +1297,12 @@ function renderLeft(){
     const model=meta.model||'-';
     div.innerHTML=`
       <div class="lrow-meta" title="${esc(row.item)}">
-        <div class="lm-line">
+        <div class="lm-cell">
           <div class="lm-field primary"><span class="lm-label">案件</span><span class="lm-value">${esc(projectNo)}</span></div>
-          <div class="lm-field primary"><span class="lm-label">顧客</span><span class="lm-value">${esc(customer)}</span></div>
-        </div>
-        <div class="lm-line">
           <div class="lm-field"><span class="lm-label">担当</span><span class="lm-value">${esc(owner)}</span></div>
+        </div>
+        <div class="lm-cell">
+          <div class="lm-field primary"><span class="lm-label">顧客</span><span class="lm-value">${esc(customer)}</span></div>
           <div class="lm-field"><span class="lm-label">型番</span><span class="lm-value">${esc(model)}</span></div>
         </div>
       </div>
@@ -1178,9 +1323,12 @@ function renderTimeline(){
   // update label
   document.getElementById('period-label').innerHTML=periodLabelHtml(period);
 
-  // ── pxPerDayはフォーカス期間の幅で決める（スケール固定） ──
+  // ── pxPerDayはフォーカス期間が画面内に収まる幅で決める ──
+  // zoomLevelは文字サイズ・行高の見た目拡大に使い、日幅には直接掛けない。
   const availW=document.getElementById('tlsc').clientWidth||800;
-  const pxPerDay=Math.max(1.5, (availW/focusDays) * zoomLevel);
+  const focusSidePad=12;
+  const fitW=Math.max(1,availW-focusSidePad*2);
+  const pxPerDay=Math.max(1.5,fitW/focusDays);
 
   // ── 描画範囲: 前後に同スケールで拡張（スクロール用） ──
   // フォーカス期間の2倍分を前後に追加
@@ -1352,7 +1500,7 @@ function renderTimeline(){
   requestAnimationFrame(()=>{
     const sc=document.getElementById('tlsc');
     const focusX=diffD(S,focusS)*pxPerDay;
-    sc.scrollLeft=Math.max(0,focusX-12);
+    sc.scrollLeft=Math.max(0,focusX-focusSidePad);
   });
 }
 
@@ -1472,7 +1620,7 @@ function saveAppearance(){
 }
 
 function resetAppearance(){
-  zoomLevel=1;
+  zoomLevel=1.15;
   baseRowHeight=48;
   setLabelWidth(290);
   try{localStorage.removeItem(APPEARANCE_KEY);}catch(e){}
