@@ -1558,9 +1558,17 @@ body.single-view-mode #tlist{max-height:none !important;overflow:visible !import
             <div class="s-row-title">スケジュール関連URL（設定シート管理）</div>
             <input id="s-schedule-viewer-url" class="s-input" placeholder="スケジュールビューアURL">
             <input id="s-schedule-github-url" class="s-input" placeholder="GitHubURL">
-            <input id="s-schedule-updated-date" class="s-input" type="date" aria-label="スケジュールビューア更新日">
           </div>
-          <button class="s-btn" onclick="saveScheduleViewerLinks(this)">URL/更新日を保存</button>
+          <button class="s-btn" onclick="saveScheduleViewerLinks(this)">URLを保存</button>
+        </div>
+        <div class="s-row">
+          <div class="s-row-icon"><i class="ti ti-calendar-time"></i></div>
+          <div class="s-row-body" style="display:grid;gap:8px;">
+            <div class="s-row-title">ホーム表示の更新日</div>
+            <div class="s-row-desc">がんすけビューワーを更新した日付を保存します。</div>
+            <input id="s-schedule-updated-date" class="s-input" type="date" aria-label="GansukeViewer更新日">
+          </div>
+          <button class="s-btn" onclick="saveScheduleViewerUpdatedDate(this)">更新日を保存</button>
         </div>
       </div>
 
@@ -4681,12 +4689,33 @@ function normalizeScheduleUrl(raw, fallback){
   const s = String(raw || '').trim();
   return s || fallback;
 }
+function getPortalSettingValue(settings, key){
+  if(!settings || !key) return '';
+  if(settings[key] != null && String(settings[key]).trim() !== '') return settings[key];
+  const target = String(key).trim().toLowerCase();
+  for(const k of Object.keys(settings)){
+    if(String(k).trim().toLowerCase() !== target) continue;
+    const v = settings[k];
+    if(v != null && String(v).trim() !== '') return v;
+  }
+  return '';
+}
 function normalizePortalDateValue(raw){
-  const s = String(raw || '').trim();
+  if(raw == null || raw === '') return '';
+  if(raw instanceof Date && !isNaN(raw.getTime())){
+    return `${raw.getFullYear()}-${p(raw.getMonth()+1)}-${p(raw.getDate())}`;
+  }
+  const s = String(raw).trim();
   if(!s) return '';
-  const m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
-  if(!m) return s;
-  return `${m[1]}-${p(m[2])}-${p(m[3])}`;
+  const slash = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if(slash) return `${slash[1]}-${p(slash[2])}-${p(slash[3])}`;
+  const isoDate = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(isoDate) return `${isoDate[1]}-${isoDate[2]}-${isoDate[3]}`;
+  if(/^\d{4}-\d{2}-\d{2}T/.test(s) || /^\d{4}\/\d{2}\/\d{2}T/.test(s)){
+    const d = new Date(s);
+    if(!isNaN(d.getTime())) return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  }
+  return '';
 }
 function formatMgmtUpdatedDate(raw){
   const s = normalizePortalDateValue(raw);
@@ -4713,8 +4742,8 @@ function renderManagementUpdateDateSettings(){
 }
 function applyManagementUpdateDatesFromData(d){
   const settings = (d && d.settings) || {};
-  _shukkaUpdatedDate = normalizePortalDateValue(settings[SHUKKA_UPDATED_DATE_KEY] || settings.shukka_updated_date);
-  _scheduleViewerUpdatedDate = normalizePortalDateValue(settings[SCHEDULE_VIEWER_UPDATED_DATE_KEY] || settings.schedule_viewer_updated_date);
+  _shukkaUpdatedDate = normalizePortalDateValue(getPortalSettingValue(settings, SHUKKA_UPDATED_DATE_KEY));
+  _scheduleViewerUpdatedDate = normalizePortalDateValue(getPortalSettingValue(settings, SCHEDULE_VIEWER_UPDATED_DATE_KEY));
   renderManagementTileUpdatedDates();
   renderManagementUpdateDateSettings();
 }
@@ -4729,7 +4758,24 @@ async function saveShukkaUpdatedDate(btnEl){
   setAdminActionLoading(btnEl, true, '保存中...');
   try{
     await persistManagementUpdatedDate(SHUKKA_UPDATED_DATE_KEY, _shukkaUpdatedDate);
+    await loadData({ force: true });
     showToast('出荷連絡表の更新日を保存しました');
+  }catch(e){
+    showToast('エラー: ' + e.message);
+  }finally{
+    setAdminActionLoading(btnEl, false);
+  }
+}
+async function saveScheduleViewerUpdatedDate(btnEl){
+  if(btnEl && btnEl.disabled) return;
+  const input = document.getElementById('s-schedule-updated-date');
+  _scheduleViewerUpdatedDate = normalizePortalDateValue(input ? input.value : '');
+  renderManagementTileUpdatedDates();
+  setAdminActionLoading(btnEl, true, '保存中...');
+  try{
+    await persistManagementUpdatedDate(SCHEDULE_VIEWER_UPDATED_DATE_KEY, _scheduleViewerUpdatedDate);
+    await loadData({ force: true });
+    showToast('GansukeViewerの更新日を保存しました');
   }catch(e){
     showToast('エラー: ' + e.message);
   }finally{
@@ -4764,18 +4810,15 @@ async function saveScheduleViewerLinks(btnEl){
   if(btnEl && btnEl.disabled) return;
   const viewerInput = document.getElementById('s-schedule-viewer-url');
   const githubInput = document.getElementById('s-schedule-github-url');
-  const updatedDateInput = document.getElementById('s-schedule-updated-date');
   _scheduleViewerUrl = normalizeScheduleUrl(viewerInput ? viewerInput.value : '', DEFAULT_SCHEDULE_VIEWER_URL);
   _scheduleViewerGithubUrl = normalizeScheduleUrl(githubInput ? githubInput.value : '', DEFAULT_SCHEDULE_VIEWER_GITHUB_URL);
-  _scheduleViewerUpdatedDate = normalizePortalDateValue(updatedDateInput ? updatedDateInput.value : '');
   renderScheduleViewerLinks();
-  renderManagementTileUpdatedDates();
   setAdminActionLoading(btnEl, true, '保存中...');
   try{
     await gasPost({sheet:'設定_UPDATE', key:SCHEDULE_VIEWER_URL_KEY, value:_scheduleViewerUrl});
     await gasPost({sheet:'設定_UPDATE', key:SCHEDULE_VIEWER_GITHUB_URL_KEY, value:_scheduleViewerGithubUrl});
-    await persistManagementUpdatedDate(SCHEDULE_VIEWER_UPDATED_DATE_KEY, _scheduleViewerUpdatedDate);
-    showToast('スケジュール関連URL/更新日を保存しました');
+    await loadData({ force: true });
+    showToast('スケジュール関連URLを保存しました');
   }catch(e){
     showToast('エラー: ' + e.message);
   }finally{
@@ -6992,6 +7035,8 @@ function setupPortalNavPrefetch(){
 setupPortalNavPrefetch();
 setupPortalAuditCapture();
 updateGuestLoginUi();
+renderManagementTileUpdatedDates();
+renderManagementUpdateDateSettings();
 startPortalDataLoad();
 stashAfterLoginTargetFromQuery();
 ensurePortalLogin();
